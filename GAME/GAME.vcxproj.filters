@@ -1,0 +1,245 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="actor">
+      <UniqueIdentifier>{8b902c09-daaf-442d-bd4c-62991aa1a5e3}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="component">
+      <UniqueIdentifier>{4380ba0c-b529-42b0-871e-b2274ecf2ac3}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="manager">
+      <UniqueIdentifier>{5239cf7b-5e77-4b6f-a76f-4c1e4c3b6428}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="math">
+      <UniqueIdentifier>{a64d1cde-680e-4021-ac7b-af72a49eb316}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="shader_related">
+      <UniqueIdentifier>{83b5c649-7318-4f4d-9a26-8e169ad67404}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="manager\audio">
+      <UniqueIdentifier>{c7e087b7-9b60-4039-bd20-60d66cb89f84}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="shader_related\shader">
+      <UniqueIdentifier>{3aaa07c0-d061-46a3-8418-77a0152af777}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="component\camera">
+      <UniqueIdentifier>{b7e72151-1b97-43d4-8758-24fd7759de11}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="manager\ui">
+      <UniqueIdentifier>{14da8934-c678-463f-8160-fb7055d864a3}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="main.cpp">
+      <Filter>manager</Filter>
+    </ClCompile>
+    <ClCompile Include="Game.cpp">
+      <Filter>manager</Filter>
+    </ClCompile>
+    <ClCompile Include="Math.cpp">
+      <Filter>math</Filter>
+    </ClCompile>
+    <ClCompile Include="Renderer.cpp">
+      <Filter>manager</Filter>
+    </ClCompile>
+    <ClCompile Include="Mesh.cpp">
+      <Filter>shader_related</Filter>
+    </ClCompile>
+    <ClCompile Include="Shader.cpp">
+      <Filter>shader_related</Filter>
+    </ClCompile>
+    <ClCompile Include="Texture.cpp">
+      <Filter>shader_related</Filter>
+    </ClCompile>
+    <ClCompile Include="VertexArray.cpp">
+      <Filter>shader_related</Filter>
+    </ClCompile>
+    <ClCompile Include="AudioSystem.cpp">
+      <Filter>manager\audio</Filter>
+    </ClCompile>
+    <ClCompile Include="SoundEvent.cpp">
+      <Filter>manager\audio</Filter>
+    </ClCompile>
+    <ClCompile Include="AudioComponent.cpp">
+      <Filter>component</Filter>
+    </ClCompile>
+    <ClCompile Include="Component.cpp">
+      <Filter>component</Filter>
+    </ClCompile>
+    <ClCompile Include="MeshComponent.cpp">
+      <Filter>component</Filter>
+    </ClCompile>
+    <ClCompile Include="MoveComponent.cpp">
+      <Filter>component</Filter>
+    </ClCompile>
+    <ClCompile Include="SpriteComponent.cpp">
+      <Filter>component</Filter>
+    </ClCompile>
+    <ClCompile Include="CameraComponent.cpp">
+      <Filter>component\camera</Filter>
+    </ClCompile>
+    <ClCompile Include="FPSCamera.cpp">
+      <Filter>component\camera</Filter>
+    </ClCompile>
+    <ClCompile Include="FPSActor.cpp">
+      <Filter>actor</Filter>
+    </ClCompile>
+    <ClCompile Include="Actor.cpp">
+      <Filter>actor</Filter>
+    </ClCompile>
+    <ClCompile Include="Collision.cpp">
+      <Filter>math</Filter>
+    </ClCompile>
+    <ClCompile Include="BoxComponent.cpp">
+      <Filter>component</Filter>
+    </ClCompile>
+    <ClCompile Include="BallMove.cpp">
+      <Filter>component</Filter>
+    </ClCompile>
+    <ClCompile Include="BallActor.cpp">
+      <Filter>actor</Filter>
+    </ClCompile>
+    <ClCompile Include="PlaneActor.cpp">
+      <Filter>actor</Filter>
+    </ClCompile>
+    <ClCompile Include="UIScreen.cpp">
+      <Filter>manager\ui</Filter>
+    </ClCompile>
+    <ClCompile Include="Font.cpp">
+      <Filter>manager\ui</Filter>
+    </ClCompile>
+    <ClCompile Include="HUD.cpp">
+      <Filter>manager\ui</Filter>
+    </ClCompile>
+    <ClCompile Include="PhysWorld.cpp">
+      <Filter>manager</Filter>
+    </ClCompile>
+    <ClCompile Include="PauseMenu.cpp">
+      <Filter>manager\ui</Filter>
+    </ClCompile>
+    <ClCompile Include="DialogBox.cpp">
+      <Filter>manager\ui</Filter>
+    </ClCompile>
+    <ClCompile Include="TargetActor.cpp">
+      <Filter>actor</Filter>
+    </ClCompile>
+    <ClCompile Include="TargetComponent.cpp">
+      <Filter>component</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="Game.h">
+      <Filter>manager</Filter>
+    </ClInclude>
+    <ClInclude Include="Math.h">
+      <Filter>math</Filter>
+    </ClInclude>
+    <ClInclude Include="Renderer.h">
+      <Filter>manager</Filter>
+    </ClInclude>
+    <ClInclude Include="Mesh.h">
+      <Filter>shader_related</Filter>
+    </ClInclude>
+    <ClInclude Include="Shader.h">
+      <Filter>shader_related</Filter>
+    </ClInclude>
+    <ClInclude Include="Texture.h">
+      <Filter>shader_related</Filter>
+    </ClInclude>
+    <ClInclude Include="VertexArray.h">
+      <Filter>shader_related</Filter>
+    </ClInclude>
+    <ClInclude Include="AudioSystem.h">
+      <Filter>manager\audio</Filter>
+    </ClInclude>
+    <ClInclude Include="SoundEvent.h">
+      <Filter>manager\audio</Filter>
+    </ClInclude>
+    <ClInclude Include="AudioComponent.h">
+      <Filter>component</Filter>
+    </ClInclude>
+    <ClInclude Include="Component.h">
+      <Filter>component</Filter>
+    </ClInclude>
+    <ClInclude Include="MeshComponent.h">
+      <Filter>component</Filter>
+    </ClInclude>
+    <ClInclude Include="MoveComponent.h">
+      <Filter>component</Filter>
+    </ClInclude>
+    <ClInclude Include="SpriteComponent.h">
+      <Filter>component</Filter>
+    </ClInclude>
+    <ClInclude Include="CameraComponent.h">
+      <Filter>component\camera</Filter>
+    </ClInclude>
+    <ClInclude Include="FPSCamera.h">
+      <Filter>component\camera</Filter>
+    </ClInclude>
+    <ClInclude Include="Actor.h">
+      <Filter>actor</Filter>
+    </ClInclude>
+    <ClInclude Include="FPSActor.h">
+      <Filter>actor</Filter>
+    </ClInclude>
+    <ClInclude Include="Collision.h">
+      <Filter>math</Filter>
+    </ClInclude>
+    <ClInclude Include="BoxComponent.h">
+      <Filter>component</Filter>
+    </ClInclude>
+    <ClInclude Include="BallActor.h">
+      <Filter>actor</Filter>
+    </ClInclude>
+    <ClInclude Include="PlaneActor.h">
+      <Filter>actor</Filter>
+    </ClInclude>
+    <ClInclude Include="BallMove.h">
+      <Filter>component</Filter>
+    </ClInclude>
+    <ClInclude Include="Font.h">
+      <Filter>manager\ui</Filter>
+    </ClInclude>
+    <ClInclude Include="HUD.h">
+      <Filter>manager\ui</Filter>
+    </ClInclude>
+    <ClInclude Include="PhysWorld.h">
+      <Filter>manager</Filter>
+    </ClInclude>
+    <ClInclude Include="PauseMenu.h">
+      <Filter>manager\ui</Filter>
+    </ClInclude>
+    <ClInclude Include="DialogBox.h">
+      <Filter>manager\ui</Filter>
+    </ClInclude>
+    <ClInclude Include="TargetActor.h">
+      <Filter>actor</Filter>
+    </ClInclude>
+    <ClInclude Include="TargetComponent.h">
+      <Filter>component</Filter>
+    </ClInclude>
+    <ClInclude Include="UIScreen.h">
+      <Filter>manager\ui</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Shaders\Sprite.frag">
+      <Filter>shader_related\shader</Filter>
+    </None>
+    <None Include="Shaders\BasicMesh.frag">
+      <Filter>shader_related\shader</Filter>
+    </None>
+    <None Include="Shaders\BasicMesh.vert">
+      <Filter>shader_related\shader</Filter>
+    </None>
+    <None Include="Shaders\Phong.frag">
+      <Filter>shader_related\shader</Filter>
+    </None>
+    <None Include="Shaders\Phong.vert">
+      <Filter>shader_related\shader</Filter>
+    </None>
+    <None Include="Shaders\Sprite.vert">
+      <Filter>shader_related\shader</Filter>
+    </None>
+  </ItemGroup>
+</Project>
