@@ -3,6 +3,10 @@
 #include "Game.h"
 #include "Renderer.h"
 
+/*
+*  床・壁のアクター
+*/
+
 class PlaneActor :
     public Actor
 {

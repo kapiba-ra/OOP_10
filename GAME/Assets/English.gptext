@@ -1,7 +1,9 @@
 {
 	"TextMap":{
+		"MainTitle" : "MAIN TITLE",
 		"PauseTitle": "PAUSED",
 		"ResumeButton": "Resume",
+		"StartButton" : "Start",
 		"QuitButton": "Quit",
 		"QuitText": "Do you want to quit?",
 		"OKButton": "OK",

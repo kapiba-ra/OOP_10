@@ -1,7 +1,9 @@
 {
 	"TextMap":{
+		"MainTitle" : "основное название",
 		"PauseTitle": "ПАУЗА",
 		"ResumeButton": "Продолжить",
+		"StartButton" : "запустить",
 		"QuitButton": "Уволиться",
 		"QuitText": "Вы хотите бросить курить?",
 		"OKButton": "ОК",

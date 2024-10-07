@@ -13,20 +13,20 @@
     <Filter Include="math">
       <UniqueIdentifier>{a64d1cde-680e-4021-ac7b-af72a49eb316}</UniqueIdentifier>
     </Filter>
-    <Filter Include="shader_related">
-      <UniqueIdentifier>{83b5c649-7318-4f4d-9a26-8e169ad67404}</UniqueIdentifier>
-    </Filter>
     <Filter Include="manager\audio">
       <UniqueIdentifier>{c7e087b7-9b60-4039-bd20-60d66cb89f84}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="shader_related\shader">
-      <UniqueIdentifier>{3aaa07c0-d061-46a3-8418-77a0152af777}</UniqueIdentifier>
     </Filter>
     <Filter Include="component\camera">
       <UniqueIdentifier>{b7e72151-1b97-43d4-8758-24fd7759de11}</UniqueIdentifier>
     </Filter>
     <Filter Include="manager\ui">
       <UniqueIdentifier>{14da8934-c678-463f-8160-fb7055d864a3}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="manager\renderer">
+      <UniqueIdentifier>{362e5eb1-edc4-4507-9501-3e088a848993}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="manager\renderer\shader">
+      <UniqueIdentifier>{3aaa07c0-d061-46a3-8418-77a0152af777}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -38,21 +38,6 @@
     </ClCompile>
     <ClCompile Include="Math.cpp">
       <Filter>math</Filter>
-    </ClCompile>
-    <ClCompile Include="Renderer.cpp">
-      <Filter>manager</Filter>
-    </ClCompile>
-    <ClCompile Include="Mesh.cpp">
-      <Filter>shader_related</Filter>
-    </ClCompile>
-    <ClCompile Include="Shader.cpp">
-      <Filter>shader_related</Filter>
-    </ClCompile>
-    <ClCompile Include="Texture.cpp">
-      <Filter>shader_related</Filter>
-    </ClCompile>
-    <ClCompile Include="VertexArray.cpp">
-      <Filter>shader_related</Filter>
     </ClCompile>
     <ClCompile Include="AudioSystem.cpp">
       <Filter>manager\audio</Filter>
@@ -126,6 +111,30 @@
     <ClCompile Include="TargetComponent.cpp">
       <Filter>component</Filter>
     </ClCompile>
+    <ClCompile Include="MainMenu.cpp">
+      <Filter>manager\ui</Filter>
+    </ClCompile>
+    <ClCompile Include="Renderer.cpp">
+      <Filter>manager\renderer</Filter>
+    </ClCompile>
+    <ClCompile Include="Mesh.cpp">
+      <Filter>manager\renderer</Filter>
+    </ClCompile>
+    <ClCompile Include="Shader.cpp">
+      <Filter>manager\renderer</Filter>
+    </ClCompile>
+    <ClCompile Include="Texture.cpp">
+      <Filter>manager\renderer</Filter>
+    </ClCompile>
+    <ClCompile Include="VertexArray.cpp">
+      <Filter>manager\renderer</Filter>
+    </ClCompile>
+    <ClCompile Include="FollowActor.cpp">
+      <Filter>actor</Filter>
+    </ClCompile>
+    <ClCompile Include="FollowCamera.cpp">
+      <Filter>component\camera</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Game.h">
@@ -133,21 +142,6 @@
     </ClInclude>
     <ClInclude Include="Math.h">
       <Filter>math</Filter>
-    </ClInclude>
-    <ClInclude Include="Renderer.h">
-      <Filter>manager</Filter>
-    </ClInclude>
-    <ClInclude Include="Mesh.h">
-      <Filter>shader_related</Filter>
-    </ClInclude>
-    <ClInclude Include="Shader.h">
-      <Filter>shader_related</Filter>
-    </ClInclude>
-    <ClInclude Include="Texture.h">
-      <Filter>shader_related</Filter>
-    </ClInclude>
-    <ClInclude Include="VertexArray.h">
-      <Filter>shader_related</Filter>
     </ClInclude>
     <ClInclude Include="AudioSystem.h">
       <Filter>manager\audio</Filter>
@@ -221,25 +215,49 @@
     <ClInclude Include="UIScreen.h">
       <Filter>manager\ui</Filter>
     </ClInclude>
+    <ClInclude Include="MainMenu.h">
+      <Filter>manager\ui</Filter>
+    </ClInclude>
+    <ClInclude Include="Renderer.h">
+      <Filter>manager\renderer</Filter>
+    </ClInclude>
+    <ClInclude Include="Mesh.h">
+      <Filter>manager\renderer</Filter>
+    </ClInclude>
+    <ClInclude Include="Shader.h">
+      <Filter>manager\renderer</Filter>
+    </ClInclude>
+    <ClInclude Include="Texture.h">
+      <Filter>manager\renderer</Filter>
+    </ClInclude>
+    <ClInclude Include="VertexArray.h">
+      <Filter>manager\renderer</Filter>
+    </ClInclude>
+    <ClInclude Include="FollowActor.h">
+      <Filter>actor</Filter>
+    </ClInclude>
+    <ClInclude Include="FollowCamera.h">
+      <Filter>component\camera</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include="Shaders\Sprite.frag">
-      <Filter>shader_related\shader</Filter>
+      <Filter>manager\renderer\shader</Filter>
     </None>
     <None Include="Shaders\BasicMesh.frag">
-      <Filter>shader_related\shader</Filter>
+      <Filter>manager\renderer\shader</Filter>
     </None>
     <None Include="Shaders\BasicMesh.vert">
-      <Filter>shader_related\shader</Filter>
+      <Filter>manager\renderer\shader</Filter>
     </None>
     <None Include="Shaders\Phong.frag">
-      <Filter>shader_related\shader</Filter>
+      <Filter>manager\renderer\shader</Filter>
     </None>
     <None Include="Shaders\Phong.vert">
-      <Filter>shader_related\shader</Filter>
+      <Filter>manager\renderer\shader</Filter>
     </None>
     <None Include="Shaders\Sprite.vert">
-      <Filter>shader_related\shader</Filter>
+      <Filter>manager\renderer\shader</Filter>
     </None>
   </ItemGroup>
 </Project>
