@@ -23,7 +23,7 @@ void FPSCamera::Update(float deltaTime)
 	//SetViewMatrix(view);
 
 	/* ピッチあり */
-	CameraComponent::Update(deltaTime); \
+	CameraComponent::Update(deltaTime);
 
 	// カメラの位置は所有アクターの位置
 	Vector3 cameraPos = mOwner->GetPosition();

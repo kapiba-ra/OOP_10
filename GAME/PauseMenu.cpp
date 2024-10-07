@@ -1,29 +1,33 @@
 #include "PauseMenu.h"
 #include "Game.h"
 #include "DialogBox.h"
+#include "MainMenu.h"
 #include <SDL/SDL.h>
 
 PauseMenu::PauseMenu(Game* game)
 	: UIScreen(game)
+	, mDialogBox(nullptr)
 {
 	mGame->SetState(Game::EPaused);
 	SetRelativeMouseMode(false);
 	SetTitle("PauseTitle");
 	AddButton("ResumeButton", [this]() {
 		Close();
+		SetRelativeMouseMode(true);
+		mGame->SetState(Game::EGameplay);
 	});
 	AddButton("QuitButton", [this]() {
-		new DialogBox(mGame, "QuitText",
+		mDialogBox = new DialogBox(mGame, "QuitText",
 			[this]() {
-				mGame->SetState(Game::EQuit);
+				this->Close();		 // PauseMenu‚ÌClose()
+				mDialogBox->Close(); // DialogBox‚ÌClose()
+				mGame->OnChangeState(Game::EMainMenu, Game::EPaused);
 		});
 	});
 }
 
 PauseMenu::~PauseMenu()
 {
-	SetRelativeMouseMode(true);
-	mGame->SetState(Game::EGameplay);
 }
 
 void PauseMenu::HandleKeyPress(int key)
@@ -32,5 +36,7 @@ void PauseMenu::HandleKeyPress(int key)
 	if (key == SDLK_ESCAPE)
 	{
 		Close();
+		SetRelativeMouseMode(true); 
+		mGame->SetState(Game::EGameplay);
 	}
 }

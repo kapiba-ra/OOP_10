@@ -14,6 +14,7 @@
 #include "UIScreen.h"
 #include "HUD.h"
 #include "PauseMenu.h"
+#include "MainMenu.h"
 #include <SDL/SDL.h>
 #include <SDL/SDL_ttf.h>
 #include <fstream>
@@ -29,7 +30,7 @@ Game::Game()
 	, mCrosshair(nullptr)
 	, mFPSActor(nullptr)
 	, mHUD(nullptr)
-	, mGameState(Game::EGameplay)
+	, mGameState(Game::EMainMenu)
 	, mTicksCount(0)
 {
 }
@@ -74,15 +75,17 @@ bool Game::Initialize()
 		return false;
 	}
 
-	LoadData();
+	//LoadData();
+	// 代わりにメインメニューを作成する
+	LoadText("Assets/English.gptext");
+	new MainMenu(this);
+
 	mTicksCount = SDL_GetTicks();
 	return true;
 }
 
 void Game::LoadData()
 {
-	LoadText("Assets/English.gptext");
-
 	Actor* actor = nullptr;
 	Quaternion q;
 	
@@ -376,10 +379,23 @@ void Game::UnloadData()
 		delete mUIStack.back();
 		mUIStack.pop_back();
 	}
-
-	if (mRenderer)
+	// メインメニューからUnloadする時のみ呼び出すようにした
+	if (mRenderer && mGameState == EMainMenu)
 	{
 		mRenderer->UnloadData();
+	}
+}
+
+void Game::OnChangeState(GameState newState, GameState oldState)
+{
+	if (newState == EMainMenu && oldState == EPaused)
+	{
+		UnloadData();
+		new MainMenu(this);
+	}
+	else if (newState == EGameplay)
+	{
+		LoadData();
 	}
 }
 

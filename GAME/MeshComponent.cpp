@@ -23,6 +23,7 @@ MeshComponent::~MeshComponent()
 
 void MeshComponent::Draw(Shader* shader)
 {
+	// この関数が呼び出された時点で既にシェーダーは設定されていることに注意
 	if (mMesh)
 	{
 		// ワールド座標変換の設定
@@ -36,6 +37,7 @@ void MeshComponent::Draw(Shader* shader)
 		Texture* t = mMesh->GetTexture(mTextureIndex);
 		if (t) { t->SetActive(); }
 		// メッシュの頂点配列をアクティブにする
+		// 頂点の情報はシェーダーに渡すので必ず必要
 		VertexArray* va = mMesh->GetVertexArray();
 		va->SetActive();
 		// 描画

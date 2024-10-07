@@ -9,5 +9,8 @@ public:
     ~PauseMenu();
 
     void HandleKeyPress(int key) override;
+
+private:
+    class DialogBox* mDialogBox;
 };
 

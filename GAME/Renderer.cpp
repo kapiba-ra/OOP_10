@@ -302,9 +302,9 @@ bool Renderer::LoadShaders()
 	mMeshShader->SetActive();
 	// ビュー行列
 	mView = Matrix4::CreateLookAt(
-		Vector3::Zero,
-		Vector3::UnitX,
-		Vector3::UnitZ
+		Vector3::Zero,	// 目(カメラ)の位置
+		Vector3::UnitX, // カメラを向ける方向
+		Vector3::UnitZ  // 上方向
 	);
 	// 射影行列
 	mProjection = Matrix4::CreatePerspectiveFOV(

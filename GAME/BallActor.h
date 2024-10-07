@@ -1,6 +1,10 @@
 #pragma once
 #include "Actor.h"
 
+/*
+*  発射する弾のアクター
+*/
+
 class BallActor :
     public Actor
 {

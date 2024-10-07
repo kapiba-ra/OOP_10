@@ -27,11 +27,14 @@ public:
 	void RemovePlane(class PlaneActor* plane);
 	std::vector<class PlaneActor*>& GetPlanes() { return mPlanes; }
 
+	// ó‘Ô‚É‚æ‚Á‚Ä“ü—Í‚ğUI‚É“n‚·‚©ƒQ[ƒ€ƒ[ƒ‹ƒh‚É“n‚·‚©‚ğ•Ï‚¦‚é
 	enum GameState
 	{
-		EGameplay,	// “ü—Í‚ğƒQ[ƒ€ƒ[ƒ‹ƒh‚Ö“n‚·
-		EPaused,	// “ü—Í‚ğUI‰æ–Ê‚É‚Ì‚İ“n‚·
-		EQuit
+		EMainMenu, 
+		EGameplay,
+		EPaused,
+		EQuit,
+		EStateNum
 	};
 	GameState GetState() const { return mGameState; }
 	void SetState(GameState state) { mGameState = state; }
@@ -45,6 +48,12 @@ public:
 	void LoadText(const std::string& fileName);
 	const std::string& GetText(const std::string& key);
 
+	// ˆê“I‚Épublic‚É‚µ‚Ä‚¢‚é
+	void LoadData();
+	void UnloadData();
+
+	void OnChangeState(GameState newState, GameState oldState = EStateNum);
+
 private:
 	// processes in RunLoop()
 	void ProcessInput();
@@ -52,8 +61,6 @@ private:
 	void GenerateOutput();
 	// helper
 	void HandleKeyPress(int key);
-	void LoadData();
-	void UnloadData();
 
 	std::vector<class Actor*> mActors;
 	std::vector<class Actor*> mPendingActors;

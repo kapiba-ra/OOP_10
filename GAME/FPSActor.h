@@ -2,6 +2,10 @@
 #include "Actor.h"
 #include "SoundEvent.h"
 
+/*
+* 一人称視点の操作キャラのアクター
+*/
+
 class FPSActor :
     public Actor
 {
