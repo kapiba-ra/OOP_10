@@ -30,10 +30,13 @@ public:
 	// ó‘Ô‚É‚æ‚Á‚Ä“ü—Í‚ğUI‚É“n‚·‚©ƒQ[ƒ€ƒ[ƒ‹ƒh‚É“n‚·‚©‚ğ•Ï‚¦‚é
 	enum GameState
 	{
-		EMainMenu, 
+		EMainMenu,
 		EGameplay,
+		EGameclear,
+		EGameover,
 		EPaused,
 		EQuit,
+
 		EStateNum
 	};
 	GameState GetState() const { return mGameState; }

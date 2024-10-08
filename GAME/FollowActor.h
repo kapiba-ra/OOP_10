@@ -16,12 +16,20 @@ public:
 		EJumping,
 		EFalling
 	};
+	State GetState() const { return mState; }
+	void SetState(State state) { mState = state; }
 
 	// 2つのAABBの最小の重なりテストを行う
 	void FixCollisions();
 
+	float GetJumpSpeed() const { return mJumpSpeed; }
+	void SetJumpSpeed(float speed) { mJumpSpeed = speed; }
+
 private:
-	void Jump();
+	void Jump(float deltaTime);
+	State mState;
+	float mJumpSpeed;
+	
 	class MoveComponent* mMoveComp;
 	class FollowCamera* mCameraComp;
 	class MeshComponent* mMeshComp;

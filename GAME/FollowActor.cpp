@@ -12,6 +12,8 @@
 FollowActor::FollowActor(Game* game)
 	: Actor(game)
 	, mBoxComp(nullptr)
+	, mState(EOnFloor)
+	, mJumpSpeed(0.0f)
 {
 	mMeshComp = new MeshComponent(this);
 	mMeshComp->SetMesh(game->GetRenderer()->GetMesh("Assets/Cube.gpmesh"));
@@ -52,7 +54,11 @@ void FollowActor::ActorInput(const uint8_t* keys)
 	// ジャンプ
 	if (keys[SDL_SCANCODE_SPACE])
 	{
-		Jump();
+		if (mState == EOnFloor)
+		{
+			mState = EJumping;
+			SetJumpSpeed(500.0f);
+		}
 	}
 	mMoveComp->SetForwardSpeed(forwardSpeed);
 	mMoveComp->SetAngularSpeed(angularSpeed);
@@ -74,8 +80,7 @@ void FollowActor::UpdateActor(float deltaTime)
 	Actor::UpdateActor(deltaTime);
 
 	FixCollisions();
-
-
+	Jump(deltaTime);
 }
 
 void FollowActor::FixCollisions()
@@ -86,8 +91,12 @@ void FollowActor::FixCollisions()
 
 	const AABB& playerBox = mBoxComp->GetWorldBox();
 	Vector3 pos = GetPosition();
+	// 地上から落下への遷移で使う
+	LineSegment line(pos, pos + Vector3::UnitZ * -100.0f);
+	float t = 0.0f;
+	Vector3 norm(Vector3::Zero);
+	bool slip(true);
 
-	// 床・壁との衝突判定
 	auto& planes = GetGame()->GetPlanes();
 	for (auto pa : planes)
 	{
@@ -121,19 +130,50 @@ void FollowActor::FixCollisions()
 			else
 			{
 				pos.z += dz;
+				// 床との衝突であるとき
+				if (dz == dz1) 
+				{
+					switch (mState)
+					{
+					case EOnFloor:
+						slip = false;
+						break;
+					case EFalling:
+						mState = EOnFloor;
+						break;
+					}
+				}
 			}
-
 			// 位置を設定しボックスの成分を更新する
 			SetPosition(pos);
 			mBoxComp->OnUpdateWorldTransform();
 		}
 	}
+	if (slip && mState == EOnFloor)
+	{
+		mState = EFalling;
+	}
 }
 
-void FollowActor::Jump()
+void FollowActor::Jump(float deltaTime)
 {
-	float jumpSpeed = 50.0f;
-	Vector3 pos = GetPosition();
-	pos.z += jumpSpeed;
-	SetPosition(pos);
+	if (mState == EJumping)
+	{
+		Vector3 pos = GetPosition();
+		pos += Vector3::UnitZ * mJumpSpeed * deltaTime;
+		mJumpSpeed -= 1000.0f * deltaTime;
+		if (mJumpSpeed < 0.0f)
+		{
+			mState = EFalling;
+		}
+		SetPosition(pos);
+	}
+	else if (mState == EFalling)
+	{
+		Vector3 pos = GetPosition();
+		pos += Vector3::UnitZ * mJumpSpeed * deltaTime;
+		mJumpSpeed -= 1000.0f * deltaTime;
+
+		SetPosition(pos);
+	}
 }
