@@ -5,6 +5,7 @@
 #include "PhysWorld.h"
 #include "Actor.h"
 #include "FPSActor.h"
+#include "FollowActor.h"
 #include "PlaneActor.h"
 #include "BallActor.h"
 #include "TargetActor.h"
@@ -146,7 +147,8 @@ void Game::LoadData()
 	SDL_GetRelativeMouseState(nullptr, nullptr);
 
 	// カメラアクターは今回1つ
-	mFPSActor = new FPSActor(this);
+	//mFPSActor = new FPSActor(this);
+	mFollowActor = new FollowActor(this);
 
 	// ターゲット
 	actor = new TargetActor(this);
@@ -288,7 +290,7 @@ void Game::HandleKeyPress(int key)
 	}
 	case SDL_BUTTON_LEFT:
 	{
-		mFPSActor->Shoot();
+		//mFPSActor->Shoot();
 		break;
 	}
 	default:

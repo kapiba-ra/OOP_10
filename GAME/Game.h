@@ -21,7 +21,7 @@ public:
 	class AudioSystem* GetAudioSystem() { return mAudioSystem; }
 	class PhysWorld* GetPhysWorld() { return mPhysWorld; }
 	class HUD* GetHUD() { return mHUD; }
-	class FPSActor* GetPlayer() { return mFPSActor; }
+	class FollowActor* GetPlayer() { return mFollowActor; }
 
 	void AddPlane(class PlaneActor* plane);
 	void RemovePlane(class PlaneActor* plane);
@@ -81,6 +81,7 @@ private:
 	SoundEvent mMusicEvent;
 	std::vector<class PlaneActor*> mPlanes;
 	class FPSActor* mFPSActor;
+	class FollowActor* mFollowActor;
 	class SpriteComponent* mCrosshair;
 };
 

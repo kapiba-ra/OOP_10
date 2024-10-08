@@ -5,6 +5,7 @@
 #include "Texture.h"
 #include "Actor.h"
 #include "FPSActor.h"
+#include "FollowActor.h"
 #include "TargetComponent.h"
 
 HUD::HUD(Game* game)
