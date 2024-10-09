@@ -13,13 +13,14 @@ HUD::HUD(Game* game)
 	, mRaderRange(2000.0f)
 	, mRaderRadius(92.0f)
 	, mTargetEnemy(false)
+	, mHPdiscardRange(1.0f)
 {
 	Renderer* r = mGame->GetRenderer();
 	mRader = r->GetTexture("Assets/Radar.png");
 	mCrosshair = r->GetTexture("Assets/Crosshair.png");
 	mCrosshairEnemy = r->GetTexture("Assets/CrosshairRed.png");
 	mBlipTex = r->GetTexture("Assets/Blip.png");
-	mHPbar = r->GetTexture("Assets/HealthBar.png");
+	mHPbar = r->GetTexture("Assets/HPBar.png");
 }
 
 HUD::~HUD()
@@ -49,7 +50,10 @@ void HUD::Draw(Shader* shader)
 	}
 
 	// HPƒo[‚Ì•`‰æ
-	DrawTexture(shader, mHPbar, Vector2(-350.0f, -350.0f));
+	if (mHPdiscardRange >= 0.0f)
+	{
+		DrawTexture(shader, mHPbar, Vector2(-350.0f, -350.0f), 1.0f, mHPdiscardRange);
+	}
 }
 
 void HUD::AddTargetComponent(TargetComponent* tc)

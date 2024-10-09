@@ -42,5 +42,9 @@ protected:
     float mRaderRadius;
 
     std::vector<class TargetComponent*> mTargetComps;
+private:
+    float mHPdiscardRange;
+public:
+    void SetHPdiscardRange(float range) { mHPdiscardRange = range; }
 };
 

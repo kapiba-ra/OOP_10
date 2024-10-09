@@ -3,10 +3,14 @@
 #include "Renderer.h"
 #include "Mesh.h"
 #include "InputSystem.h"
+
+#include "HUD.h"
+
 #include "MeshComponent.h"
 #include "MoveComponent.h"
 #include "BoxComponent.h"
 #include "FollowCamera.h"
+
 #include "PlaneActor.h" // for collision caluculation
 #include "BallActor.h"
 
@@ -17,8 +21,11 @@ FollowActor::FollowActor(Game* game)
 	, mJumpSpeed(0.0f)
 	, mShotInterval(2.0f)
 	, mLastShot(0.0f)
-	, mHP(10)
+	, mHP(100.0f)
+	, mHUD(nullptr)
 {
+	mHUD = GetGame()->GetHUD();
+
 	mMeshComp = new MeshComponent(this);
 	mMeshComp->SetMesh(game->GetRenderer()->GetMesh("Assets/Cube.gpmesh"));
 	SetPosition(Vector3(0.0f, 0.0f, -50.0f));
@@ -107,6 +114,8 @@ void FollowActor::ActorInput(const InputState& state)
 		{
 			mState = EJumping;
 			SetJumpSpeed(500.0f);
+			mHP -= 10.0f;
+			mHUD->SetHPdiscardRange(mHP / 100.0f);
 		}
 	}
 	mMoveComp->SetForwardSpeed(forwardSpeed);

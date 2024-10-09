@@ -167,7 +167,7 @@ void UIScreen::AddButton(const std::string& name, std::function<void()> onClick)
 	mNextButtonPos.y -= mButtonOff->GetHeight() + 20.0f;
 }
 
-void UIScreen::DrawTexture(Shader* shader, Texture* texture, const Vector2& offset, float scale)
+void UIScreen::DrawTexture(Shader* shader, Texture* texture, const Vector2& offset, float scale, float range)
 {
 	Matrix4 scaleMat = Matrix4::CreateScale(
 		static_cast<float>(texture->GetWidth()) * scale,
@@ -177,6 +177,7 @@ void UIScreen::DrawTexture(Shader* shader, Texture* texture, const Vector2& offs
 	Matrix4 transMat = Matrix4::CreateTranslation(Vector3(offset.x, offset.y, 0.0f));
 	Matrix4 world = scaleMat * transMat;
 	shader->SetMatrixUniform("uWorldTransform", world);
+	shader->SetFloatUniform("uDiscardRange", range);
 	texture->SetActive();
 	glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, nullptr);
 }

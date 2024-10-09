@@ -25,6 +25,8 @@ public:
 
 	float GetJumpSpeed() const { return mJumpSpeed; }
 	void SetJumpSpeed(float speed) { mJumpSpeed = speed; }
+	float GetHP() const { return mHP; }
+	void SetHP(float hp) { mHP = hp; }
 
 private:
 	State mState;
@@ -35,7 +37,8 @@ private:
 	float mShotInterval;
 	float mLastShot;
 
-	int mHP;
+	float mHP;
+	class HUD* mHUD;
 
 	class MoveComponent* mMoveComp;
 	class FollowCamera* mCameraComp;

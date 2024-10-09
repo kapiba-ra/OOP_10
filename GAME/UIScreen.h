@@ -69,7 +69,7 @@ public:
 protected:
 	// テクスチャを描画するヘルパー関数
 	void DrawTexture(class Shader* shader, class Texture* texture,
-		const Vector2& offset = Vector2::Zero, float scale = 1.0f);
+		const Vector2& offset = Vector2::Zero, float scale = 1.0f, float range = 1.0f);
 	void SetRelativeMouseMode(bool relative);
 	class Game* mGame;
 
