@@ -29,6 +29,9 @@ protected:
     // 十字線が敵を捉えているか
     bool mTargetEnemy;
 
+    // HPバーのテクスチャ
+    class Texture* mHPbar;
+
     // レーダー用のテクスチャ
     class Texture* mRader;
     class Texture* mBlipTex;

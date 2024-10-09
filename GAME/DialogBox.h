@@ -9,4 +9,3 @@ public:
         std::function<void()> onOK);
     ~DialogBox();
 };
-

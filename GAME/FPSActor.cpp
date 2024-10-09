@@ -62,59 +62,59 @@ void FPSActor::UpdateActor(float deltaTime)
 	mFPSModel->SetRotation(q);
 }
 
-void FPSActor::ActorInput(const uint8_t* keys)
-{
-	float forwardSpeed = 0.0f;
-	float strafeSpeed = 0.0f;
-
-	if (keys[SDL_SCANCODE_W])
-	{
-		forwardSpeed += 400.0f;
-	}
-	if (keys[SDL_SCANCODE_S])
-	{
-		forwardSpeed -= 400.0f;
-	}
-	if (keys[SDL_SCANCODE_A])
-	{
-		strafeSpeed -= 400.0f;
-	}
-	if (keys[SDL_SCANCODE_D])
-	{
-		strafeSpeed += 400.0f;
-	}
-
-	mMoveComp->SetForwardSpeed(forwardSpeed);
-	mMoveComp->SetStrafeSpeed(strafeSpeed);
-
-	/* マウスによる角速度の計算 */
-	// SDLから相対運動を取得
-	int x, y;
-	Uint32 buttons = SDL_GetRelativeMouseState(&x, &y);
-	const int maxMouseSpeed = 500;
-	const float maxAngularSpeed = Math::Pi * 8;
-	float angularSpeed = 0.0f;
-	if (x != 0)
-	{
-		// およそ[-1.0, 1.0]の範囲に変換
-		angularSpeed = static_cast<float>(x) / maxMouseSpeed;
-		// 最大移動量での角速度をかける
-		angularSpeed *= maxAngularSpeed;
-	}
-	mMoveComp->SetAngularSpeed(angularSpeed);
-
-	// ピッチの計算
-	const float maxPitchSpeed = Math::Pi * 8;
-	float pitchSpeed = 0.0f;
-	if (y != 0)
-	{
-		// およそ[-1.0, 1.0]の範囲に変換
-		pitchSpeed = static_cast<float>(y) / maxMouseSpeed;
-		// 最大移動量での角速度をかける
-		pitchSpeed *= maxPitchSpeed;
-	}
-	mCameraComp->SetPitchSpeed(pitchSpeed);
-}
+//void FPSActor::ActorInput(const uint8_t* keys)
+//{
+//	float forwardSpeed = 0.0f;
+//	float strafeSpeed = 0.0f;
+//
+//	if (keys[SDL_SCANCODE_W])
+//	{
+//		forwardSpeed += 400.0f;
+//	}
+//	if (keys[SDL_SCANCODE_S])
+//	{
+//		forwardSpeed -= 400.0f;
+//	}
+//	if (keys[SDL_SCANCODE_A])
+//	{
+//		strafeSpeed -= 400.0f;
+//	}
+//	if (keys[SDL_SCANCODE_D])
+//	{
+//		strafeSpeed += 400.0f;
+//	}
+//
+//	mMoveComp->SetForwardSpeed(forwardSpeed);
+//	mMoveComp->SetStrafeSpeed(strafeSpeed);
+//
+//	/* マウスによる角速度の計算 */
+//	// SDLから相対運動を取得
+//	int x, y;
+//	Uint32 buttons = SDL_GetRelativeMouseState(&x, &y);
+//	const int maxMouseSpeed = 500;
+//	const float maxAngularSpeed = Math::Pi * 8;
+//	float angularSpeed = 0.0f;
+//	if (x != 0)
+//	{
+//		// およそ[-1.0, 1.0]の範囲に変換
+//		angularSpeed = static_cast<float>(x) / maxMouseSpeed;
+//		// 最大移動量での角速度をかける
+//		angularSpeed *= maxAngularSpeed;
+//	}
+//	mMoveComp->SetAngularSpeed(angularSpeed);
+//
+//	// ピッチの計算
+//	const float maxPitchSpeed = Math::Pi * 8;
+//	float pitchSpeed = 0.0f;
+//	if (y != 0)
+//	{
+//		// およそ[-1.0, 1.0]の範囲に変換
+//		pitchSpeed = static_cast<float>(y) / maxMouseSpeed;
+//		// 最大移動量での角速度をかける
+//		pitchSpeed *= maxPitchSpeed;
+//	}
+//	mCameraComp->SetPitchSpeed(pitchSpeed);
+//}
 
 void FPSActor::Shoot()
 {

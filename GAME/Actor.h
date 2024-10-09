@@ -21,8 +21,10 @@ public:
 	virtual void UpdateActor(float deltaTime);
 	void ComputeWorldTransform();
 
-	void ProcessInput(const uint8_t* keyState);
-	virtual void ActorInput(const uint8_t* keyState);
+	//void ProcessInput(const uint8_t* keyState);
+	void ProcessInput(const struct InputState& state);
+	//virtual void ActorInput(const uint8_t* keyState);
+	virtual void ActorInput(const struct InputState& state);
 
 	void RotateToNewForward(const Vector3& forward);
 

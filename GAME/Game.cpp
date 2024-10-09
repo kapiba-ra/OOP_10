@@ -1,35 +1,41 @@
 #include "Game.h"
 #include <algorithm>
+#include <SDL/SDL.h>
+#include <SDL/SDL_ttf.h>
+#include <fstream>
+#include <sstream>
+#include <rapidjson/document.h>
 #include "Renderer.h"
 #include "AudioSystem.h"
+#include "InputSystem.h"
 #include "PhysWorld.h"
+#include "Font.h"
+
 #include "Actor.h"
 #include "FPSActor.h"
 #include "FollowActor.h"
 #include "PlaneActor.h"
 #include "BallActor.h"
 #include "TargetActor.h"
+
 #include "MeshComponent.h"
 #include "SpriteComponent.h"
-#include "Font.h"
+
 #include "UIScreen.h"
 #include "HUD.h"
 #include "PauseMenu.h"
 #include "MainMenu.h"
-#include <SDL/SDL.h>
-#include <SDL/SDL_ttf.h>
-#include <fstream>
-#include <sstream>
-#include <rapidjson/document.h>
+
 
 Game::Game()
 	: mRenderer(nullptr)
 	, mAudioSystem(nullptr)
 	, mPhysWorld(nullptr)
+	, mInputSystem(nullptr)
 	, mIsRunning(true)
 	, mUpdatingActors(false)
 	, mCrosshair(nullptr)
-	, mFPSActor(nullptr)
+	, mFollowActor(nullptr)
 	, mHUD(nullptr)
 	, mGameState(Game::EMainMenu)
 	, mTicksCount(0)
@@ -42,6 +48,14 @@ bool Game::Initialize()
 	if (SDL_Init(SDL_INIT_VIDEO | SDL_INIT_AUDIO) != 0)
 	{
 		SDL_Log("SDL初期化失敗: %s", SDL_GetError());
+		return false;
+	}
+
+	// InputSystemの作成と初期化
+	mInputSystem = new InputSystem();
+	if (!mInputSystem->Initialize())
+	{
+		SDL_Log("入力システム初期化失敗");
 		return false;
 	}
 
@@ -179,6 +193,7 @@ void Game::RunLoop()
 
 void Game::ProcessInput()
 {
+	mInputSystem->PrepareForUpdate();
 	SDL_Event event;
 	while (SDL_PollEvent(&event)) // イベントの状態を取得
 	{
@@ -216,7 +231,10 @@ void Game::ProcessInput()
 		}
 	}
 
-	const Uint8* state = SDL_GetKeyboardState(NULL);
+	mInputSystem->Update();
+
+	const InputState& state = mInputSystem->GetState();
+	//const Uint8* state = SDL_GetKeyboardState(NULL);
 	if (mGameState == EGameplay)
 	{
 		for (auto actor : mActors)
@@ -412,6 +430,7 @@ void Game::Shutdown()
 	{
 		mAudioSystem->Shutdown();
 	}
+	delete mInputSystem;
 	SDL_Quit();
 }
 

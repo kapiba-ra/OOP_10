@@ -62,7 +62,35 @@ void UIScreen::Draw(Shader* shader)
 	}
 }
 
-void UIScreen::ProcessInput(const uint8_t* keys)
+//void UIScreen::ProcessInput(const uint8_t* keys)
+//{
+//	// ボタンがあるならば
+//	if (!mButtons.empty())
+//	{
+//		// マウスの位置
+//		int x, y;
+//		SDL_GetMouseState(&x, &y);	// (画面左上が原点の座標系)
+//		// (0, 0)中心で1024×768の座標に変換する
+//		Vector2 mousePos(static_cast<float>(x), static_cast<float>(y));
+//		mousePos.x -= mGame->GetRenderer()->GetScreenWidth() * 0.5f;
+//		mousePos.y = mGame->GetRenderer()->GetScreenHeight() * 0.5f - mousePos.y;
+//
+//		// ボタンを強調する
+//		for (auto b : mButtons)
+//		{
+//			if (b->ContainPoint(mousePos))
+//			{
+//				b->SetHighlighted(true);
+//			}
+//			else
+//			{
+//				b->SetHighlighted(false);
+//			}
+//		}
+//	}
+//}
+
+void UIScreen::ProcessInput(const InputState& state)
 {
 	// ボタンがあるならば
 	if (!mButtons.empty())

@@ -28,6 +28,9 @@
     <Filter Include="manager\renderer\shader">
       <UniqueIdentifier>{3aaa07c0-d061-46a3-8418-77a0152af777}</UniqueIdentifier>
     </Filter>
+    <Filter Include="manager\collision">
+      <UniqueIdentifier>{f7f55b78-e753-4cd0-a5e2-ae3523a9e969}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp">
@@ -72,9 +75,6 @@
     <ClCompile Include="Actor.cpp">
       <Filter>actor</Filter>
     </ClCompile>
-    <ClCompile Include="Collision.cpp">
-      <Filter>math</Filter>
-    </ClCompile>
     <ClCompile Include="BoxComponent.cpp">
       <Filter>component</Filter>
     </ClCompile>
@@ -95,9 +95,6 @@
     </ClCompile>
     <ClCompile Include="HUD.cpp">
       <Filter>manager\ui</Filter>
-    </ClCompile>
-    <ClCompile Include="PhysWorld.cpp">
-      <Filter>manager</Filter>
     </ClCompile>
     <ClCompile Include="PauseMenu.cpp">
       <Filter>manager\ui</Filter>
@@ -134,6 +131,15 @@
     </ClCompile>
     <ClCompile Include="FollowCamera.cpp">
       <Filter>component\camera</Filter>
+    </ClCompile>
+    <ClCompile Include="PhysWorld.cpp">
+      <Filter>manager\collision</Filter>
+    </ClCompile>
+    <ClCompile Include="Collision.cpp">
+      <Filter>manager\collision</Filter>
+    </ClCompile>
+    <ClCompile Include="InputSystem.cpp">
+      <Filter>manager</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -176,9 +182,6 @@
     <ClInclude Include="FPSActor.h">
       <Filter>actor</Filter>
     </ClInclude>
-    <ClInclude Include="Collision.h">
-      <Filter>math</Filter>
-    </ClInclude>
     <ClInclude Include="BoxComponent.h">
       <Filter>component</Filter>
     </ClInclude>
@@ -196,9 +199,6 @@
     </ClInclude>
     <ClInclude Include="HUD.h">
       <Filter>manager\ui</Filter>
-    </ClInclude>
-    <ClInclude Include="PhysWorld.h">
-      <Filter>manager</Filter>
     </ClInclude>
     <ClInclude Include="PauseMenu.h">
       <Filter>manager\ui</Filter>
@@ -238,6 +238,15 @@
     </ClInclude>
     <ClInclude Include="FollowCamera.h">
       <Filter>component\camera</Filter>
+    </ClInclude>
+    <ClInclude Include="PhysWorld.h">
+      <Filter>manager\collision</Filter>
+    </ClInclude>
+    <ClInclude Include="Collision.h">
+      <Filter>manager\collision</Filter>
+    </ClInclude>
+    <ClInclude Include="InputSystem.h">
+      <Filter>manager</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

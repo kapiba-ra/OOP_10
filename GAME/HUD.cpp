@@ -19,6 +19,7 @@ HUD::HUD(Game* game)
 	mCrosshair = r->GetTexture("Assets/Crosshair.png");
 	mCrosshairEnemy = r->GetTexture("Assets/CrosshairRed.png");
 	mBlipTex = r->GetTexture("Assets/Blip.png");
+	mHPbar = r->GetTexture("Assets/HealthBar.png");
 }
 
 HUD::~HUD()
@@ -41,12 +42,14 @@ void HUD::Draw(Shader* shader)
 	// レーダーの描画
 	const Vector2 cRaderPos(-390.0f, 275.0f);
 	DrawTexture(shader, mRader, cRaderPos, 1.0f);
-
-	// 輝点の描画
+	// レーダー上の輝点の描画
 	for (const Vector2& blip : mBlips)
 	{
 		DrawTexture(shader, mBlipTex, cRaderPos + blip, 1.0f);
 	}
+
+	// HPバーの描画
+	DrawTexture(shader, mHPbar, Vector2(-350.0f, -350.0f));
 }
 
 void HUD::AddTargetComponent(TargetComponent* tc)

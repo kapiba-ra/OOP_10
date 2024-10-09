@@ -64,8 +64,8 @@ struct AABB
 	bool Contains(const Vector3& point) const;
 	float MinDistSq(const Vector3& point) const;
 
-	Vector3 mMin;	// 最大点(最大のx,y,zを持つ点)
-	Vector3 mMax;	// 最小点(最小のx,y,zを持つ点)
+	Vector3 mMin;	// 最小点(最小のx,y,zを持つ点)
+	Vector3 mMax;	// 最大点(最大のx,y,zを持つ点)
 };
 
 // oriented bounding box 有向バウンディングボックス

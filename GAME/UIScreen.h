@@ -47,7 +47,8 @@ public:
 	// UIScreen‚Ì”h¶ƒNƒ‰ƒX‚ÍˆÈ‰º‚ğoverride‚Å‚«‚é
 	virtual void Update(float deltaTime);
 	virtual void Draw(class Shader* shader);
-	virtual void ProcessInput(const uint8_t* keys);
+	//virtual void ProcessInput(const uint8_t* keys);
+	virtual void ProcessInput(const struct InputState& state);
 	virtual void HandleKeyPress(int key);
 
 	// ó‘ÔŠÇ—

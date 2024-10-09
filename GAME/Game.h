@@ -74,6 +74,7 @@ private:
 	class Renderer* mRenderer;
 	class AudioSystem* mAudioSystem;
 	class PhysWorld* mPhysWorld;
+	class InputSystem* mInputSystem;
 	class HUD* mHUD;
 
 	Uint32 mTicksCount;
@@ -83,7 +84,7 @@ private:
 	GameState mGameState;
 	SoundEvent mMusicEvent;
 	std::vector<class PlaneActor*> mPlanes;
-	class FPSActor* mFPSActor;
+	//class FPSActor* mFPSActor;
 	class FollowActor* mFollowActor;
 	class SpriteComponent* mCrosshair;
 };

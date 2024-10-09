@@ -7,7 +7,8 @@ class FollowActor :
 public:
 	FollowActor(class Game* game);
 
-	void ActorInput(const uint8_t* keys) override;
+	//void ActorInput(const uint8_t* keys) override;
+	void ActorInput(const struct InputState& state) override;
 	void UpdateActor(float deltaTime) override;
 	
 	enum State
@@ -26,10 +27,16 @@ public:
 	void SetJumpSpeed(float speed) { mJumpSpeed = speed; }
 
 private:
-	void Jump(float deltaTime);
 	State mState;
+
+	void Jump(float deltaTime);
 	float mJumpSpeed;
-	
+	void AutoShoot(float deltaTime);
+	float mShotInterval;
+	float mLastShot;
+
+	int mHP;
+
 	class MoveComponent* mMoveComp;
 	class FollowCamera* mCameraComp;
 	class MeshComponent* mMeshComp;

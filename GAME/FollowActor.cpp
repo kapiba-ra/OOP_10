@@ -1,19 +1,23 @@
 #include "FollowActor.h"
+#include "Game.h"
+#include "Renderer.h"
+#include "Mesh.h"
+#include "InputSystem.h"
 #include "MeshComponent.h"
 #include "MoveComponent.h"
 #include "BoxComponent.h"
 #include "FollowCamera.h"
-#include "Game.h"
-#include "Renderer.h"
-#include "Mesh.h"
-// for collision caluculation
-#include "PlaneActor.h"
+#include "PlaneActor.h" // for collision caluculation
+#include "BallActor.h"
 
 FollowActor::FollowActor(Game* game)
 	: Actor(game)
 	, mBoxComp(nullptr)
 	, mState(EOnFloor)
 	, mJumpSpeed(0.0f)
+	, mShotInterval(2.0f)
+	, mLastShot(0.0f)
+	, mHP(10)
 {
 	mMeshComp = new MeshComponent(this);
 	mMeshComp->SetMesh(game->GetRenderer()->GetMesh("Assets/Cube.gpmesh"));
@@ -25,34 +29,79 @@ FollowActor::FollowActor(Game* game)
 	mCameraComp->SnapToIdeal();
 	
 	mBoxComp = new BoxComponent(this);
-	AABB myBox(Vector3(-0.5f, -0.5f, -0.5f), Vector3(0.5f,0.5f,0.5f));
+	AABB myBox(Vector3(-0.5f, -0.5f, -0.5f), Vector3(0.5f, 0.5f, 0.5f));
 	mBoxComp->SetObjectBox(myBox);
 	mBoxComp->SetShouldRotate(false);
 }
 
-void FollowActor::ActorInput(const uint8_t* keys)
+//void FollowActor::ActorInput(const uint8_t* keys)
+//{
+//	float forwardSpeed = 0.0f;	// 前進速度
+//	float angularSpeed = 0.0f;	// 回転速度
+//	// 前後と回転の移動
+//	if (keys[SDL_SCANCODE_W])
+//	{
+//		forwardSpeed += 400.0f;
+//	}
+//	if (keys[SDL_SCANCODE_S])
+//	{
+//		forwardSpeed -= 400.0f;
+//	}
+//	if (keys[SDL_SCANCODE_A])
+//	{
+//		angularSpeed -= Math::Pi;
+//	}
+//	if (keys[SDL_SCANCODE_D])
+//	{
+//		angularSpeed += Math::Pi;
+//	}
+//	// ジャンプ
+//	if (keys[SDL_SCANCODE_SPACE])
+//	{
+//		if (mState == EOnFloor)
+//		{
+//			mState = EJumping;
+//			SetJumpSpeed(500.0f);
+//		}
+//	}
+//	mMoveComp->SetForwardSpeed(forwardSpeed);
+//	mMoveComp->SetAngularSpeed(angularSpeed);
+//
+//	/* カメラの設定 */
+//	// スピードによって水平距離を変えてスピード感を出す
+//	if (!Math::NearZero(forwardSpeed))
+//	{
+//		mCameraComp->SetHorzDist(500.0f);
+//	}
+//	else
+//	{
+//		mCameraComp->SetHorzDist(350.0f);
+//	}
+//}
+
+void FollowActor::ActorInput(const InputState& state)
 {
 	float forwardSpeed = 0.0f;	// 前進速度
 	float angularSpeed = 0.0f;	// 回転速度
 	// 前後と回転の移動
-	if (keys[SDL_SCANCODE_W])
+	if (state.Keyboard.GetKeyValue(SDL_SCANCODE_W))
 	{
 		forwardSpeed += 400.0f;
 	}
-	if (keys[SDL_SCANCODE_S])
+	if (state.Keyboard.GetKeyValue(SDL_SCANCODE_S))
 	{
 		forwardSpeed -= 400.0f;
 	}
-	if (keys[SDL_SCANCODE_A])
+	if (state.Keyboard.GetKeyValue(SDL_SCANCODE_A))
 	{
 		angularSpeed -= Math::Pi;
 	}
-	if (keys[SDL_SCANCODE_D])
+	if (state.Keyboard.GetKeyValue(SDL_SCANCODE_D))
 	{
 		angularSpeed += Math::Pi;
 	}
 	// ジャンプ
-	if (keys[SDL_SCANCODE_SPACE])
+	if (state.Keyboard.GetKeyValue(SDL_SCANCODE_SPACE))
 	{
 		if (mState == EOnFloor)
 		{
@@ -81,6 +130,7 @@ void FollowActor::UpdateActor(float deltaTime)
 
 	FixCollisions();
 	Jump(deltaTime);
+	AutoShoot(deltaTime);
 }
 
 void FollowActor::FixCollisions()
@@ -175,5 +225,24 @@ void FollowActor::Jump(float deltaTime)
 		mJumpSpeed -= 1000.0f * deltaTime;
 
 		SetPosition(pos);
+	}
+}
+
+void FollowActor::AutoShoot(float deltaTime)
+{
+	mLastShot += deltaTime;
+	if (mLastShot > mShotInterval)
+	{
+		mLastShot -= mShotInterval;
+		/* 球の位置、方向を決める 関数化した */
+		Vector3 start = GetPosition();
+		Vector3 dir = GetForward();
+		// 球を作成して色々設定
+		BallActor* ball = new BallActor(GetGame());
+		ball->SetPlayer(this);
+		ball->SetPosition(start + dir * 50.0f);
+		ball->RotateToNewForward(dir);
+		//// サウンド
+		//mAudioComp->PlayEvent("event:/Shot");
 	}
 }
