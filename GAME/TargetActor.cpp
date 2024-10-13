@@ -7,7 +7,7 @@
 #include "TargetComponent.h"
 
 TargetActor::TargetActor(Game* game)
-	: Actor(game)
+	: Actor(game, Type::Etarget)
 {
 	SetRotation(Quaternion(Vector3::UnitZ, Math::Pi));
 	MeshComponent* mc = new MeshComponent(this);

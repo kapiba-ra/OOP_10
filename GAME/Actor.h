@@ -6,14 +6,25 @@
 class Actor
 {
 public:
+	// ‹£‡‚µ‚È‚¢‚æ‚¤‚É’ˆÓ(‚µ‚»‚¤‚È‚çenum class‚É‚·‚é)
+	// E‚Ì‚ ‚Æ¬•¶šor‘å•¶š‚Åˆê‰•ª‚¯‚Ä‚¢‚é
 	enum State
 	{
 		EActive,
 		EPaused,
 		EDead
 	};
+	enum Type
+	{
+		Enone,
+		Eplane,
+		Eplayer,
+		Eenemy,
+		Etarget,
+		Eball
+	};
 
-	Actor(class Game* game);
+	Actor(class Game* game, Type type = Type::Enone);
 	virtual ~Actor();
 
 	void Update(float deltaTime);
@@ -36,6 +47,7 @@ public:
 	float GetScale() const { return mScale; }
 	// Others
 	State GetState() const { return mState; }
+	Type GetType() const { return mType; }
 	class Game* GetGame() { return mGame; }
 	Vector3 GetForward() const { return Vector3::Transform(Vector3::UnitX, mRotation); }
 	Vector3 GetRight() const { return Vector3::Transform(Vector3::UnitY, mRotation); }
@@ -52,6 +64,7 @@ public:
 
 private:
 	State mState;
+	Type mType;
 
 	// Transform
 	Matrix4 mWorldTransform;

@@ -71,7 +71,7 @@ Texture* Font::RenderText(const std::string& textKey, const Vector3& color, int 
 		SDL_Surface* surf = TTF_RenderUTF8_Blended(font, actualText.c_str(), sdlColor);
 		if (surf != nullptr)
 		{
-			// SDL_Surface‚©‚çTexture‚Ö‚Ì•ÏŠ·
+			// SDL_Surface‚©‚çTexture‚Ö‚Ì•ÏŠ·,OpenGL‚ª’¼Úˆµ‚¦‚é‚æ‚¤‚É
 			texture = new Texture();
 			texture->CreateFromSurface(surf);
 			SDL_FreeSurface(surf);

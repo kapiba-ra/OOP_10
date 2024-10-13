@@ -4,12 +4,14 @@
 #include <SDL/SDL_ttf.h>
 #include <fstream>
 #include <sstream>
+#include <utility> // for 'pair'
 #include <rapidjson/document.h>
 #include "Renderer.h"
 #include "AudioSystem.h"
 #include "InputSystem.h"
 #include "PhysWorld.h"
 #include "Font.h"
+#include "AStar.h"
 
 #include "Actor.h"
 #include "FPSActor.h"
@@ -17,6 +19,7 @@
 #include "PlaneActor.h"
 #include "BallActor.h"
 #include "TargetActor.h"
+#include "EnemyActor.h"
 
 #include "MeshComponent.h"
 #include "SpriteComponent.h"
@@ -34,11 +37,11 @@ Game::Game()
 	, mInputSystem(nullptr)
 	, mIsRunning(true)
 	, mUpdatingActors(false)
-	, mCrosshair(nullptr)
 	, mFollowActor(nullptr)
 	, mHUD(nullptr)
 	, mGameState(Game::EMainMenu)
 	, mTicksCount(0)
+	, mGraph(nullptr)
 {
 }
 
@@ -105,12 +108,12 @@ void Game::LoadData()
 	Quaternion q;
 	
 	/* ----- Create actors ----- */
-	// 床(3250×3250)
-	const float start = -1250.0f;
-	const float size = 250.0f;	// 縦横1000×1000のアクターなので結構重ねることになる
-	for (int i = 0; i < 10; i++)
+	// 床(5000×5000)
+	const float start = -2000.0f;
+	const float size = 1000.0f;
+	for (int i = 0; i < 5; i++)
 	{
-		for (int j = 0; j < 10; j++)
+		for (int j = 0; j < 5; j++)
 		{
 			actor = new PlaneActor(this);
 			actor->SetPosition(Vector3(start + i * size, start + j * size, -100.0f));
@@ -119,7 +122,7 @@ void Game::LoadData()
 
 	// 壁
 	q = Quaternion(Vector3::UnitX, Math::PiOver2); // X軸は前方であることに注意
-	for (int i = 0; i < 10; i++)
+	for (int i = 0; i < 5; i++)
 	{
 		// 左
 		//actor = new PlaneActor(this);
@@ -127,21 +130,37 @@ void Game::LoadData()
 		//actor->SetRotation(q);
 		// 右
 		actor = new PlaneActor(this);
-		actor->SetPosition(Vector3(start + i * size, -start + size, 0.0f));
+		actor->SetPosition(Vector3(start + i * size, -2500.0f, 0.0f));
 		actor->SetRotation(q);
 	}
+	// ステージ上の通れないところ(壁)
+	// TODO: 壁四枚でなくオブジェクト１個にしたい
+	actor = new PlaneActor(this);
+	actor->SetPosition(Vector3(1500.0f, 0.0f, 0.0f));
+	actor->SetRotation(q);
+	actor = new PlaneActor(this);
+	actor->SetPosition(Vector3(1500.0f, 1000.0f, 0.0f));
+	actor->SetRotation(q);
+
 	q = Quaternion::Concatenate(q, Quaternion(Vector3::UnitZ, Math::PiOver2));
-	for (int i = 0; i < 10; i++)
+	for (int i = 0; i < 5; i++)
 	{
 		// 後
 		actor = new PlaneActor(this);
-		actor->SetPosition(Vector3(start - size, start + i * size, 0.0f));
+		actor->SetPosition(Vector3(-2500.0f, start + i * size, 0.0f));
 		actor->SetRotation(q);
 		// 前
 		actor = new PlaneActor(this);
-		actor->SetPosition(Vector3(-start + size, start + i * size, 0.0f));
+		actor->SetPosition(Vector3(2500.0f, start + i * size, 0.0f));
 		actor->SetRotation(q);
 	}
+	actor = new PlaneActor(this);
+	actor->SetPosition(Vector3(1000.0f, 500.0f, 0.0f));
+	actor->SetRotation(q);
+	actor = new PlaneActor(this);
+	actor->SetPosition(Vector3(2000.0f, 500.0f, 0.0f));
+	actor->SetRotation(q);
+
 
 	// Setup lights
 	mRenderer->SetAmbientLight(Vector3(0.7f, 0.7f, 0.7f));
@@ -164,6 +183,10 @@ void Game::LoadData()
 	//mFPSActor = new FPSActor(this);
 	mFollowActor = new FollowActor(this);
 
+	// Enemy
+	actor = new EnemyActor(this);
+	CreateNodes();
+	
 	// ターゲット
 	actor = new TargetActor(this);
 	actor->SetPosition(Vector3(1450.0f, 0.0f, 100.0f));
@@ -417,6 +440,10 @@ void Game::OnChangeState(GameState newState, GameState oldState)
 	{
 		LoadData();
 	}
+	else if (newState == EGameover)
+	{
+		new PauseMenu(this);
+	}
 }
 
 void Game::Shutdown()
@@ -431,6 +458,18 @@ void Game::Shutdown()
 		mAudioSystem->Shutdown();
 	}
 	delete mInputSystem;
+
+	if (mGraph) {
+		for (WeightedGraphNode* node : mGraph->mNodes) {
+			// 各ノードのエッジを解放
+			for (WeightedEdge* edge : node->mEdges) {
+				delete edge; // エッジのメモリを解放
+			}
+			delete node; // ノードのメモリを解放
+		}
+		delete mGraph; // グラフ自体のメモリを解放
+	}
+
 	SDL_Quit();
 }
 
@@ -550,5 +589,76 @@ const std::string& Game::GetText(const std::string& key)
 	else
 	{
 		return errorMsg;
+	}
+}
+
+void Game::CreateNodes()
+{
+	// グラフには全てのノードの情報が入る
+	// 各ノードにはエッジの他に、x,y座標とNodeTypeという列挙型変数を持たせた
+	mGraph = new WeightedGraph;
+
+	// まずはグラフにノードを追加して、x,y座標を設定する。
+	for (int i = 0; i < 10; ++i)
+	{
+		for (int j = 0; j < 10; ++j)
+		{
+			// -2500.0fはステージの正方形(5000×5000)の半分
+			float centerX = -2500.0f + (i * 500.0f) + 250.0f;
+			float centerY = -2500.0f + (j * 500.0f) + 250.0f;
+
+			// TODO: deleteどこでやるのか問題
+			WeightedGraphNode* node = new WeightedGraphNode();
+			node->NodePos.x = centerX;
+			node->NodePos.y = centerY;
+			mGraph->mNodes.push_back(node);
+
+			// 壁の内側のノード。ここはハードコーディングで、NodeTypeを設定する
+			// この判定をずっとやるのがしんどいのでNodeTypeを持たせた
+			if ((centerX == 1250.0f && centerY == 250.0f) ||
+				(centerX == 1250.0f && centerY == 750.0f) ||
+				(centerX == 1750.0f && centerY == 250.0f) ||
+				(centerX == 1750.0f && centerY == 750.0f)
+				)
+			{
+				node->type = NodeType::ENoAccess;
+			}
+		}
+	}
+	// ここまでで100個のノードのxy座標・NodeTypeを設定し終えた
+
+	// ノードのエッジを設定する
+	for (int i = 0; i < 100; ++i)
+	{
+		WeightedGraphNode* node = mGraph->mNodes[i];
+		
+		// ワールドでx座標は正面,y座標は右側に伸びてることに注意
+		int curNodeX = i / 10;
+		int curNodeY = i % 10;
+		
+		// 前後左右のノードをつなぐのに便利
+		std::vector<std::pair<int, int>> directions = {
+			{1, 0},  // 前
+			{-1, 0}, // 後
+			{0, -1}, // 左
+			{0, 1}   // 右
+		};
+
+		for (const auto& dir : directions)
+		{
+			int neighborX = curNodeX + dir.first;
+			int neighborY = curNodeY + dir.second;
+			
+			if (0 <= neighborX && neighborX < 10 && 0 <= neighborY && neighborY < 10)
+			{
+				int neighborIndex = neighborX * 10 + neighborY;
+				WeightedGraphNode* neighborNode = mGraph->mNodes[neighborIndex];
+				if (neighborNode->type != NodeType::ENoAccess)
+				{
+					WeightedEdge* edge = new WeightedEdge{ node, neighborNode };
+					node->mEdges.push_back(edge);
+				}
+			}
+		}
 	}
 }

@@ -28,6 +28,7 @@ PauseMenu::PauseMenu(Game* game)
 
 PauseMenu::~PauseMenu()
 {
+	SetRelativeMouseMode(true); 
 }
 
 void PauseMenu::HandleKeyPress(int key)
@@ -36,7 +37,7 @@ void PauseMenu::HandleKeyPress(int key)
 	if (key == SDLK_ESCAPE)
 	{
 		Close();
-		SetRelativeMouseMode(true); 
+		//SetRelativeMouseMode(true); 
 		mGame->SetState(Game::EGameplay);
 	}
 }

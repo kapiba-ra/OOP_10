@@ -23,10 +23,14 @@ public:
 	// 2つのAABBの最小の重なりテストを行う
 	void FixCollisions();
 
+	void TakeDamage(float amount);
+
 	float GetJumpSpeed() const { return mJumpSpeed; }
 	void SetJumpSpeed(float speed) { mJumpSpeed = speed; }
 	float GetHP() const { return mHP; }
 	void SetHP(float hp) { mHP = hp; }
+	class BoxComponent* GetBox() { return mBoxComp; }
+
 
 private:
 	State mState;

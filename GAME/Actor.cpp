@@ -4,8 +4,9 @@
 #include <algorithm>
 
 
-Actor::Actor(Game* game)
+Actor::Actor(Game* game, Type type)
 	: mState(EActive)
+	, mType(type)
 	, mPosition(Vector3::Zero)
 	, mRotation(Quaternion::Identity)
 	, mScale(1.0f)

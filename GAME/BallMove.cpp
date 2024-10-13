@@ -29,14 +29,26 @@ void BallMove::Update(float deltaTime)
 		// 衝突したら法線の向きで方向を反射させる
 		dir = Vector3::Reflect(dir, info.mNormal);
 		mOwner->RotateToNewForward(dir);
-		// ターゲットにヒットしたか
-		TargetActor* target = dynamic_cast<TargetActor*>(info.mActor);
-		if (target)
+		/* ターゲットにヒットしたか */
+		//info.mActor->GetType() == Actor::Type::Etarget;
+		//TargetActor* target = dynamic_cast<TargetActor*>(info.mActor);
+		//if (target)
+		//{
+		//	static_cast<BallActor*>(mOwner)->HitTarget();
+		//}
+		if (info.mActor->GetType() == Actor::Type::Eenemy)
 		{
-			static_cast<BallActor*>(mOwner)->HitTarget();
+			mOwner->SetState(Actor::State::EDead); // erase ball
+			static_cast<BallActor*>(mOwner)->HitTarget(info.mActor);
 		}
 	}
 
 	// 基底クラスで動きを更新する
 	MoveComponent::Update(deltaTime);
 }
+
+// SegmentCastは線分とワールドの全てのボックスとのテストを行う
+// 元の設計では当たったボックスの持ち主を知るために,
+// info.mActorを派生クラスのポインタにdynamic_castしていた。
+// ただ,RTTIに依存せずに設計するように,基底クラスに派生クラスの情報を
+// Typeとして持たせ,Typeから判断できるようにした。

@@ -4,7 +4,7 @@
 #include "PhysWorld.h"
 #include "Texture.h"
 #include "Actor.h"
-#include "FPSActor.h"
+//#include "FPSActor.h"
 #include "FollowActor.h"
 #include "TargetComponent.h"
 
@@ -32,6 +32,7 @@ void HUD::Update(float deltaTime)
 	UIScreen::Update(deltaTime);
 	UpdateCrosshair(deltaTime);
 	UpdateRadar(deltaTime);
+	// UpdateTimer(deltaTime);
 }
 
 void HUD::Draw(Shader* shader)
@@ -53,6 +54,19 @@ void HUD::Draw(Shader* shader)
 	if (mHPdiscardRange >= 0.0f)
 	{
 		DrawTexture(shader, mHPbar, Vector2(-350.0f, -350.0f), 1.0f, mHPdiscardRange);
+	}
+
+	// HPの描画
+	Vector2 NumPos(-460.0f, -315.0f);
+	Vector2 offset(20.0f, 0.0f);
+	std::string hp = std::to_string(static_cast<int>(mGame->GetPlayer()->GetHP()));
+	for (size_t i = 0;i < hp.length(); i++)
+	{
+		int digitIndex = hp[i] - '0';
+		if (0 <= digitIndex && digitIndex <= 9) //一応範囲外アクセスしないように
+		{
+			DrawTexture(shader, mNumbers[digitIndex], NumPos + offset * static_cast<float>(i));
+		}
 	}
 }
 

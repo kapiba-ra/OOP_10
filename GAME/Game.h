@@ -22,6 +22,7 @@ public:
 	class PhysWorld* GetPhysWorld() { return mPhysWorld; }
 	class HUD* GetHUD() { return mHUD; }
 	class FollowActor* GetPlayer() { return mFollowActor; }
+	struct WeightedGraph* GetGraph() { return mGraph; }
 
 	void AddPlane(class PlaneActor* plane);
 	void RemovePlane(class PlaneActor* plane);
@@ -86,6 +87,9 @@ private:
 	std::vector<class PlaneActor*> mPlanes;
 	//class FPSActor* mFPSActor;
 	class FollowActor* mFollowActor;
-	class SpriteComponent* mCrosshair;
+
+	// ステージからノードを作りエッジをつなぐ
+	void CreateNodes();
+	struct WeightedGraph* mGraph;
 };
 

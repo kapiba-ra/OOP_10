@@ -19,6 +19,11 @@ UIScreen::UIScreen(Game* game)
 	mFont = mGame->GetFont("Assets/Carlito-Regular.ttf");
 	mButtonOn = mGame->GetRenderer()->GetTexture("Assets/ButtonYellow.png");
 	mButtonOff = mGame->GetRenderer()->GetTexture("Assets/ButtonBlue.png");
+
+	for (int i = 0; i < 10; i++)
+	{
+		mNumbers[i] = mGame->GetRenderer()->GetTexture("Assets/Numbers/" + std::to_string(i) + ".png");
+	}
 }
 
 UIScreen::~UIScreen()
@@ -177,7 +182,7 @@ void UIScreen::DrawTexture(Shader* shader, Texture* texture, const Vector2& offs
 	Matrix4 transMat = Matrix4::CreateTranslation(Vector3(offset.x, offset.y, 0.0f));
 	Matrix4 world = scaleMat * transMat;
 	shader->SetMatrixUniform("uWorldTransform", world);
-	shader->SetFloatUniform("uDiscardRange", range);
+	shader->SetFloatUniform("uDiscardRange", range); // xŽ²•ûŒü‚Ì•`‰æ”ÍˆÍ‚ð§ŒÀ‚Å‚«‚é(hp‚Ìˆ×‚É—pˆÓ‚µ‚½)
 	texture->SetActive();
 	glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, nullptr);
 }

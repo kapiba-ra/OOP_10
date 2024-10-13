@@ -168,15 +168,19 @@ xcopy "C:\Program Files (x86)\FMOD SoundSystem\FMOD Studio API Windows\api\studi
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="Actor.cpp" />
+    <ClCompile Include="AStar.cpp" />
+    <ClCompile Include="AttackComponent.cpp" />
     <ClCompile Include="AudioComponent.cpp" />
     <ClCompile Include="AudioSystem.cpp" />
     <ClCompile Include="BallActor.cpp" />
     <ClCompile Include="BallMove.cpp" />
     <ClCompile Include="BoxComponent.cpp" />
     <ClCompile Include="CameraComponent.cpp" />
+    <ClCompile Include="ChaseMove.cpp" />
     <ClCompile Include="Collision.cpp" />
     <ClCompile Include="Component.cpp" />
     <ClCompile Include="DialogBox.cpp" />
+    <ClCompile Include="EnemyActor.cpp" />
     <ClCompile Include="FollowActor.cpp" />
     <ClCompile Include="FollowCamera.cpp" />
     <ClCompile Include="Font.cpp" />
@@ -195,6 +199,7 @@ xcopy "C:\Program Files (x86)\FMOD SoundSystem\FMOD Studio API Windows\api\studi
     <ClCompile Include="PhysWorld.cpp" />
     <ClCompile Include="PlaneActor.cpp" />
     <ClCompile Include="Renderer.cpp" />
+    <ClInclude Include="AStar.h" />
     <ClCompile Include="Shader.cpp" />
     <ClCompile Include="SoundEvent.cpp" />
     <ClCompile Include="SpriteComponent.cpp" />
@@ -206,15 +211,18 @@ xcopy "C:\Program Files (x86)\FMOD SoundSystem\FMOD Studio API Windows\api\studi
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Actor.h" />
+    <ClInclude Include="AttackComponent.h" />
     <ClInclude Include="AudioComponent.h" />
     <ClInclude Include="AudioSystem.h" />
     <ClInclude Include="BallActor.h" />
     <ClInclude Include="BallMove.h" />
     <ClInclude Include="BoxComponent.h" />
     <ClInclude Include="CameraComponent.h" />
+    <ClInclude Include="ChaseMove.h" />
     <ClInclude Include="Collision.h" />
     <ClInclude Include="Component.h" />
     <ClInclude Include="DialogBox.h" />
+    <ClInclude Include="EnemyActor.h" />
     <ClInclude Include="FollowActor.h" />
     <ClInclude Include="FollowCamera.h" />
     <ClInclude Include="Font.h" />

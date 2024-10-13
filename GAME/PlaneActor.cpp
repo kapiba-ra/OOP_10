@@ -6,7 +6,7 @@
 #include "BoxComponent.h"
 
 PlaneActor::PlaneActor(Game* game)
-	: Actor(game)
+	: Actor(game, Type::Eplane)
 {
 	SetScale(10.0f); // ècâ°1000ÇÃí∑Ç≥Ç…Ç»Ç¡ÇƒÇÈÇÕÇ∏
 	

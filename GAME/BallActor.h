@@ -14,11 +14,12 @@ public:
     void UpdateActor(float deltaTime) override;
     void SetPlayer(Actor* player);
 
-    void HitTarget();
+    void HitTarget(Actor* target);
 
 private:
     class AudioComponent* mAudioComp;
     class BallMove* mMyMove;
+    class AttackComponent* mAttackComp;
     float mLifeSpan;
 };
 

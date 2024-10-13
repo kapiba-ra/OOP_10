@@ -4,6 +4,7 @@
 #include <string>
 #include <functional>
 #include <vector>
+#include <array>
 
 class Button
 {
@@ -79,12 +80,15 @@ protected:
 	class Texture* mButtonOff;
 	class Texture* mBackground;
 	
+	// 数字はよく使いそうなので,基底クラスでロードしちゃう
+	std::array<Texture*,10> mNumbers;
+
 	std::vector<Button*> mButtons;
 	// 1024×768,中心(0,0)の座標で指定
 	Vector2 mTitlePos;
 	Vector2 mNextButtonPos;
 	Vector2 mBGPos;
+	Vector2 mNumPos;
 
 	UIState mState;
 };
-
