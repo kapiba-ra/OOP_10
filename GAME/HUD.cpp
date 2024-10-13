@@ -14,6 +14,8 @@ HUD::HUD(Game* game)
 	, mRaderRadius(92.0f)
 	, mTargetEnemy(false)
 	, mHPdiscardRange(1.0f)
+	, mTimeInt(0)
+	, mTimeFloat(0.0f)
 {
 	Renderer* r = mGame->GetRenderer();
 	mRader = r->GetTexture("Assets/Radar.png");
@@ -32,7 +34,7 @@ void HUD::Update(float deltaTime)
 	UIScreen::Update(deltaTime);
 	UpdateCrosshair(deltaTime);
 	UpdateRadar(deltaTime);
-	// UpdateTimer(deltaTime);
+	UpdateTimer(deltaTime);
 }
 
 void HUD::Draw(Shader* shader)
@@ -68,6 +70,15 @@ void HUD::Draw(Shader* shader)
 			DrawTexture(shader, mNumbers[digitIndex], NumPos + offset * static_cast<float>(i));
 		}
 	}
+
+	NumPos = Vector2(-20.0f, 340.0f);
+	offset = Vector2(40.0f, 0.0f);
+	float scale = 2.0f;
+	// タイマーの描画
+	int tens = mTimeInt / 10;
+	int ones = (mTimeInt - tens * 10) % 10;
+	DrawTexture(shader, mNumbers[tens], NumPos, scale);
+	DrawTexture(shader, mNumbers[ones], NumPos + offset, scale);
 }
 
 void HUD::AddTargetComponent(TargetComponent* tc)
@@ -144,5 +155,14 @@ void HUD::UpdateRadar(float deltaTime)
 			blipPos = Vector2::Transform(blipPos, rotMat);
 			mBlips.emplace_back(blipPos);
 		}
+	}
+}
+
+void HUD::UpdateTimer(float deltaTime)
+{
+	if (mGame->GetState() == Game::GameState::EGameplay)
+	{
+		mTimeFloat += deltaTime;
+		mTimeInt = static_cast<int>(mTimeFloat);
 	}
 }

@@ -34,10 +34,10 @@ PauseMenu::~PauseMenu()
 void PauseMenu::HandleKeyPress(int key)
 {
 	UIScreen::HandleKeyPress(key);
+	
 	if (key == SDLK_ESCAPE)
 	{
 		Close();
-		//SetRelativeMouseMode(true); 
 		mGame->SetState(Game::EGameplay);
 	}
 }

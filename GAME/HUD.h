@@ -22,6 +22,7 @@ protected:
     // Update内で呼び出すヘルパー関数
     void UpdateCrosshair(float deltaTime);
     void UpdateRadar(float deltaTime);
+    void UpdateTimer(float deltaTime);
 
     // 十字線のテクスチャ
     class Texture* mCrosshair;
@@ -41,6 +42,9 @@ protected:
     float mRaderRange;
     float mRaderRadius;
 
+    // タイマー用
+    int mTimeInt;
+    float mTimeFloat;
 
     std::vector<class TargetComponent*> mTargetComps;
 private:

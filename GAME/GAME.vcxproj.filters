@@ -157,6 +157,7 @@
       <Filter>manager</Filter>
     </ClCompile>
     <ClCompile Include="AStar.cpp" />
+    <ClCompile Include="GameOverMenu.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Math.h">
@@ -274,6 +275,7 @@
       <Filter>manager</Filter>
     </ClInclude>
     <ClInclude Include="AStar.h" />
+    <ClInclude Include="GameOverMenu.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Shaders\Sprite.frag">
