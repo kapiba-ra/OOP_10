@@ -51,6 +51,7 @@ public:
 	//virtual void ProcessInput(const uint8_t* keys);
 	virtual void ProcessInput(const struct InputState& state);
 	virtual void HandleKeyPress(int key);
+	virtual void Reset();
 
 	// ó‘ÔŠÇ—
 	enum UIState

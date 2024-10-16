@@ -181,7 +181,9 @@ xcopy "C:\Program Files (x86)\FMOD SoundSystem\FMOD Studio API Windows\api\studi
     <ClCompile Include="Component.cpp" />
     <ClCompile Include="DialogBox.cpp" />
     <ClCompile Include="EnemyActor.cpp" />
-    <ClCompile Include="FollowActor.cpp" />
+    <ClCompile Include="GameClearMenu.cpp" />
+    <ClCompile Include="ItemActor.cpp" />
+    <ClCompile Include="PlayerActor.cpp" />
     <ClCompile Include="FollowCamera.cpp" />
     <ClCompile Include="Font.cpp" />
     <ClCompile Include="FPSActor.cpp" />
@@ -199,6 +201,7 @@ xcopy "C:\Program Files (x86)\FMOD SoundSystem\FMOD Studio API Windows\api\studi
     <ClCompile Include="PauseMenu.cpp" />
     <ClCompile Include="PhysWorld.cpp" />
     <ClCompile Include="PlaneActor.cpp" />
+    <ClCompile Include="Random.cpp" />
     <ClCompile Include="Renderer.cpp" />
     <ClInclude Include="AStar.h" />
     <ClCompile Include="Shader.cpp" />
@@ -224,7 +227,9 @@ xcopy "C:\Program Files (x86)\FMOD SoundSystem\FMOD Studio API Windows\api\studi
     <ClInclude Include="Component.h" />
     <ClInclude Include="DialogBox.h" />
     <ClInclude Include="EnemyActor.h" />
-    <ClInclude Include="FollowActor.h" />
+    <ClInclude Include="GameClearMenu.h" />
+    <ClInclude Include="ItemActor.h" />
+    <ClInclude Include="PlayerActor.h" />
     <ClInclude Include="FollowCamera.h" />
     <ClInclude Include="Font.h" />
     <ClInclude Include="FPSActor.h" />
@@ -241,6 +246,7 @@ xcopy "C:\Program Files (x86)\FMOD SoundSystem\FMOD Studio API Windows\api\studi
     <ClInclude Include="PauseMenu.h" />
     <ClInclude Include="PhysWorld.h" />
     <ClInclude Include="PlaneActor.h" />
+    <ClInclude Include="Random.h" />
     <ClInclude Include="Renderer.h" />
     <ClInclude Include="Shader.h" />
     <ClInclude Include="SoundEvent.h" />

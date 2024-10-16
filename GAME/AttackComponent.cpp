@@ -2,7 +2,7 @@
 
 //#include "Actor.h"
 #include "EnemyActor.h"
-#include "FollowActor.h"
+#include "PlayerActor.h"
 
 AttackComponent::AttackComponent(Actor* owner)
 	: Component(owner)
@@ -26,7 +26,7 @@ void AttackComponent::Damage(Actor* target)
 	}
 	case Actor::Type::Eplayer:
 	{
-		static_cast<FollowActor*>(target)->TakeDamage(mAttackDamage);
+		static_cast<PlayerActor*>(target)->TakeDamage(mAttackDamage);
 		break;
 	}
 	}

@@ -15,11 +15,11 @@
 
 #include "Actor.h"
 #include "FPSActor.h"
-#include "FollowActor.h"
+#include "PlayerActor.h"
 #include "PlaneActor.h"
 #include "BallActor.h"
-#include "TargetActor.h"
 #include "EnemyActor.h"
+#include "ItemActor.h"
 
 #include "MeshComponent.h"
 #include "SpriteComponent.h"
@@ -28,6 +28,8 @@
 #include "HUD.h"
 #include "PauseMenu.h"
 #include "MainMenu.h"
+#include "GameOverMenu.h"
+#include "GameClearMenu.h"
 
 
 Game::Game()
@@ -37,11 +39,12 @@ Game::Game()
 	, mInputSystem(nullptr)
 	, mIsRunning(true)
 	, mUpdatingActors(false)
-	, mFollowActor(nullptr)
+	, mPlayerActor(nullptr)
 	, mHUD(nullptr)
 	, mGameState(Game::EMainMenu)
 	, mTicksCount(0)
 	, mGraph(nullptr)
+	, mLastEnemyGen(0.0f)
 {
 }
 
@@ -93,8 +96,6 @@ bool Game::Initialize()
 		return false;
 	}
 
-	//LoadData();
-	// 代わりにメインメニューを作成する
 	LoadText("Assets/English.gptext");
 	new MainMenu(this);
 
@@ -104,6 +105,9 @@ bool Game::Initialize()
 
 void Game::LoadData()
 {
+	// 以下で作成するステージが前提になっている
+	CreateNodes();
+
 	Actor* actor = nullptr;
 	Quaternion q;
 	
@@ -161,7 +165,6 @@ void Game::LoadData()
 	actor->SetPosition(Vector3(2000.0f, 500.0f, 0.0f));
 	actor->SetRotation(q);
 
-
 	// Setup lights
 	mRenderer->SetAmbientLight(Vector3(0.7f, 0.7f, 0.7f));
 	DirectionalLight& dir = mRenderer->GetDirectionalLight();
@@ -179,29 +182,19 @@ void Game::LoadData()
 	SDL_SetRelativeMouseMode(SDL_TRUE);
 	SDL_GetRelativeMouseState(nullptr, nullptr);
 
-	// カメラアクターは今回1つ
-	//mFPSActor = new FPSActor(this);
-	mFollowActor = new FollowActor(this);
+	mPlayerActor = new PlayerActor(this);
 
 	// Enemy
 	actor = new EnemyActor(this);
-	CreateNodes();
-	
-	// ターゲット
-	actor = new TargetActor(this);
-	actor->SetPosition(Vector3(1450.0f, 0.0f, 100.0f));
-	actor = new TargetActor(this);
-	actor->SetPosition(Vector3(1450.0f, 0.0f, 400.0f));
-	actor = new TargetActor(this);
-	actor->SetPosition(Vector3(1450.0f, -500.0f, 200.0f));
-	actor = new TargetActor(this);
-	actor->SetPosition(Vector3(1450.0f, 500.0f, 200.0f));
-	actor = new TargetActor(this);
-	actor->SetPosition(Vector3(0.0f, -1450.0f, 200.0f));
-	actor->SetRotation(Quaternion(Vector3::UnitZ, Math::PiOver2));
-	actor = new TargetActor(this);
-	actor->SetPosition(Vector3(0.0f, 1450.0f, 200.0f));
-	actor->SetRotation(Quaternion(Vector3::UnitZ, -Math::PiOver2));
+	actor = new EnemyActor(this);
+	actor->SetPosition(Vector3(-400.0f, 400.0f, 0.0f));
+	actor = new EnemyActor(this);
+	actor->SetPosition(Vector3(-300.0f, -300.0f, 0.0f));
+	actor = new EnemyActor(this);
+	actor->SetPosition(Vector3(300.0f, -300.0f, 0.0f));
+
+	// Item
+	actor = new ItemActor(this);
 }
 
 void Game::RunLoop()
@@ -280,7 +273,8 @@ void Game::HandleKeyPress(int key)
 	{
 	case SDLK_ESCAPE:
 	{
-		new PauseMenu(this);
+		ChangeState(EPaused);
+		// new PauseMenu(this);
 		break;
 	}
 	case '-':
@@ -329,14 +323,81 @@ void Game::HandleKeyPress(int key)
 		mMusicEvent.SetPaused(!mMusicEvent.GetPaused()); // trueとfalseのtoggleになってる
 		break;
 	}
-	case SDL_BUTTON_LEFT:
-	{
-		//mFPSActor->Shoot();
-		break;
-	}
 	default:
 		break;
 	}
+}
+
+void Game::OnEnter(GameState state)
+{
+	switch (state)
+	{
+	case EGameclear:
+		new GameClearMenu(this);
+		break;
+	case EGameover:
+		new GameOverMenu(this);
+		break;
+	case EGameplay:
+		// LoadData();
+		break;
+	case EMainMenu:
+		UnloadData();
+		new MainMenu(this);
+		break;
+	case EPaused:
+		new PauseMenu(this);
+		break;
+	case EQuit:
+		break;
+	}
+}
+
+void Game::OnExit(GameState nextState)
+{
+	// 現在のStateから出る時に行う処理
+	// UI画面を表示する系のStateでは,そっちでdeleteの準備をする
+	// したがってUIを消すような処理はここで指定しなくていい
+
+	// 結局nextStateに依存するのは仕方がないか...
+	switch (mGameState)
+	{
+	case EGameclear: // ok
+		break;
+	case EGameover:
+		if (nextState == EGameplay)
+		{
+			Reset();
+		}
+		break;
+	case EGameplay:
+		break;
+	case EMainMenu:
+		if (nextState == EGameplay)
+		{
+			LoadData();
+		}
+		break;
+	case EPaused:
+		break;
+	case EQuit:
+		// そもそもこういう状況がない
+		break;
+	}
+}
+
+void Game::Reset()
+{
+	for (auto actor : mActors)
+	{
+		actor->Reset();
+	}
+
+	//for (auto ui : mUIStack)
+	//{
+	//	ui->Reset();
+	//}
+	mHUD->Reset();
 }
 
 void Game::UpdateGame()
@@ -352,6 +413,13 @@ void Game::UpdateGame()
 	
 	if (mGameState == EGameplay)
 	{
+		mLastEnemyGen += deltaTime;
+		if (mLastEnemyGen >= 2.0f)
+		{
+			mLastEnemyGen -= 2.0f;
+			new EnemyActor(this);
+		}
+
 		mUpdatingActors = true;
 		for (auto actor : mActors)
 		{
@@ -423,32 +491,18 @@ void Game::UnloadData()
 		mUIStack.pop_back();
 	}
 	// メインメニューからUnloadする時のみ呼び出すようにした
-	if (mRenderer && mGameState == EMainMenu)
+	// もはやShutDown時にすべきか
+	if (mRenderer)
 	{
 		mRenderer->UnloadData();
-	}
-}
-
-void Game::OnChangeState(GameState newState, GameState oldState)
-{
-	if (newState == EMainMenu && oldState == EPaused)
-	{
-		UnloadData();
-		new MainMenu(this);
-	}
-	else if (newState == EGameplay)
-	{
-		LoadData();
-	}
-	else if (newState == EGameover)
-	{
-		new PauseMenu(this);
 	}
 }
 
 void Game::Shutdown()
 {
 	UnloadData();
+	TTF_Quit();
+	delete mPhysWorld;
 	if (mRenderer)
 	{
 		mRenderer->Shutdown();
@@ -511,6 +565,13 @@ void Game::RemovePlane(PlaneActor* plane)
 {
 	auto iter = std::find(mPlanes.begin(), mPlanes.end(), plane);
 	mPlanes.erase(iter);
+}
+
+void Game::ChangeState(GameState nextState)
+{
+	OnExit(nextState);
+	mGameState = nextState;
+	OnEnter(mGameState);
 }
 
 Font* Game::GetFont(const std::string& fileName)

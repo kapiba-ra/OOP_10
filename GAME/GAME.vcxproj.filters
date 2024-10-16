@@ -34,8 +34,17 @@
     <Filter Include="manager\renderer\shader">
       <UniqueIdentifier>{3aaa07c0-d061-46a3-8418-77a0152af777}</UniqueIdentifier>
     </Filter>
-    <Filter Include="manager\ui">
-      <UniqueIdentifier>{14da8934-c678-463f-8160-fb7055d864a3}</UniqueIdentifier>
+    <Filter Include="component\collision">
+      <UniqueIdentifier>{600a370d-8027-4f9d-be12-471007b5746b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="manager\search">
+      <UniqueIdentifier>{618c3c9a-0d8d-48d8-a01d-c13f79212307}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ui">
+      <UniqueIdentifier>{9cd6cfa8-1544-4b9a-a91e-4bb2943f7804}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ui\menu">
+      <UniqueIdentifier>{3b484cc9-2187-4e08-a387-b1c41f8c5810}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -60,38 +69,14 @@
     <ClCompile Include="Actor.cpp">
       <Filter>actor</Filter>
     </ClCompile>
-    <ClCompile Include="BoxComponent.cpp">
-      <Filter>component</Filter>
-    </ClCompile>
     <ClCompile Include="BallActor.cpp">
       <Filter>actor</Filter>
     </ClCompile>
     <ClCompile Include="PlaneActor.cpp">
       <Filter>actor</Filter>
     </ClCompile>
-    <ClCompile Include="UIScreen.cpp">
-      <Filter>manager\ui</Filter>
-    </ClCompile>
-    <ClCompile Include="Font.cpp">
-      <Filter>manager\ui</Filter>
-    </ClCompile>
-    <ClCompile Include="HUD.cpp">
-      <Filter>manager\ui</Filter>
-    </ClCompile>
-    <ClCompile Include="PauseMenu.cpp">
-      <Filter>manager\ui</Filter>
-    </ClCompile>
-    <ClCompile Include="DialogBox.cpp">
-      <Filter>manager\ui</Filter>
-    </ClCompile>
     <ClCompile Include="TargetActor.cpp">
       <Filter>actor</Filter>
-    </ClCompile>
-    <ClCompile Include="TargetComponent.cpp">
-      <Filter>component</Filter>
-    </ClCompile>
-    <ClCompile Include="MainMenu.cpp">
-      <Filter>manager\ui</Filter>
     </ClCompile>
     <ClCompile Include="Renderer.cpp">
       <Filter>manager\renderer</Filter>
@@ -108,7 +93,7 @@
     <ClCompile Include="VertexArray.cpp">
       <Filter>manager\renderer</Filter>
     </ClCompile>
-    <ClCompile Include="FollowActor.cpp">
+    <ClCompile Include="PlayerActor.cpp">
       <Filter>actor</Filter>
     </ClCompile>
     <ClCompile Include="FollowCamera.cpp">
@@ -156,8 +141,45 @@
     <ClCompile Include="InputSystem.cpp">
       <Filter>manager</Filter>
     </ClCompile>
-    <ClCompile Include="AStar.cpp" />
-    <ClCompile Include="GameOverMenu.cpp" />
+    <ClCompile Include="BoxComponent.cpp">
+      <Filter>component\collision</Filter>
+    </ClCompile>
+    <ClCompile Include="TargetComponent.cpp">
+      <Filter>component\collision</Filter>
+    </ClCompile>
+    <ClCompile Include="AStar.cpp">
+      <Filter>manager\search</Filter>
+    </ClCompile>
+    <ClCompile Include="Random.cpp">
+      <Filter>math</Filter>
+    </ClCompile>
+    <ClCompile Include="DialogBox.cpp">
+      <Filter>ui</Filter>
+    </ClCompile>
+    <ClCompile Include="Font.cpp">
+      <Filter>ui</Filter>
+    </ClCompile>
+    <ClCompile Include="HUD.cpp">
+      <Filter>ui</Filter>
+    </ClCompile>
+    <ClCompile Include="UIScreen.cpp">
+      <Filter>ui</Filter>
+    </ClCompile>
+    <ClCompile Include="GameOverMenu.cpp">
+      <Filter>ui\menu</Filter>
+    </ClCompile>
+    <ClCompile Include="GameClearMenu.cpp">
+      <Filter>ui\menu</Filter>
+    </ClCompile>
+    <ClCompile Include="MainMenu.cpp">
+      <Filter>ui\menu</Filter>
+    </ClCompile>
+    <ClCompile Include="PauseMenu.cpp">
+      <Filter>ui\menu</Filter>
+    </ClCompile>
+    <ClCompile Include="ItemActor.cpp">
+      <Filter>actor</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Math.h">
@@ -181,38 +203,14 @@
     <ClInclude Include="FPSActor.h">
       <Filter>actor</Filter>
     </ClInclude>
-    <ClInclude Include="BoxComponent.h">
-      <Filter>component</Filter>
-    </ClInclude>
     <ClInclude Include="BallActor.h">
       <Filter>actor</Filter>
     </ClInclude>
     <ClInclude Include="PlaneActor.h">
       <Filter>actor</Filter>
     </ClInclude>
-    <ClInclude Include="Font.h">
-      <Filter>manager\ui</Filter>
-    </ClInclude>
-    <ClInclude Include="HUD.h">
-      <Filter>manager\ui</Filter>
-    </ClInclude>
-    <ClInclude Include="PauseMenu.h">
-      <Filter>manager\ui</Filter>
-    </ClInclude>
-    <ClInclude Include="DialogBox.h">
-      <Filter>manager\ui</Filter>
-    </ClInclude>
     <ClInclude Include="TargetActor.h">
       <Filter>actor</Filter>
-    </ClInclude>
-    <ClInclude Include="TargetComponent.h">
-      <Filter>component</Filter>
-    </ClInclude>
-    <ClInclude Include="UIScreen.h">
-      <Filter>manager\ui</Filter>
-    </ClInclude>
-    <ClInclude Include="MainMenu.h">
-      <Filter>manager\ui</Filter>
     </ClInclude>
     <ClInclude Include="Renderer.h">
       <Filter>manager\renderer</Filter>
@@ -229,7 +227,7 @@
     <ClInclude Include="VertexArray.h">
       <Filter>manager\renderer</Filter>
     </ClInclude>
-    <ClInclude Include="FollowActor.h">
+    <ClInclude Include="PlayerActor.h">
       <Filter>actor</Filter>
     </ClInclude>
     <ClInclude Include="FollowCamera.h">
@@ -274,8 +272,45 @@
     <ClInclude Include="InputSystem.h">
       <Filter>manager</Filter>
     </ClInclude>
-    <ClInclude Include="AStar.h" />
-    <ClInclude Include="GameOverMenu.h" />
+    <ClInclude Include="TargetComponent.h">
+      <Filter>component\collision</Filter>
+    </ClInclude>
+    <ClInclude Include="BoxComponent.h">
+      <Filter>component\collision</Filter>
+    </ClInclude>
+    <ClInclude Include="AStar.h">
+      <Filter>manager\search</Filter>
+    </ClInclude>
+    <ClInclude Include="Random.h">
+      <Filter>math</Filter>
+    </ClInclude>
+    <ClInclude Include="UIScreen.h">
+      <Filter>ui</Filter>
+    </ClInclude>
+    <ClInclude Include="DialogBox.h">
+      <Filter>ui</Filter>
+    </ClInclude>
+    <ClInclude Include="Font.h">
+      <Filter>ui</Filter>
+    </ClInclude>
+    <ClInclude Include="HUD.h">
+      <Filter>ui</Filter>
+    </ClInclude>
+    <ClInclude Include="GameClearMenu.h">
+      <Filter>ui\menu</Filter>
+    </ClInclude>
+    <ClInclude Include="GameOverMenu.h">
+      <Filter>ui\menu</Filter>
+    </ClInclude>
+    <ClInclude Include="MainMenu.h">
+      <Filter>ui\menu</Filter>
+    </ClInclude>
+    <ClInclude Include="PauseMenu.h">
+      <Filter>ui\menu</Filter>
+    </ClInclude>
+    <ClInclude Include="ItemActor.h">
+      <Filter>actor</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include="Shaders\Sprite.frag">

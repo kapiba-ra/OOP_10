@@ -67,18 +67,6 @@ void Actor::ComputeWorldTransform()
 	}
 }
 
-//void Actor::ProcessInput(const uint8_t* keyState)
-//{
-//	if (mState == EActive)
-//	{
-//		for (auto comp : mComponents)
-//		{
-//			comp->ProcessInput(keyState);
-//		}
-//		ActorInput(keyState);
-//	}
-//}
-
 void Actor::ProcessInput(const InputState& state)
 {
 	if (mState == EActive)
@@ -91,12 +79,22 @@ void Actor::ProcessInput(const InputState& state)
 	}
 }
 
-//void Actor::ActorInput(const uint8_t* keyState)
-//{
-//}
-
 void Actor::ActorInput(const InputState& state)
 {
+}
+
+void Actor::Reset()
+{
+	//if (mState == EActive)
+	//{
+	//	ComputeWorldTransform();
+	//
+	//	ResetComponents();
+	//	ResetActor();
+	//
+	//	ComputeWorldTransform();
+	//}
+	// // ‚±‚ñ‚ÈŠ´‚¶‚É‚·‚×‚«‚©‚à
 }
 
 void Actor::RotateToNewForward(const Vector3& forward)

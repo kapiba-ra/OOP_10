@@ -29,9 +29,9 @@ private:
     ChaseState mChaseState;
     float mInterval;
 
-    // 追跡対象をFollowActorにしている,Actorにしてキャストするようにしたら拡張性はあるが
+    // 追跡対象をPlayerActorにしている,Actorにしてキャストするようにしたら拡張性はあるが
     // 当面は敵からPlayerへの追跡しかないだろうという事で
-    class FollowActor* mPlayer;
+    class PlayerActor* mPlayer;
 
     std::vector<Vector3> mPath;
     class Vector3 mNextPoint; // Searchingの時に次に向かう点

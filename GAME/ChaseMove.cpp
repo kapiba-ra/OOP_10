@@ -5,7 +5,7 @@
 #include "Collision.h"
 #include "AStar.h"
 
-#include "FollowActor.h"
+#include "PlayerActor.h"
 #include "PlaneActor.h"
 
 #include "BoxComponent.h" // for planes box

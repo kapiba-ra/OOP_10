@@ -1,4 +1,5 @@
 #include "EnemyActor.h"
+#include <random>
 #include "Game.h"
 #include "Renderer.h"
 #include "Mesh.h"
@@ -10,7 +11,7 @@
 #include "BoxComponent.h"
 #include "TargetComponent.h"
 
-#include "FollowActor.h"
+#include "PlayerActor.h"
 #include "PlaneActor.h"
 // ui
 
@@ -25,8 +26,20 @@ EnemyActor::EnemyActor(Game* game)
 	mMeshComp = new MeshComponent(this);
 	Mesh* mesh = game->GetRenderer()->GetMesh("Assets/Human.gpmesh");
 	mMeshComp->SetMesh(mesh);
+
 	// TODO: ランダムspawnにしたい。Gameクラスで設定
-	SetPosition(Vector3(200.0f, 200.0f, 0.0f));
+	WeightedGraph* g = game->GetGraph();
+	size_t size = g->mNodes.size();
+	std::random_device rd;    // シードを生成
+	std::mt19937 gen(rd());   // メルセンヌ・ツイスタ乱数生成器
+	std::uniform_int_distribution<> dist(0, size - 1);  // 0から99の範囲で乱数を生成
+	int randomIndex = dist(gen);
+	WeightedGraphNode* node = g->mNodes[randomIndex];
+	if (node->type != NodeType::ENoAccess)
+	{
+		SetPosition(node->NodePos);
+	}
+	
 	// メッシュによる
 	SetScale(40.0f);
 
@@ -38,6 +51,7 @@ EnemyActor::EnemyActor(Game* game)
 	mBoxComp->SetObjectBox(mesh->GetBox());
 	mBoxComp->SetShouldRotate(false);
 
+	// レーダーへの表示に使う
 	new TargetComponent(this);
 }
 
@@ -54,9 +68,15 @@ void EnemyActor::UpdateActor(float deltaTime)
 	
 }
 
+void EnemyActor::Reset()
+{
+	// シンプルに消す(準備をする)。
+	// SetState(EDead);
+}
+
 void EnemyActor::FixCollisions()
 {
-	// 丸ごとFollowActorにおいてもいいかも
+	// 丸ごとPlayerActorにおいてもいいかも
 	ComputeWorldTransform();
 
 	const AABB& enemyBox = mBoxComp->GetWorldBox();
@@ -64,7 +84,8 @@ void EnemyActor::FixCollisions()
 
 	auto player = GetGame()->GetPlayer();
 	const AABB& playerBox = player->GetBox()->GetWorldBox();
-	if (Intersect(enemyBox, playerBox))
+	// playerがactiveだったらという条件を追加、もっと良い感じにはできそう
+	if (Intersect(enemyBox, playerBox) && player->GetState() == EActive)
 	{
 		// 敵の位置をプレイヤーから少し離す
 		

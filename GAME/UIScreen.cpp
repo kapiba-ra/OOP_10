@@ -145,6 +145,10 @@ void UIScreen::HandleKeyPress(int key)
 	}
 }
 
+void UIScreen::Reset()
+{
+}
+
 void UIScreen::Close()
 {
 	mState = EClosing;

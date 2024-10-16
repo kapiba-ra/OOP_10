@@ -1,12 +1,18 @@
 {
 	"TextMap":{
 		"MainTitle" : "TITLE DAYO",
-		"PauseTitle": "PAUSED",
+		"PauseTitle" : "PAUSED",
+		"GameOverTitle" : "GAME OVER",
+		"GameClearTitle" : "GAME CLEAR!!",
 		"ResumeButton": "Resume",
 		"StartButton" : "Start",
 		"QuitButton": "Quit",
 		"QuitText": "Do you want to quit?",
+		"ContinueText" : "Continue?",
+		"ThankYouText" : "Thank You!",
 		"OKButton": "OK",
-		"CancelButton": "Cancel"
+		"CancelButton": "Cancel",
+		"YesButton" : "YES",
+		"NoButton" : "NO"
 	}
 }

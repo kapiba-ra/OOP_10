@@ -8,6 +8,7 @@ public:
     EnemyActor(class Game* game);
 
     void UpdateActor(float deltaTime) override;
+    void Reset() override;
 
     void FixCollisions();
 

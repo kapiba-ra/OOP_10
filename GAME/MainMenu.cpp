@@ -7,7 +7,7 @@
 MainMenu::MainMenu(Game* game)
 	: UIScreen(game)
 {
-	mGame->SetState(Game::EMainMenu);
+	// mGame->SetState(Game::EMainMenu);
 	SetRelativeMouseMode(false);
 
 	// ”wŒi
@@ -19,14 +19,16 @@ MainMenu::MainMenu(Game* game)
 
 	SetTitle("MainTitle");
 	AddButton("StartButton", [this]() {
-		mGame->SetState(Game::EGameplay);
-		mGame->OnChangeState(Game::EGameplay);
+		//mGame->SetState(Game::EGameplay);
+		//mGame->OnChangeState(Game::EGameplay);
+		mGame->ChangeState(Game::EGameplay);
 		Close();
 	});
 	AddButton("QuitButton", [this]() {
 		new DialogBox(mGame, "QuitText",
 			[this]() {
-				mGame->SetState(Game::EQuit);
+				//mGame->SetState(Game::EQuit);
+				mGame->ChangeState(Game::EQuit);
 		});
 	});
 }

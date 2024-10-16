@@ -1,24 +1,26 @@
 #pragma once
 #include "Actor.h"
 
-class FollowActor :
+class PlayerActor :
 	public Actor
 {
 public:
-	FollowActor(class Game* game);
+	PlayerActor(class Game* game);
 
 	//void ActorInput(const uint8_t* keys) override;
 	void ActorInput(const struct InputState& state) override;
 	void UpdateActor(float deltaTime) override;
 	
-	enum State
+	void Reset() override;
+
+	enum PosState
 	{
 		EOnFloor,
 		EJumping,
 		EFalling
 	};
-	State GetState() const { return mState; }
-	void SetState(State state) { mState = state; }
+	PosState GetPosState() const { return mPosState; }
+	void SetPosState(PosState state) { mPosState = state; }
 
 	// 2つのAABBの最小の重なりテストを行う
 	void FixCollisions();
@@ -33,7 +35,7 @@ public:
 
 
 private:
-	State mState;
+	PosState mPosState;
 
 	void Jump(float deltaTime);
 	float mJumpSpeed;

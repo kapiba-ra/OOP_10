@@ -14,21 +14,15 @@ public:
 
     void Update(float deltaTime) override;
     void Draw(class Shader* shader) override;
+    void Reset() override;
 
     void AddTargetComponent(class TargetComponent* tc);
     void RemoveTargetComponent(class TargetComponent* tc);
 
 protected:
     // Update内で呼び出すヘルパー関数
-    void UpdateCrosshair(float deltaTime);
     void UpdateRadar(float deltaTime);
     void UpdateTimer(float deltaTime);
-
-    // 十字線のテクスチャ
-    class Texture* mCrosshair;
-    class Texture* mCrosshairEnemy;
-    // 十字線が敵を捉えているか
-    bool mTargetEnemy;
 
     // HPバーのテクスチャ
     class Texture* mHPbar;
@@ -43,7 +37,6 @@ protected:
     float mRaderRadius;
 
     // タイマー用
-    int mTimeInt;
     float mTimeFloat;
 
     std::vector<class TargetComponent*> mTargetComps;

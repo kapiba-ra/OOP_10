@@ -1,6 +1,8 @@
 #pragma once
 #include "Component.h"
 
+// Actorをレーダーに表示するためだけに必要
+
 class TargetComponent :
     public Component
 {

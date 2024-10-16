@@ -21,7 +21,7 @@ public:
 	class AudioSystem* GetAudioSystem() { return mAudioSystem; }
 	class PhysWorld* GetPhysWorld() { return mPhysWorld; }
 	class HUD* GetHUD() { return mHUD; }
-	class FollowActor* GetPlayer() { return mFollowActor; }
+	class PlayerActor* GetPlayer() { return mPlayerActor; }
 	struct WeightedGraph* GetGraph() { return mGraph; }
 
 	void AddPlane(class PlaneActor* plane);
@@ -42,6 +42,7 @@ public:
 	};
 	GameState GetState() const { return mGameState; }
 	void SetState(GameState state) { mGameState = state; }
+	void ChangeState(GameState nextState);
 
 	class Font* GetFont(const std::string& fileName);
 	// スタック全体を参照で返す
@@ -56,7 +57,7 @@ public:
 	void LoadData();
 	void UnloadData();
 
-	void OnChangeState(GameState newState, GameState oldState = EStateNum);
+	//void OnChangeState(GameState newState, GameState oldState = EStateNum);
 
 private:
 	// processes in RunLoop()
@@ -65,6 +66,9 @@ private:
 	void GenerateOutput();
 	// helper
 	void HandleKeyPress(int key);
+	void OnEnter(GameState nextState);
+	void OnExit(GameState nextState);
+	void Reset();
 
 	std::vector<class Actor*> mActors;
 	std::vector<class Actor*> mPendingActors;
@@ -86,10 +90,12 @@ private:
 	SoundEvent mMusicEvent;
 	std::vector<class PlaneActor*> mPlanes;
 	//class FPSActor* mFPSActor;
-	class FollowActor* mFollowActor;
+	class PlayerActor* mPlayerActor;
 
 	// ステージからノードを作りエッジをつなぐ
 	void CreateNodes();
 	struct WeightedGraph* mGraph;
+
+	float mLastEnemyGen;
 };
 

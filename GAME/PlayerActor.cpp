@@ -1,4 +1,4 @@
-#include "FollowActor.h"
+#include "PlayerActor.h"
 #include "Game.h"
 #include "Renderer.h"
 #include "Mesh.h"
@@ -14,10 +14,10 @@
 #include "PlaneActor.h" // for collision caluculation
 #include "BallActor.h"
 
-FollowActor::FollowActor(Game* game)
+PlayerActor::PlayerActor(Game* game)
 	: Actor(game, Type::Eplayer)
 	, mBoxComp(nullptr)
-	, mState(EOnFloor)
+	, mPosState(EOnFloor)
 	, mJumpSpeed(0.0f)
 	, mShotInterval(2.0f)
 	, mLastShot(0.0f)
@@ -41,52 +41,7 @@ FollowActor::FollowActor(Game* game)
 	mBoxComp->SetShouldRotate(false);
 }
 
-//void FollowActor::ActorInput(const uint8_t* keys)
-//{
-//	float forwardSpeed = 0.0f;	// 前進速度
-//	float angularSpeed = 0.0f;	// 回転速度
-//	// 前後と回転の移動
-//	if (keys[SDL_SCANCODE_W])
-//	{
-//		forwardSpeed += 400.0f;
-//	}
-//	if (keys[SDL_SCANCODE_S])
-//	{
-//		forwardSpeed -= 400.0f;
-//	}
-//	if (keys[SDL_SCANCODE_A])
-//	{
-//		angularSpeed -= Math::Pi;
-//	}
-//	if (keys[SDL_SCANCODE_D])
-//	{
-//		angularSpeed += Math::Pi;
-//	}
-//	// ジャンプ
-//	if (keys[SDL_SCANCODE_SPACE])
-//	{
-//		if (mState == EOnFloor)
-//		{
-//			mState = EJumping;
-//			SetJumpSpeed(500.0f);
-//		}
-//	}
-//	mMoveComp->SetForwardSpeed(forwardSpeed);
-//	mMoveComp->SetAngularSpeed(angularSpeed);
-//
-//	/* カメラの設定 */
-//	// スピードによって水平距離を変えてスピード感を出す
-//	if (!Math::NearZero(forwardSpeed))
-//	{
-//		mCameraComp->SetHorzDist(500.0f);
-//	}
-//	else
-//	{
-//		mCameraComp->SetHorzDist(350.0f);
-//	}
-//}
-
-void FollowActor::ActorInput(const InputState& state)
+void PlayerActor::ActorInput(const InputState& state)
 {
 	float forwardSpeed = 0.0f;	// 前進速度
 	float angularSpeed = 0.0f;	// 回転速度
@@ -110,9 +65,9 @@ void FollowActor::ActorInput(const InputState& state)
 	// ジャンプ
 	if (state.Keyboard.GetKeyValue(SDL_SCANCODE_SPACE))
 	{
-		if (mState == EOnFloor)
+		if (mPosState == EOnFloor)
 		{
-			mState = EJumping;
+			mPosState = EJumping;
 			mJumpSpeed = 500.0f;
 		}
 	}
@@ -131,7 +86,7 @@ void FollowActor::ActorInput(const InputState& state)
 	}
 }
 
-void FollowActor::UpdateActor(float deltaTime)
+void PlayerActor::UpdateActor(float deltaTime)
 {
 	Actor::UpdateActor(deltaTime);
 
@@ -140,7 +95,17 @@ void FollowActor::UpdateActor(float deltaTime)
 	AutoShoot(deltaTime);
 }
 
-void FollowActor::FixCollisions()
+void PlayerActor::Reset()
+{
+	Actor::SetState(EActive);
+	mPosState = EOnFloor;
+	mJumpSpeed = 0.0f;
+	mLastShot = 0.0f;
+	mHP  = 100.0f;
+	SetPosition(Vector3(0.0f, 0.0f, -50.0f));
+}
+
+void PlayerActor::FixCollisions()
 {
 	// ワールド空間のボックスを更新するために、自分の
 	// ワールド変換を再計算する必要がある
@@ -199,9 +164,9 @@ void FollowActor::FixCollisions()
 					//	mState = EOnFloor;
 					//	break;
 					//}
-					if (mState == EFalling)
+					if (mPosState == EFalling)
 					{
-						mState = EOnFloor;
+						mPosState = EOnFloor;
 					}
 				}
 			}
@@ -209,7 +174,7 @@ void FollowActor::FixCollisions()
 			SetPosition(pos);
 			mBoxComp->OnUpdateWorldTransform();
 			// TODO: playerの中心から一本だけのlineでテストしているので修正が必要そう
-			if (mState == EOnFloor)
+			if (mPosState == EOnFloor)
 			{
 				if (Intersect(line, planeBox, t, norm))
 				{
@@ -218,36 +183,37 @@ void FollowActor::FixCollisions()
 			}
 		}
 	}
-	if (slip && mState == EOnFloor)
+	if (slip && mPosState == EOnFloor)
 	{
-		mState = EFalling;
+		mPosState = EFalling;
 	}
 }
 
-void FollowActor::TakeDamage(float amount)
+void PlayerActor::TakeDamage(float amount)
 {
 	// TODO: 当たってから数フレーム,色が変わるようにしたら面白いかも
 	mHP -= amount;
 	mHUD->SetHPdiscardRange(mHP / 100.0f);
 	if (mHP <= 0.0f)
 	{
-		// 冗長か
-		GetGame()->SetState(Game::GameState::EGameover);
-		GetGame()->OnChangeState(Game::GameState::EGameover);
+		//GetGame()->SetState(Game::GameState::EGameover);
+		//GetGame()->OnChangeState(Game::GameState::EGameover);
+		Actor::SetState(EPaused);
+		GetGame()->ChangeState(Game::EGameover);
 	}
 }
 
-void FollowActor::Jump(float deltaTime)
+void PlayerActor::Jump(float deltaTime)
 {
-	if (mState == EJumping || mState == EFalling)
+	if (mPosState == EJumping || mPosState == EFalling)
 	{
 		Vector3 pos = GetPosition();
 		pos += Vector3::UnitZ * mJumpSpeed * deltaTime;
 		mJumpSpeed -= 1000.0f * deltaTime;
 
-		if (mState == EJumping && mJumpSpeed < 0.0f)
+		if (mPosState == EJumping && mJumpSpeed < 0.0f)
 		{
-			mState = EFalling;
+			mPosState = EFalling;
 		}
 		//else if (mState == EFalling)
 		//{
@@ -257,21 +223,21 @@ void FollowActor::Jump(float deltaTime)
 	}
 }
 
-void FollowActor::AutoShoot(float deltaTime)
+void PlayerActor::AutoShoot(float deltaTime)
 {
 	mLastShot += deltaTime;
 	if (mLastShot > mShotInterval)
 	{
 		mLastShot -= mShotInterval;
-		///* 球の位置、方向を決める 関数化した */
-		//Vector3 start = GetPosition();
-		//Vector3 dir = GetForward();
-		//// 球を作成して色々設定
-		//BallActor* ball = new BallActor(GetGame());
-		//ball->SetPlayer(this);
-		//ball->SetPosition(start + dir * 50.0f);
-		//ball->RotateToNewForward(dir);
-		//// サウンド
+		/* 球の位置、方向を決める 関数化した */
+		Vector3 start = GetPosition();
+		Vector3 dir = GetForward();
+		// 球を作成して色々設定
+		BallActor* ball = new BallActor(GetGame());
+		ball->SetPlayer(this);
+		ball->SetPosition(start + dir * 50.0f);
+		ball->RotateToNewForward(dir);
+		// サウンド
 		//mAudioComp->PlayEvent("event:/Shot");
 	}
 }
