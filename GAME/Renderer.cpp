@@ -49,7 +49,7 @@ bool Renderer::Initialize(float screenWidth, float screenHeight)
 
 	// OpenGLの利用,作成されたWindowでOpenGLが使えるようになる
 	mWindow = SDL_CreateWindow(
-		"OPP_10,11",	// Windowの名前
+		"Game",	// Windowの名前
 		100,		// Windowの表示位置(x座標)
 		100,		// Windowの表示位置(y座標)
 		static_cast<int>(mScreenWidth),		// Windowの幅

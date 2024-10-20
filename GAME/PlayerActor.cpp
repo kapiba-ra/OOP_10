@@ -183,10 +183,16 @@ void PlayerActor::FixCollisions()
 			}
 		}
 	}
+	if (pos.z <= -300.0f)
+	{
+		Actor::SetState(EPaused);
+		GetGame()->ChangeState(Game::EGameover);
+	}
 	if (slip && mPosState == EOnFloor)
 	{
 		mPosState = EFalling;
 	}
+
 }
 
 void PlayerActor::TakeDamage(float amount)

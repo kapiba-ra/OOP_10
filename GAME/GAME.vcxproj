@@ -201,7 +201,6 @@ xcopy "C:\Program Files (x86)\FMOD SoundSystem\FMOD Studio API Windows\api\studi
     <ClCompile Include="PauseMenu.cpp" />
     <ClCompile Include="PhysWorld.cpp" />
     <ClCompile Include="PlaneActor.cpp" />
-    <ClCompile Include="Random.cpp" />
     <ClCompile Include="Renderer.cpp" />
     <ClInclude Include="AStar.h" />
     <ClCompile Include="Shader.cpp" />
@@ -246,7 +245,6 @@ xcopy "C:\Program Files (x86)\FMOD SoundSystem\FMOD Studio API Windows\api\studi
     <ClInclude Include="PauseMenu.h" />
     <ClInclude Include="PhysWorld.h" />
     <ClInclude Include="PlaneActor.h" />
-    <ClInclude Include="Random.h" />
     <ClInclude Include="Renderer.h" />
     <ClInclude Include="Shader.h" />
     <ClInclude Include="SoundEvent.h" />

@@ -45,7 +45,7 @@ EnemyActor::EnemyActor(Game* game)
 
 	mMyMove = new ChaseMove(this);
 	// 常に進み続ける
-	mMyMove->SetForwardSpeed(100.0f);
+	mMyMove->SetForwardSpeed(150.0f);
 
 	mBoxComp = new BoxComponent(this);
 	mBoxComp->SetObjectBox(mesh->GetBox());
@@ -71,7 +71,7 @@ void EnemyActor::UpdateActor(float deltaTime)
 void EnemyActor::Reset()
 {
 	// シンプルに消す(準備をする)。
-	// SetState(EDead);
+	SetState(EDead);
 }
 
 void EnemyActor::FixCollisions()

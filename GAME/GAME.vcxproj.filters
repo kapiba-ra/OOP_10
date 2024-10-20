@@ -150,9 +150,6 @@
     <ClCompile Include="AStar.cpp">
       <Filter>manager\search</Filter>
     </ClCompile>
-    <ClCompile Include="Random.cpp">
-      <Filter>math</Filter>
-    </ClCompile>
     <ClCompile Include="DialogBox.cpp">
       <Filter>ui</Filter>
     </ClCompile>
@@ -280,9 +277,6 @@
     </ClInclude>
     <ClInclude Include="AStar.h">
       <Filter>manager\search</Filter>
-    </ClInclude>
-    <ClInclude Include="Random.h">
-      <Filter>math</Filter>
     </ClInclude>
     <ClInclude Include="UIScreen.h">
       <Filter>ui</Filter>

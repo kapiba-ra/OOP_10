@@ -293,24 +293,6 @@ void Game::HandleKeyPress(int key)
 		mAudioSystem->SetBusVolume("bus:/", volume);
 		break;
 	}
-	case '1':
-	{
-		// Load English text
-		LoadText("Assets/English.gptext");
-		break;
-	}
-	case '2':
-	{
-		// Load Russian text
-		LoadText("Assets/Russian.gptext");
-		break;
-	}
-	case '3':
-	{
-		// 日本語のテキストをロード
-		LoadText("Assets/Japanese.gptext");
-		break;
-	}
 	case 'e':
 	{
 		// 爆発音を鳴らす
@@ -398,6 +380,16 @@ void Game::Reset()
 	//	ui->Reset();
 	//}
 	mHUD->Reset();
+
+	// 初期配置
+	Actor* actor;
+	actor = new EnemyActor(this);
+	actor = new EnemyActor(this);
+	actor->SetPosition(Vector3(-400.0f, 400.0f, 0.0f));
+	actor = new EnemyActor(this);
+	actor->SetPosition(Vector3(-300.0f, -300.0f, 0.0f));
+	actor = new EnemyActor(this);
+	actor->SetPosition(Vector3(300.0f, -300.0f, 0.0f));
 }
 
 void Game::UpdateGame()
