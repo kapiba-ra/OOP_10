@@ -165,7 +165,7 @@ void UIScreen::SetTitle(const std::string& text, const Vector3& color, int point
 	mTitle = mFont->RenderText(text, color, pointSize);
 }
 
-void UIScreen::AddButton(const std::string& name, std::function<void()> onClick)
+void UIScreen::AddButton(const std::string& name, std::function<void()> onClick, Vector2 offset)
 {
 	Vector2 dims(static_cast<float>(mButtonOn->GetWidth()),
 				 static_cast<float>(mButtonOn->GetHeight()));
@@ -173,7 +173,7 @@ void UIScreen::AddButton(const std::string& name, std::function<void()> onClick)
 	mButtons.emplace_back(b);
 	// 次のボタンの位置を更新
 	// ボタンの高さ+余白の分だけ位置を下げる
-	mNextButtonPos.y -= mButtonOff->GetHeight() + 20.0f;
+	mNextButtonPos.y -= mButtonOff->GetHeight() + offset.y;
 }
 
 void UIScreen::DrawTexture(Shader* shader, Texture* texture, const Vector2& offset, float scale, float range)

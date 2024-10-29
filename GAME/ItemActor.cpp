@@ -8,6 +8,8 @@
 #include "MoveComponent.h"
 #include "BoxComponent.h"
 
+#include "PlayerActor.h"
+
 ItemActor::ItemActor(Game* game)
 	: Actor(game, Type::Eitem)
 {
@@ -24,9 +26,26 @@ ItemActor::ItemActor(Game* game)
 	mBoxComp = new BoxComponent(this);
 	mBoxComp->SetObjectBox(mesh->GetBox());
 	mBoxComp->SetShouldRotate(false);
+
+	game->AddItem(this);
+}
+
+ItemActor::~ItemActor()
+{
+	GetGame()->RemoveItem(this);
 }
 
 void ItemActor::Reset()
 {
 	SetState(EDead);
+}
+
+void ItemActor::OnAcquired()
+{
+	SetState(EDead);
+
+	// Player‚ÉŽæ“¾Žž‚Ìˆ—(Œ»ÝexpƒAƒCƒeƒ€‚¾‚¯‚É‚µ‚Ä‚é)
+	PlayerActor* player = GetGame()->GetPlayer();
+	float expAmount = 1.0f; // EnemyActor‘¤‚©‚çÝ’è‚Å‚«‚é‚æ‚¤‚É‚µ‚½‚¢
+	player->GainExp(expAmount);
 }

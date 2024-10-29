@@ -26,23 +26,24 @@ protected:
 
     // HPバーのテクスチャ
     class Texture* mHPbar;
+    class Texture* mHPbarBG;
+    float mHPdiscardRange;
 
     // レーダー用のテクスチャ
     class Texture* mRader;
     class Texture* mBlipTex;
     // レーダー中心から輝点への2D相対オフセット
     std::vector<Vector2> mBlips;
-    // レーダーの(ワールド空間での)範囲と(レーダーディスプレイの)半径
+    // レーダーの(ワールド空間での)範囲とレーダーディスプレイの半径
     float mRaderRange;
     float mRaderRadius;
 
     // タイマー用
     float mTimeFloat;
 
+    // Level
+    class Texture* mLevel;
+
     std::vector<class TargetComponent*> mTargetComps;
-private:
-    float mHPdiscardRange;
-public:
-    void SetHPdiscardRange(float range) { mHPdiscardRange = range; }
 };
 

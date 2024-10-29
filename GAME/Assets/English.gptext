@@ -2,6 +2,7 @@
 	"TextMap":{
 		"MainTitle" : "SEI ZON",
 		"PauseTitle" : "PAUSED",
+		"LevelUpTitle" : "LEVEL UP!",
 		"GameOverTitle" : "GAME OVER",
 		"GameClearTitle" : "GAME CLEAR!!",
 		"ResumeButton": "Resume",
@@ -10,9 +11,12 @@
 		"QuitText": "Do you want to quit?",
 		"ContinueText" : "Continue?",
 		"ThankYouText" : "Thank You!",
+		"LevelText" : "Lv",
 		"OKButton": "OK",
 		"CancelButton": "Cancel",
 		"YesButton" : "YES",
-		"NoButton" : "NO"
+		"NoButton" : "NO",
+		"IncBulletButton" : "Increase the number of bullets",
+		"MoveSpeedUpButton" : "Increase movement speed"
 	}
 }

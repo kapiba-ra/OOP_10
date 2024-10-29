@@ -13,6 +13,7 @@
 
 #include "PlayerActor.h"
 #include "PlaneActor.h"
+#include "ItemActor.h"
 // ui
 
 EnemyActor::EnemyActor(Game* game)
@@ -62,6 +63,9 @@ void EnemyActor::UpdateActor(float deltaTime)
 	if (mHP <= 0.0f)
 	{
 		SetState(EDead);
+		// ƒAƒCƒeƒ€‚ð—Ž‚Æ‚·
+		Actor* a = new ItemActor(GetGame());
+		a->SetPosition(GetPosition());
 	}
 
 	FixCollisions();

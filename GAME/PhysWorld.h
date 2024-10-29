@@ -17,8 +17,8 @@ public:
 	{
 		Vector3 mPoint;		// 衝突した位置
 		Vector3 mNormal;	// 衝突点の法線
-		class BoxComponent* mBox;	// 交差したコンポーネント
-		class Actor* mActor;		// 交差したコンポーネントのownerであるActor
+		class BoxComponent* mBox = nullptr;	// 交差したコンポーネント
+		class Actor* mActor = nullptr;		// 交差したコンポーネントのownerであるActor
 	};
 
 	// 線分がボックスと交差するならtrueを返す,CollisionInfoを参照で返す

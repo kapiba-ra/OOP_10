@@ -9,7 +9,7 @@ GameClearMenu::GameClearMenu(Game* game)
 	SetRelativeMouseMode(false);
 	
 	mTitlePos = Vector2(0.0f, 150.0f);
-	SetTitle("GameClearTitle", Color::Black, FontSize::font_60);
+	SetTitle("GameClearTitle", Color::White, FontSize::font_60);
 	
 	mComment = mFont->RenderText("ThankYouText", Color::Green, FontSize::font_42 );
 	mCommentPos = Vector2(0.0f, -192.0f);

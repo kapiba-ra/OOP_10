@@ -7,11 +7,20 @@ class ItemActor :
     public Actor
 {
 public:
-    ItemActor(class Game* game);
+    // Žg‚¤‚©‚í‚©‚ç‚È‚¢‚¯‚Ç
+    enum ItemType
+    {
+        Eexp,
+    };
 
+    ItemActor(class Game* game);
+    ~ItemActor();
+    
+    void OnAcquired();
     void Reset() override;
 
 private:
+
     class MoveComponent* mMoveComp;
     class BoxComponent* mBoxComp;
 };

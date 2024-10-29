@@ -5,6 +5,7 @@
 #include "InputSystem.h"
 
 #include "HUD.h"
+//#include "LevelUpMenu.h"
 
 #include "MeshComponent.h"
 #include "MoveComponent.h"
@@ -13,17 +14,14 @@
 
 #include "PlaneActor.h" // for collision caluculation
 #include "BallActor.h"
+#include "ItemActor.h"
 
 PlayerActor::PlayerActor(Game* game)
 	: Actor(game, Type::Eplayer)
 	, mBoxComp(nullptr)
 	, mPosState(EOnFloor)
-	, mJumpSpeed(0.0f)
-	, mShotInterval(2.0f)
-	, mLastShot(0.0f)
-	, mHP(100.0f)
 	, mHUD(nullptr)
-{
+{	
 	mHUD = GetGame()->GetHUD();
 
 	mMeshComp = new MeshComponent(this);
@@ -48,11 +46,11 @@ void PlayerActor::ActorInput(const InputState& state)
 	// 前後と回転の移動
 	if (state.Keyboard.GetKeyValue(SDL_SCANCODE_W))
 	{
-		forwardSpeed += 400.0f;
+		forwardSpeed += mParams.maxForwardSpeed;
 	}
 	if (state.Keyboard.GetKeyValue(SDL_SCANCODE_S))
 	{
-		forwardSpeed -= 400.0f;
+		forwardSpeed -= mParams.maxForwardSpeed;
 	}
 	if (state.Keyboard.GetKeyValue(SDL_SCANCODE_A))
 	{
@@ -68,7 +66,7 @@ void PlayerActor::ActorInput(const InputState& state)
 		if (mPosState == EOnFloor)
 		{
 			mPosState = EJumping;
-			mJumpSpeed = 500.0f;
+			mParams.jumpSpeed = 500.0f;
 		}
 	}
 	mMoveComp->SetForwardSpeed(forwardSpeed);
@@ -99,9 +97,8 @@ void PlayerActor::Reset()
 {
 	Actor::SetState(EActive);
 	mPosState = EOnFloor;
-	mJumpSpeed = 0.0f;
-	mLastShot = 0.0f;
-	mHP  = 100.0f;
+	mParams.Reset();
+
 	SetPosition(Vector3(0.0f, 0.0f, -50.0f));
 }
 
@@ -115,9 +112,10 @@ void PlayerActor::FixCollisions()
 	Vector3 pos = GetPosition();
 	// 地上から落下への遷移で使う
 	LineSegment line(pos, pos + Vector3::UnitZ * -100.0f);
-	float t = 0.0f;
-	Vector3 norm(Vector3::Zero);
-	bool slip(true);
+	bool inAir(true); // 空中にいるか
+	
+	float t = 0.0f;				 // 引数設定用に便宜上必要,使わない
+	Vector3 norm(Vector3::Zero); // 同上
 
 	auto& planes = GetGame()->GetPlanes();
 	for (auto pa : planes)
@@ -173,24 +171,41 @@ void PlayerActor::FixCollisions()
 			// 位置を設定しボックスの成分を更新する
 			SetPosition(pos);
 			mBoxComp->OnUpdateWorldTransform();
+			// ここは落下用の処理
 			// TODO: playerの中心から一本だけのlineでテストしているので修正が必要そう
 			if (mPosState == EOnFloor)
 			{
 				if (Intersect(line, planeBox, t, norm))
 				{
-					slip = false;
+					inAir = false;
 				}
 			}
 		}
 	}
+
+	// 一定落下したらgameoverへ
 	if (pos.z <= -300.0f)
 	{
 		Actor::SetState(EPaused);
 		GetGame()->ChangeState(Game::EGameover);
 	}
-	if (slip && mPosState == EOnFloor)
+	// inAirならEfallingへ
+	else if (inAir && mPosState == EOnFloor)
 	{
 		mPosState = EFalling;
+	}
+
+	// アイテム取得用
+	auto& items = GetGame()->GetItems();
+	for (auto item : items)
+	{
+		Vector3 itemPos = item->GetPosition();
+		Vector3 dir = itemPos - pos;
+		float getRadius = 200.0f;
+		if (dir.Length() < getRadius)
+		{
+			item->OnAcquired();
+		}
 	}
 
 }
@@ -198,15 +213,23 @@ void PlayerActor::FixCollisions()
 void PlayerActor::TakeDamage(float amount)
 {
 	// TODO: 当たってから数フレーム,色が変わるようにしたら面白いかも
-	mHP -= amount;
-	mHUD->SetHPdiscardRange(mHP / 100.0f);
-	if (mHP <= 0.0f)
+	mParams.hp -= amount;
+	if (mParams.hp <= 0.0f)
 	{
-		//GetGame()->SetState(Game::GameState::EGameover);
-		//GetGame()->OnChangeState(Game::GameState::EGameover);
 		Actor::SetState(EPaused);
 		GetGame()->ChangeState(Game::EGameover);
 	}
+}
+
+void PlayerActor::GainExp(float exp)
+{
+	mParams.exp += exp;
+	CheckLevelUp();
+}
+
+void PlayerActor::MoveSpeedUp()
+{
+	mParams.maxForwardSpeed += 50.0f;
 }
 
 void PlayerActor::Jump(float deltaTime)
@@ -214,16 +237,13 @@ void PlayerActor::Jump(float deltaTime)
 	if (mPosState == EJumping || mPosState == EFalling)
 	{
 		Vector3 pos = GetPosition();
-		pos += Vector3::UnitZ * mJumpSpeed * deltaTime;
-		mJumpSpeed -= 1000.0f * deltaTime;
+		pos += Vector3::UnitZ * mParams.jumpSpeed * deltaTime;
+		mParams.jumpSpeed -= 1000.0f * deltaTime;
 
-		if (mPosState == EJumping && mJumpSpeed < 0.0f)
+		if (mPosState == EJumping && mParams.jumpSpeed < 0.0f)
 		{
 			mPosState = EFalling;
 		}
-		//else if (mState == EFalling)
-		//{
-		//}
 
 		SetPosition(pos);
 	}
@@ -231,19 +251,50 @@ void PlayerActor::Jump(float deltaTime)
 
 void PlayerActor::AutoShoot(float deltaTime)
 {
-	mLastShot += deltaTime;
-	if (mLastShot > mShotInterval)
+	mParams.lastShot += deltaTime;
+	if (mParams.lastShot > mParams.shotInterval)
 	{
-		mLastShot -= mShotInterval;
-		/* 球の位置、方向を決める 関数化した */
+		mParams.lastShot -= mParams.shotInterval;
+		/* 弾の位置、方向を決める */
 		Vector3 start = GetPosition();
 		Vector3 dir = GetForward();
-		// 球を作成して色々設定
-		BallActor* ball = new BallActor(GetGame());
-		ball->SetPlayer(this);
-		ball->SetPosition(start + dir * 50.0f);
-		ball->RotateToNewForward(dir);
+		float shotAngle = Math::Pi / 6;
+		dir = Vector3::Transform(dir, Quaternion(Vector3::UnitZ, -shotAngle * (mParams.shotNum - 1) / 2));
+		for (int i = 0; i < mParams.shotNum; ++i)
+		{
+			// 弾を作成して色々設定
+			BallActor* ball = new BallActor(GetGame());
+			ball->SetPlayer(this);
+			ball->SetPosition(start + dir * 50.0f);
+			ball->RotateToNewForward(dir);
+			dir = Vector3::Transform(dir, Quaternion(Vector3::UnitZ, shotAngle));
+		}
 		// サウンド
 		//mAudioComp->PlayEvent("event:/Shot");
 	}
+}
+
+void PlayerActor::CheckLevelUp()
+{
+	if (mParams.exp > mParams.expToLevelUp)
+	{
+		mParams.level += 1;
+		mParams.exp -= mParams.expToLevelUp;
+		mParams.expToLevelUp += 1.0f;	// 今は適当
+		GetGame()->ChangeState(Game::ELevelUp);
+	}
+}
+
+void PlayerActor::Parameters::Reset()
+{
+	maxForwardSpeed = 400.0f;
+	jumpSpeed = 0.0f;
+	hp = 100.0f;
+	exp = 0.0f;
+	expToLevelUp = 1.0f;
+	level = 1;
+	// shot系の機能はcomponentにまとめるべきかも(敵が撃つなら)
+	shotNum = 1;
+	lastShot = 0.0f;
+	shotInterval = 1.0f;
 }

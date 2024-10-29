@@ -3,10 +3,12 @@
 #include "Renderer.h"
 #include "PhysWorld.h"
 #include "Texture.h"
+#include "Font.h"
+
 #include "Actor.h"
-//#include "FPSActor.h"
 #include "PlayerActor.h"
 #include "EnemyActor.h"
+
 #include "TargetComponent.h"
 
 HUD::HUD(Game* game)
@@ -19,7 +21,9 @@ HUD::HUD(Game* game)
 	Renderer* r = mGame->GetRenderer();
 	mRader = r->GetTexture("Assets/Radar.png");
 	mBlipTex = r->GetTexture("Assets/Blip.png");
+	mHPbarBG = r->GetTexture("Assets/HPBarBG.png");
 	mHPbar = r->GetTexture("Assets/HPBar.png");
+	mLevel = mFont->RenderText("LevelText");
 }
 
 HUD::~HUD()
@@ -35,25 +39,31 @@ void HUD::Update(float deltaTime)
 
 void HUD::Draw(Shader* shader)
 {
+	// prepare! キャッシュしておくと表現できるらしい
+	PlayerActor::Parameters pParams = mGame->GetPlayer()->GetParams();
+
 	// レーダーの描画
 	const Vector2 cRaderPos(-390.0f, 275.0f);
-	DrawTexture(shader, mRader, cRaderPos, 1.0f);
+	DrawTexture(shader, mRader, cRaderPos);
 	// レーダー上の輝点の描画
 	for (const Vector2& blip : mBlips)
 	{
-		DrawTexture(shader, mBlipTex, cRaderPos + blip, 1.0f);
+		DrawTexture(shader, mBlipTex, cRaderPos + blip);
 	}
 
 	// HPバーの描画
+	Vector2 hpBarPos(-350.0f, -350.0f);
+	DrawTexture(shader, mHPbarBG, hpBarPos);
+	mHPdiscardRange = pParams.hp / pParams.maxHp; // updateの範疇な気がしないでもない
 	if (mHPdiscardRange >= 0.0f)
 	{
-		DrawTexture(shader, mHPbar, Vector2(-350.0f, -350.0f), 1.0f, mHPdiscardRange);
+		DrawTexture(shader, mHPbar, hpBarPos, 1.0f, mHPdiscardRange);
 	}
 
-	// HPの描画
+	// HP(number)の描画
 	Vector2 NumPos(-460.0f, -315.0f);
 	Vector2 offset(20.0f, 0.0f);
-	std::string hp = std::to_string(static_cast<int>(mGame->GetPlayer()->GetHP()));
+	std::string hp = std::to_string(static_cast<int>(pParams.hp));
 	for (size_t i = 0;i < hp.length(); i++)
 	{
 		int digitIndex = hp[i] - '0';
@@ -63,14 +73,21 @@ void HUD::Draw(Shader* shader)
 		}
 	}
 
+	// タイマーの描画(2桁)
 	NumPos = Vector2(-20.0f, 340.0f);
 	offset = Vector2(40.0f, 0.0f);
 	float scale = 2.0f;
-	// タイマーの描画
 	int tens = static_cast<int>(mTimeFloat / 10);
 	int ones = static_cast<int>(mTimeFloat - tens * 10) % 10;
 	DrawTexture(shader, mNumbers[tens], NumPos, scale);
 	DrawTexture(shader, mNumbers[ones], NumPos + offset, scale);
+
+	// Levelの描画
+	Vector2 lvPos(400.0f, 350.0f);
+	DrawTexture(shader, mLevel, lvPos);
+	int level = pParams.level;
+	offset = Vector2(static_cast<float>(mLevel->GetWidth()), 3.0f);
+	DrawTexture(shader, mNumbers[level], lvPos + offset);
 }
 
 void HUD::Reset()

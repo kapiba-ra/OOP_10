@@ -30,6 +30,7 @@
 #include "MainMenu.h"
 #include "GameOverMenu.h"
 #include "GameClearMenu.h"
+#include "LevelUpMenu.h"
 
 
 Game::Game()
@@ -330,6 +331,9 @@ void Game::OnEnter(GameState state)
 	case EPaused:
 		new PauseMenu(this);
 		break;
+	case ELevelUp:
+		new LevelUpMenu(this);
+		break;
 	case EQuit:
 		break;
 	}
@@ -361,6 +365,8 @@ void Game::OnExit(GameState nextState)
 		}
 		break;
 	case EPaused:
+		break;
+	case ELevelUp:
 		break;
 	case EQuit:
 		// ÇªÇ‡ÇªÇ‡Ç±Ç§Ç¢Ç§èÛãµÇ™Ç»Ç¢
@@ -557,6 +563,17 @@ void Game::RemovePlane(PlaneActor* plane)
 {
 	auto iter = std::find(mPlanes.begin(), mPlanes.end(), plane);
 	mPlanes.erase(iter);
+}
+
+void Game::AddItem(ItemActor* item)
+{
+	mItems.emplace_back(item);
+}
+
+void Game::RemoveItem(ItemActor* item)
+{
+	auto iter = std::find(mItems.begin(), mItems.end(), item);
+	mItems.erase(iter);
 }
 
 void Game::ChangeState(GameState nextState)

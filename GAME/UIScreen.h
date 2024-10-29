@@ -26,6 +26,7 @@ public:
 
 	class Texture* GetNameTex() { return mNameTex; }
 	const Vector2& GetPosition() const { return mPosition; }
+	void SetPosition(Vector2 pos) { mPosition = pos; }
 	void SetHighlighted(bool sel) { mHighlighted = sel; }
 	bool GetHighlighted() const { return mHighlighted; }
 
@@ -66,7 +67,8 @@ public:
 		const Vector3& color = Color::White,
 		int pointSize = 40);
 
-	void AddButton(const std::string& name, std::function<void()> onClick);
+	void AddButton(const std::string& name, std::function<void()> onClick,
+		Vector2 offset = Vector2(0.0f, 20.0f));
 
 protected:
 	// テクスチャを描画するヘルパー関数

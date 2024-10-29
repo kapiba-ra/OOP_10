@@ -177,6 +177,9 @@
     <ClCompile Include="ItemActor.cpp">
       <Filter>actor</Filter>
     </ClCompile>
+    <ClCompile Include="LevelUpMenu.cpp">
+      <Filter>ui\menu</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Math.h">
@@ -304,6 +307,9 @@
     </ClInclude>
     <ClInclude Include="ItemActor.h">
       <Filter>actor</Filter>
+    </ClInclude>
+    <ClInclude Include="LevelUpMenu.h">
+      <Filter>ui\menu</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

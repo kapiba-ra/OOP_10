@@ -3,10 +3,10 @@
 
 FollowCamera::FollowCamera(Actor* owner)
 	: CameraComponent(owner)
-	//, mHorzDist(350.0f)
-	//, mVertDist(150.0f)
-	, mHorzDist(100.0f)
-	, mVertDist(1000.0f)
+	, mHorzDist(350.0f)
+	, mVertDist(150.0f)
+	//, mHorzDist(100.0f)
+	//, mVertDist(1000.0f)
 	, mTargetDist(100.0f)
 	, mSpringConstant(64.0f)
 {

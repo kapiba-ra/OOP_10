@@ -24,9 +24,15 @@ public:
 	class PlayerActor* GetPlayer() { return mPlayerActor; }
 	struct WeightedGraph* GetGraph() { return mGraph; }
 
+	// CollisionSystemみたいなクラスを作ってそっちでまとめて処理した方がすっきりするかも
 	void AddPlane(class PlaneActor* plane);
 	void RemovePlane(class PlaneActor* plane);
 	std::vector<class PlaneActor*>& GetPlanes() { return mPlanes; }
+	void AddItem(class ItemActor* item);
+	void RemoveItem(class ItemActor* item);
+	std::vector<class ItemActor*>& GetItems() { return mItems; }
+
+
 
 	// 状態によって入力をUIに渡すかゲームワールドに渡すかを変える
 	enum GameState
@@ -36,6 +42,7 @@ public:
 		EGameclear,
 		EGameover,
 		EPaused,
+		ELevelUp,
 		EQuit,
 
 		EStateNum
@@ -56,8 +63,6 @@ public:
 	// 一時的にpublicにしている
 	void LoadData();
 	void UnloadData();
-
-	//void OnChangeState(GameState newState, GameState oldState = EStateNum);
 
 private:
 	// processes in RunLoop()
@@ -89,7 +94,7 @@ private:
 	GameState mGameState;
 	SoundEvent mMusicEvent;
 	std::vector<class PlaneActor*> mPlanes;
-	//class FPSActor* mFPSActor;
+	std::vector<class ItemActor*> mItems;
 	class PlayerActor* mPlayerActor;
 
 	// ステージからノードを作りエッジをつなぐ
