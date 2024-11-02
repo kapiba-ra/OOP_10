@@ -15,7 +15,7 @@ ItemActor::ItemActor(Game* game)
 {
 	MeshComponent* mc = new MeshComponent(this);
 	// ‰¼
-	Mesh* mesh = game->GetRenderer()->GetMesh("Assets/Cube.gpmesh");
+	Mesh* mesh = game->GetRenderer()->GetMesh("Assets/Exp.gpmesh");
 	mc->SetMesh(mesh);
 	SetPosition(Vector3(2000.0f, 2000.0f, 0.0f));
 	SetScale(15.0f);

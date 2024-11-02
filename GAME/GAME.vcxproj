@@ -169,7 +169,7 @@ xcopy "C:\Program Files (x86)\FMOD SoundSystem\FMOD Studio API Windows\api\studi
   <ItemGroup>
     <ClCompile Include="Actor.cpp" />
     <ClCompile Include="AStar.cpp" />
-    <ClCompile Include="AttackComponent.cpp" />
+    <ClCompile Include="DamageComponent.cpp" />
     <ClCompile Include="AudioComponent.cpp" />
     <ClCompile Include="AudioSystem.cpp" />
     <ClCompile Include="BallActor.cpp" />
@@ -205,6 +205,8 @@ xcopy "C:\Program Files (x86)\FMOD SoundSystem\FMOD Studio API Windows\api\studi
     <ClCompile Include="Renderer.cpp" />
     <ClInclude Include="AStar.h" />
     <ClCompile Include="Shader.cpp" />
+    <ClCompile Include="ShotComponent.cpp" />
+    <ClCompile Include="SkillSystem.cpp" />
     <ClCompile Include="SoundEvent.cpp" />
     <ClCompile Include="SpriteComponent.cpp" />
     <ClCompile Include="TargetActor.cpp" />
@@ -215,7 +217,7 @@ xcopy "C:\Program Files (x86)\FMOD SoundSystem\FMOD Studio API Windows\api\studi
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Actor.h" />
-    <ClInclude Include="AttackComponent.h" />
+    <ClInclude Include="DamageComponent.h" />
     <ClInclude Include="AudioComponent.h" />
     <ClInclude Include="AudioSystem.h" />
     <ClInclude Include="BallActor.h" />
@@ -249,6 +251,8 @@ xcopy "C:\Program Files (x86)\FMOD SoundSystem\FMOD Studio API Windows\api\studi
     <ClInclude Include="PlaneActor.h" />
     <ClInclude Include="Renderer.h" />
     <ClInclude Include="Shader.h" />
+    <ClInclude Include="ShotComponent.h" />
+    <ClInclude Include="SkillSystem.h" />
     <ClInclude Include="SoundEvent.h" />
     <ClInclude Include="SpriteComponent.h" />
     <ClInclude Include="TargetActor.h" />

@@ -19,7 +19,7 @@ public:
 private:
     class AudioComponent* mAudioComp;
     class BallMove* mMyMove;
-    class AttackComponent* mAttackComp;
+    class DamageComponent* mAttackComp;
     float mLifeSpan;
 };
 

@@ -1,16 +1,16 @@
-#include "AttackComponent.h"
+#include "DamageComponent.h"
 
 //#include "Actor.h"
 #include "EnemyActor.h"
 #include "PlayerActor.h"
 
-AttackComponent::AttackComponent(Actor* owner)
+DamageComponent::DamageComponent(Actor* owner)
 	: Component(owner)
-	, mAttackDamage(1.0f)
+	, mDamageAmt(1.0f)
 {
 }
 
-void AttackComponent::Damage(Actor* target)
+void DamageComponent::Damage(Actor* target)
 {
 	// ‘ÎÛ‚ÌActor‚ğó‚¯æ‚èAdamage‚Ì•ª‚¾‚¯hp‚ğŒ¸‚ç‚·
 	// Œ»İ‚ÍActor©g‚Éhp‚ğ‚½‚¹‚Ä‚»‚ê‚ğŒ¸‚ç‚µ‚Ä‚¢‚é‚ªAhp‚â
@@ -21,12 +21,12 @@ void AttackComponent::Damage(Actor* target)
 	{
 	case Actor::Type::Eenemy:
 	{
-		static_cast<EnemyActor*>(target)->TakeDamage(mAttackDamage);
+		static_cast<EnemyActor*>(target)->TakeDamage(mDamageAmt);
 		break;
 	}
 	case Actor::Type::Eplayer:
 	{
-		static_cast<PlayerActor*>(target)->TakeDamage(mAttackDamage);
+		static_cast<PlayerActor*>(target)->TakeDamage(mDamageAmt);
 		break;
 	}
 	}

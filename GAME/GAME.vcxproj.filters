@@ -117,7 +117,7 @@
     <ClCompile Include="EnemyActor.cpp">
       <Filter>actor</Filter>
     </ClCompile>
-    <ClCompile Include="AttackComponent.cpp">
+    <ClCompile Include="DamageComponent.cpp">
       <Filter>component</Filter>
     </ClCompile>
     <ClCompile Include="Component.cpp">
@@ -180,6 +180,10 @@
     <ClCompile Include="LevelUpMenu.cpp">
       <Filter>ui\menu</Filter>
     </ClCompile>
+    <ClCompile Include="ShotComponent.cpp">
+      <Filter>component</Filter>
+    </ClCompile>
+    <ClCompile Include="SkillSystem.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Math.h">
@@ -251,7 +255,7 @@
     <ClInclude Include="EnemyActor.h">
       <Filter>actor</Filter>
     </ClInclude>
-    <ClInclude Include="AttackComponent.h">
+    <ClInclude Include="DamageComponent.h">
       <Filter>component</Filter>
     </ClInclude>
     <ClInclude Include="Component.h">
@@ -311,6 +315,10 @@
     <ClInclude Include="LevelUpMenu.h">
       <Filter>ui\menu</Filter>
     </ClInclude>
+    <ClInclude Include="ShotComponent.h">
+      <Filter>component</Filter>
+    </ClInclude>
+    <ClInclude Include="SkillSystem.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Shaders\Sprite.frag">

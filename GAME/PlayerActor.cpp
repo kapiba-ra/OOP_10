@@ -11,6 +11,7 @@
 #include "MoveComponent.h"
 #include "BoxComponent.h"
 #include "FollowCamera.h"
+#include "ShotComponent.h"
 
 #include "PlaneActor.h" // for collision caluculation
 #include "BallActor.h"
@@ -30,6 +31,7 @@ PlayerActor::PlayerActor(Game* game)
 	SetScale(100.0f);
 
 	mMoveComp = new MoveComponent(this);
+	
 	mCameraComp = new FollowCamera(this);
 	mCameraComp->SnapToIdeal();
 	
@@ -37,6 +39,8 @@ PlayerActor::PlayerActor(Game* game)
 	AABB myBox(Vector3(-0.5f, -0.5f, -0.5f), Vector3(0.5f, 0.5f, 0.5f));
 	mBoxComp->SetObjectBox(myBox);
 	mBoxComp->SetShouldRotate(false);
+
+	mShotComp = new ShotComponent(this);
 }
 
 void PlayerActor::ActorInput(const InputState& state)
@@ -90,7 +94,6 @@ void PlayerActor::UpdateActor(float deltaTime)
 
 	Jump(deltaTime);
 	FixCollisions();
-	AutoShoot(deltaTime);
 }
 
 void PlayerActor::Reset()
@@ -207,7 +210,6 @@ void PlayerActor::FixCollisions()
 			item->OnAcquired();
 		}
 	}
-
 }
 
 void PlayerActor::TakeDamage(float amount)
@@ -227,11 +229,6 @@ void PlayerActor::GainExp(float exp)
 	CheckLevelUp();
 }
 
-void PlayerActor::MoveSpeedUp()
-{
-	mParams.maxForwardSpeed += 50.0f;
-}
-
 void PlayerActor::Jump(float deltaTime)
 {
 	if (mPosState == EJumping || mPosState == EFalling)
@@ -249,31 +246,6 @@ void PlayerActor::Jump(float deltaTime)
 	}
 }
 
-void PlayerActor::AutoShoot(float deltaTime)
-{
-	mParams.lastShot += deltaTime;
-	if (mParams.lastShot > mParams.shotInterval)
-	{
-		mParams.lastShot -= mParams.shotInterval;
-		/* 弾の位置、方向を決める */
-		Vector3 start = GetPosition();
-		Vector3 dir = GetForward();
-		float shotAngle = Math::Pi / 6;
-		dir = Vector3::Transform(dir, Quaternion(Vector3::UnitZ, -shotAngle * (mParams.shotNum - 1) / 2));
-		for (int i = 0; i < mParams.shotNum; ++i)
-		{
-			// 弾を作成して色々設定
-			BallActor* ball = new BallActor(GetGame());
-			ball->SetPlayer(this);
-			ball->SetPosition(start + dir * 50.0f);
-			ball->RotateToNewForward(dir);
-			dir = Vector3::Transform(dir, Quaternion(Vector3::UnitZ, shotAngle));
-		}
-		// サウンド
-		//mAudioComp->PlayEvent("event:/Shot");
-	}
-}
-
 void PlayerActor::CheckLevelUp()
 {
 	if (mParams.exp > mParams.expToLevelUp)
@@ -285,6 +257,42 @@ void PlayerActor::CheckLevelUp()
 	}
 }
 
+void PlayerActor::OnLvUpSkill(const std::string& name)
+{
+	// 文字列でやってるのがちょい不満
+	if (name == "MaxHp")
+	{
+		mParams.maxHp += 20;
+		mParams.hp += 20;
+	}
+	else if (name == "PlayerSpeed")
+	{
+		mParams.maxForwardSpeed += 50.0f;
+	}
+	else if (name == "ShotSize")
+	{
+		float scale = mShotComp->GetBallScale();
+		scale += 0.2f;
+		mShotComp->SetBallScale(scale);
+	}
+	else if (name == "ShotNum")
+	{
+		int shotNum = mShotComp->GetShotNum();
+		shotNum += 1;
+		mShotComp->SetShotNum(shotNum);
+	}
+	else if (name == "ShotInterval")
+	{
+		float interval = mShotComp->GetShotInterval();
+		interval *= 0.9f;
+		mShotComp->SetShotInterval(interval);
+	}
+	else if (name == "ShotSpeed")
+	{
+		//float speed = mShotComp->
+	}
+}
+
 void PlayerActor::Parameters::Reset()
 {
 	maxForwardSpeed = 400.0f;
@@ -293,8 +301,4 @@ void PlayerActor::Parameters::Reset()
 	exp = 0.0f;
 	expToLevelUp = 1.0f;
 	level = 1;
-	// shot系の機能はcomponentにまとめるべきかも(敵が撃つなら)
-	shotNum = 1;
-	lastShot = 0.0f;
-	shotInterval = 1.0f;
 }

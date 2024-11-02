@@ -20,6 +20,7 @@ public:
 	class Renderer* GetRenderer() { return mRenderer; }
 	class AudioSystem* GetAudioSystem() { return mAudioSystem; }
 	class PhysWorld* GetPhysWorld() { return mPhysWorld; }
+	class SkillSystem* GetSkillSystem() { return mSkillSystem; }
 	class HUD* GetHUD() { return mHUD; }
 	class PlayerActor* GetPlayer() { return mPlayerActor; }
 	struct WeightedGraph* GetGraph() { return mGraph; }
@@ -85,6 +86,7 @@ private:
 	class AudioSystem* mAudioSystem;
 	class PhysWorld* mPhysWorld;
 	class InputSystem* mInputSystem;
+	class SkillSystem* mSkillSystem;
 	class HUD* mHUD;
 
 	Uint32 mTicksCount;

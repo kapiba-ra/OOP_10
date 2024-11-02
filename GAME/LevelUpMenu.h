@@ -11,6 +11,8 @@ public:
     void Update(float deltaTime) override;
     void Draw(class Shader* shader) override;
 
+    void AddButtonRandom();
+
     enum class Slide
     {
         ESlideIn,
@@ -25,5 +27,6 @@ private:
 
     // ƒ{ƒ^ƒ“‚Ì”wŒi—p,
     std::vector<class Texture*> mButtonBGs;
+    class SkillSystem* mSkillSystem;
 };
 

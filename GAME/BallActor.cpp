@@ -6,7 +6,7 @@
 #include "MeshComponent.h"
 #include "AudioComponent.h"
 #include "BallMove.h"
-#include "AttackComponent.h"
+#include "DamageComponent.h"
 
 BallActor::BallActor(Game* game)
 	: Actor(game, Type::Eball)
@@ -19,7 +19,7 @@ BallActor::BallActor(Game* game)
 	mMyMove->SetForwardSpeed(1500.0f);
 	mAudioComp = new AudioComponent(this);
 
-	mAttackComp = new AttackComponent(this);
+	mAttackComp = new DamageComponent(this);
 }
 
 void BallActor::UpdateActor(float deltaTime)

@@ -27,6 +27,12 @@ MainMenu::MainMenu(Game* game)
 				mGame->ChangeState(Game::EQuit);
 		});
 	});
+	AddButton("ControlsButton", [this]() {
+		new DialogBox(mGame, "ControlsText",
+			[this]() {
+				mGame->ChangeState(Game::EMainMenu);
+		});
+	});
 }
 
 MainMenu::~MainMenu()

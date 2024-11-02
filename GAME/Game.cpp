@@ -10,6 +10,7 @@
 #include "AudioSystem.h"
 #include "InputSystem.h"
 #include "PhysWorld.h"
+#include "SkillSystem.h"
 #include "Font.h"
 #include "AStar.h"
 
@@ -89,6 +90,8 @@ bool Game::Initialize()
 
 	// PhysWorld‚ğì¬
 	mPhysWorld = new PhysWorld(this);
+
+	mSkillSystem = new SkillSystem(this);
 
 	// SDL_TTF‚Ì‰Šú‰»
 	if (TTF_Init() != 0)

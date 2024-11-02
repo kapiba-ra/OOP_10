@@ -5,7 +5,6 @@
 #include "Mesh.h"
 #include "InputSystem.h"
 
-//#include "MoveComponent.h"
 #include "ChaseMove.h"
 #include "MeshComponent.h"
 #include "BoxComponent.h"
@@ -14,13 +13,13 @@
 #include "PlayerActor.h"
 #include "PlaneActor.h"
 #include "ItemActor.h"
-// ui
 
 EnemyActor::EnemyActor(Game* game)
 	: Actor(game, Type::Eenemy)
 	, mMoveComp(nullptr)
 	, mMeshComp(nullptr)
 	, mBoxComp(nullptr)
+	, mMyState(MyState::EAlive)
 	, mHP(1.0f)
 	, mTimer(0.0f)
 {
@@ -60,12 +59,22 @@ void EnemyActor::UpdateActor(float deltaTime)
 {
 	Actor::UpdateActor(deltaTime);
 
-	if (mHP <= 0.0f)
+	if (mMyState == MyState::EDying)
 	{
-		SetState(EDead);
-		// アイテムを落とす
-		Actor* a = new ItemActor(GetGame());
-		a->SetPosition(GetPosition());
+		float scale = GetScale() - 1.0f;
+		SetScale(scale);
+		if (scale <= 0.0f)
+		{
+			SetState(EDead);
+			// アイテムを落とす
+			Actor* a = new ItemActor(GetGame());
+			a->SetPosition(GetPosition());
+		}
+	}
+	else if (mHP <= 0.0f && mMyState == MyState::EAlive)
+	{
+		mMyState = MyState::EDying;
+		mMyMove->SetForwardSpeed(0.0f);
 	}
 
 	FixCollisions();

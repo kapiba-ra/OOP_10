@@ -10,11 +10,18 @@ public:
     void UpdateActor(float deltaTime) override;
     void Reset() override;
 
+    enum class MyState
+    {
+        EAlive,
+        EDying,
+    };
+
     void FixCollisions();
 
     void TakeDamage(float amount) { mHP -= amount; }
 
 private:
+    MyState mMyState;
     float mHP;
     float mTimer;
 

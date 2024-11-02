@@ -5,10 +5,12 @@
 		"LevelUpTitle" : "LEVEL UP!",
 		"GameOverTitle" : "GAME OVER",
 		"GameClearTitle" : "GAME CLEAR!!",
-		"ResumeButton": "Resume",
+		"ResumeButton" : "Resume",
 		"StartButton" : "Start",
-		"QuitButton": "Quit",
-		"QuitText": "Do you want to quit?",
+		"ControlsButton" : "Controls",
+		"QuitButton" : "Quit",
+		"QuitText" : "Do you want to quit?",
+		"ControlsText" : "Move:WASD Jump:Space",
 		"ContinueText" : "Continue?",
 		"ThankYouText" : "Thank You!",
 		"LevelText" : "Lv",
@@ -16,7 +18,11 @@
 		"CancelButton": "Cancel",
 		"YesButton" : "YES",
 		"NoButton" : "NO",
-		"IncBulletButton" : "Increase the number of bullets",
-		"MoveSpeedUpButton" : "Increase movement speed"
+		"PlayerSpeed" : "Increase movement speed",
+		"ShotNum" : "Increase the number of bullets",
+		"ShotSize" : "Bigger bullet size",
+		"ShotSpeed" : "Increase bullet velocity",
+		"ShotInterval" : "Shorter firing intervals",
+		"MaxHp" : "Increase maximum hp"
 	}
 }
