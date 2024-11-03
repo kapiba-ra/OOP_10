@@ -4,6 +4,7 @@
 #include "PhysWorld.h"
 #include "Texture.h"
 #include "Font.h"
+#include "PhaseSystem.h"
 
 #include "Actor.h"
 #include "PlayerActor.h"
@@ -96,6 +97,11 @@ void HUD::Reset()
 	mTimeFloat = 0.0f;
 }
 
+void HUD::ResetTimer()
+{
+	mTimeFloat = 0.0f;
+}
+
 void HUD::AddTargetComponent(TargetComponent* tc)
 {
 	mTargetComps.emplace_back(tc);
@@ -152,9 +158,9 @@ void HUD::UpdateTimer(float deltaTime)
 	if (mGame->GetState() == Game::EGameplay)
 	{
 		mTimeFloat += deltaTime;
-		if (mTimeFloat >= 60.0f + deltaTime)
+		if (mTimeFloat >= 10.0f + deltaTime) // 60‚Å•\Ž¦‚³‚ê‚é‚æ‚¤‚É
 		{
-			mGame->ChangeState(Game::EGameclear);
+			mGame->GetPhaseSystem()->ToNextPhase();
 		}
 	}
 }

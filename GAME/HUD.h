@@ -15,6 +15,7 @@ public:
     void Update(float deltaTime) override;
     void Draw(class Shader* shader) override;
     void Reset() override;
+    void ResetTimer();
 
     void AddTargetComponent(class TargetComponent* tc);
     void RemoveTargetComponent(class TargetComponent* tc);

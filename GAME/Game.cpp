@@ -11,6 +11,7 @@
 #include "InputSystem.h"
 #include "PhysWorld.h"
 #include "SkillSystem.h"
+#include "PhaseSystem.h"
 #include "Font.h"
 #include "AStar.h"
 
@@ -39,6 +40,8 @@ Game::Game()
 	, mAudioSystem(nullptr)
 	, mPhysWorld(nullptr)
 	, mInputSystem(nullptr)
+	, mSkillSystem(nullptr)
+	, mPhaseSystem(nullptr)
 	, mIsRunning(true)
 	, mUpdatingActors(false)
 	, mPlayerActor(nullptr)
@@ -92,6 +95,7 @@ bool Game::Initialize()
 	mPhysWorld = new PhysWorld(this);
 
 	mSkillSystem = new SkillSystem(this);
+	mPhaseSystem = new PhaseSystem(this);
 
 	// SDL_TTFの初期化
 	if (TTF_Init() != 0)
@@ -189,16 +193,7 @@ void Game::LoadData()
 	mPlayerActor = new PlayerActor(this);
 
 	// Enemy
-	actor = new EnemyActor(this);
-	actor = new EnemyActor(this);
-	actor->SetPosition(Vector3(-400.0f, 400.0f, 0.0f));
-	actor = new EnemyActor(this);
-	actor->SetPosition(Vector3(-300.0f, -300.0f, 0.0f));
-	actor = new EnemyActor(this);
-	actor->SetPosition(Vector3(300.0f, -300.0f, 0.0f));
-
-	// Item
-	actor = new ItemActor(this);
+	mPhaseSystem->StartPhase();
 }
 
 void Game::RunLoop()
@@ -415,12 +410,14 @@ void Game::UpdateGame()
 	
 	if (mGameState == EGameplay)
 	{
-		mLastEnemyGen += deltaTime;
-		if (mLastEnemyGen >= 2.0f)
-		{
-			mLastEnemyGen -= 2.0f;
-			new EnemyActor(this);
-		}
+		//mLastEnemyGen += deltaTime;
+		//if (mLastEnemyGen >= 2.0f)
+		//{
+		//	mLastEnemyGen -= 2.0f;
+		//	new EnemyActor(this);
+		//}
+		// 諸説
+		mPhaseSystem->Update(deltaTime);
 
 		mUpdatingActors = true;
 		for (auto actor : mActors)
@@ -492,8 +489,7 @@ void Game::UnloadData()
 		delete mUIStack.back();
 		mUIStack.pop_back();
 	}
-	// メインメニューからUnloadする時のみ呼び出すようにした
-	// もはやShutDown時にすべきか
+
 	if (mRenderer)
 	{
 		mRenderer->UnloadData();
@@ -513,6 +509,9 @@ void Game::Shutdown()
 	{
 		mAudioSystem->Shutdown();
 	}
+
+	delete mPhaseSystem;
+	delete mSkillSystem;
 	delete mInputSystem;
 
 	if (mGraph) {

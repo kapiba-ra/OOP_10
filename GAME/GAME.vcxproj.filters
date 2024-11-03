@@ -195,6 +195,9 @@
     <ClCompile Include="HeartActor.cpp">
       <Filter>actor\item</Filter>
     </ClCompile>
+    <ClCompile Include="PhaseSystem.cpp">
+      <Filter>manager</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Math.h">
@@ -337,6 +340,9 @@
     </ClInclude>
     <ClInclude Include="HeartActor.h">
       <Filter>actor\item</Filter>
+    </ClInclude>
+    <ClInclude Include="PhaseSystem.h">
+      <Filter>manager</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

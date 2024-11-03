@@ -4,6 +4,7 @@
 SkillSystem::SkillSystem(Game* game)
 	: mGame(game)
 {
+	// —Í‹Z
 	AddSkill("MaxHp");
 	AddSkill("PlayerSpeed");
 	AddSkill("ShotSize");
@@ -34,6 +35,7 @@ void SkillSystem::RemoveSkill(const std::string& name)
 	{
 		if ((*iter)->name == name)
 		{
+			delete *iter;
 			mSkills.erase(iter);
 		}
 		else
