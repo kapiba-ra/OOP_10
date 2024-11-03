@@ -1,8 +1,6 @@
 #pragma once
 #include "Actor.h"
 
-// アイテムの種類が増えたら基底クラスにしたいかも
-
 class ItemActor :
     public Actor
 {
@@ -14,13 +12,12 @@ public:
     };
 
     ItemActor(class Game* game);
-    ~ItemActor();
+    virtual ~ItemActor();
     
-    void OnAcquired();
+    virtual void OnAcquired();
     void Reset() override;
 
-private:
-
+protected:
     class MoveComponent* mMoveComp;
     class BoxComponent* mBoxComp;
 };

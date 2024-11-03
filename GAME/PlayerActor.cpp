@@ -229,6 +229,16 @@ void PlayerActor::GainExp(float exp)
 	CheckLevelUp();
 }
 
+void PlayerActor::GainHeart(float recover)
+{
+	float diff = mParams.maxHp - mParams.hp;
+	if (diff < recover)
+	{
+		recover = diff;
+	}
+	mParams.hp += recover;
+}
+
 void PlayerActor::Jump(float deltaTime)
 {
 	if (mPosState == EJumping || mPosState == EFalling)

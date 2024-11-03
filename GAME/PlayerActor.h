@@ -28,6 +28,7 @@ public:
 	void TakeDamage(float amount);
 
 	void GainExp(float exp);
+	void GainHeart(float recover);
 
 	class BoxComponent* GetBox() { return mBoxComp; }
 

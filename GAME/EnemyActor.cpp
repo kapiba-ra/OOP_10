@@ -12,7 +12,7 @@
 
 #include "PlayerActor.h"
 #include "PlaneActor.h"
-#include "ItemActor.h"
+#include "ExpActor.h"
 
 EnemyActor::EnemyActor(Game* game)
 	: Actor(game, Type::Eenemy)
@@ -67,7 +67,7 @@ void EnemyActor::UpdateActor(float deltaTime)
 		{
 			SetState(EDead);
 			// ƒAƒCƒeƒ€‚ð—Ž‚Æ‚·
-			Actor* a = new ItemActor(GetGame());
+			Actor* a = new ExpActor(GetGame());
 			a->SetPosition(GetPosition());
 		}
 	}
@@ -78,7 +78,6 @@ void EnemyActor::UpdateActor(float deltaTime)
 	}
 
 	FixCollisions();
-	
 }
 
 void EnemyActor::Reset()

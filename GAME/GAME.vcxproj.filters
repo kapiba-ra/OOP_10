@@ -46,6 +46,9 @@
     <Filter Include="ui\menu">
       <UniqueIdentifier>{3b484cc9-2187-4e08-a387-b1c41f8c5810}</UniqueIdentifier>
     </Filter>
+    <Filter Include="actor\item">
+      <UniqueIdentifier>{9338abed-b552-44c4-8611-19f41e3e3d02}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Math.cpp">
@@ -174,16 +177,24 @@
     <ClCompile Include="PauseMenu.cpp">
       <Filter>ui\menu</Filter>
     </ClCompile>
-    <ClCompile Include="ItemActor.cpp">
-      <Filter>actor</Filter>
-    </ClCompile>
     <ClCompile Include="LevelUpMenu.cpp">
       <Filter>ui\menu</Filter>
     </ClCompile>
     <ClCompile Include="ShotComponent.cpp">
       <Filter>component</Filter>
     </ClCompile>
-    <ClCompile Include="SkillSystem.cpp" />
+    <ClCompile Include="ItemActor.cpp">
+      <Filter>actor\item</Filter>
+    </ClCompile>
+    <ClCompile Include="SkillSystem.cpp">
+      <Filter>manager</Filter>
+    </ClCompile>
+    <ClCompile Include="ExpActor.cpp">
+      <Filter>actor\item</Filter>
+    </ClCompile>
+    <ClCompile Include="HeartActor.cpp">
+      <Filter>actor\item</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Math.h">
@@ -309,16 +320,24 @@
     <ClInclude Include="PauseMenu.h">
       <Filter>ui\menu</Filter>
     </ClInclude>
-    <ClInclude Include="ItemActor.h">
-      <Filter>actor</Filter>
-    </ClInclude>
     <ClInclude Include="LevelUpMenu.h">
       <Filter>ui\menu</Filter>
     </ClInclude>
     <ClInclude Include="ShotComponent.h">
       <Filter>component</Filter>
     </ClInclude>
-    <ClInclude Include="SkillSystem.h" />
+    <ClInclude Include="ItemActor.h">
+      <Filter>actor\item</Filter>
+    </ClInclude>
+    <ClInclude Include="SkillSystem.h">
+      <Filter>manager</Filter>
+    </ClInclude>
+    <ClInclude Include="ExpActor.h">
+      <Filter>actor\item</Filter>
+    </ClInclude>
+    <ClInclude Include="HeartActor.h">
+      <Filter>actor\item</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include="Shaders\Sprite.frag">

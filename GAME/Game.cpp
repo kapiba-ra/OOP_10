@@ -20,7 +20,7 @@
 #include "PlaneActor.h"
 #include "BallActor.h"
 #include "EnemyActor.h"
-#include "ItemActor.h"
+#include "HeartActor.h"
 
 #include "MeshComponent.h"
 #include "SpriteComponent.h"
@@ -399,6 +399,7 @@ void Game::Reset()
 	actor->SetPosition(Vector3(-300.0f, -300.0f, 0.0f));
 	actor = new EnemyActor(this);
 	actor->SetPosition(Vector3(300.0f, -300.0f, 0.0f));
+	actor = new HeartActor(this);
 }
 
 void Game::UpdateGame()
