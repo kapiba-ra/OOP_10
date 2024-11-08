@@ -21,7 +21,17 @@ public:
     void SetTargetDist(float dist) { mTargetDist = dist; }
     void SetSpringConstant(float spring) { mSpringConstant = spring; }
 
+    enum CameraState
+    {
+        EBack,
+        EAbove
+    };
+    void SwitchCameraPos();
+    
+
 private:
+    CameraState mCameraState;
+
     Vector3 ComputeCameraPos() const;
 
     Vector3 mActualPos; // ƒJƒƒ‰‚ÌÀÛ‚ÌˆÊ’u

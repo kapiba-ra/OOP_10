@@ -17,8 +17,10 @@ public:
 	SkillSystem(class Game* game);
 	~SkillSystem();
 
+	void Reset();
+
 	void AddSkill(const std::string& name, int max = 5);
-	void RemoveSkill(const std::string& name);
+	//void RemoveSkill(const std::string& name);
 
 	std::vector<Skill*> GetRandomSkills();
 

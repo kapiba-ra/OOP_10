@@ -7,8 +7,9 @@ class BallMove :
 public:
     BallMove(class Actor* owner);
 
-    void SetPlayer(Actor* player) { mPlayer = player; }
     void Update(float deltaTime) override;
+
+    void SetPlayer(Actor* player) { mPlayer = player; }
 
 protected:
     class Actor* mPlayer;

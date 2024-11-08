@@ -17,11 +17,14 @@ public:
     void SetShotInterval(float f) { mShotInterval = f; }
     void SetBallScale(float f) { mBallScale = f; }
 
+    void IncShotSpeed(float add);
+
 private:
 
     int mShotNum;
     float mShotInterval;
     float mBallScale;
+    float mShotSpeed;
     
     float mLastShot;
 };

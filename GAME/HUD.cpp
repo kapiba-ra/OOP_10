@@ -18,6 +18,7 @@ HUD::HUD(Game* game)
 	, mRaderRadius(92.0f)
 	, mHPdiscardRange(1.0f)
 	, mTimeFloat(0.0f)
+	, mCurPhaseNum(1)
 {
 	Renderer* r = mGame->GetRenderer();
 	mRader = r->GetTexture("Assets/Radar.png");
@@ -25,6 +26,7 @@ HUD::HUD(Game* game)
 	mHPbarBG = r->GetTexture("Assets/HPBarBG.png");
 	mHPbar = r->GetTexture("Assets/HPBar.png");
 	mLevel = mFont->RenderText("LevelText");
+	mPhase = mFont->RenderText("PhaseText");
 }
 
 HUD::~HUD()
@@ -88,7 +90,16 @@ void HUD::Draw(Shader* shader)
 	DrawTexture(shader, mLevel, lvPos);
 	int level = pParams.level;
 	offset = Vector2(static_cast<float>(mLevel->GetWidth()), 3.0f);
-	DrawTexture(shader, mNumbers[level], lvPos + offset);
+	tens = level / 10;
+	ones = level % 10;
+	DrawTexture(shader, mNumbers[tens], lvPos + offset);
+	DrawTexture(shader, mNumbers[ones], lvPos + offset + Vector2(static_cast<float>(mNumbers[0]->GetWidth()), 0.0f));
+
+	// Phase‚Ì•`‰æ
+	Vector2 PhasePos(lvPos - Vector2(100.0f, 0.0f));
+	DrawTexture(shader, mPhase, PhasePos);
+	offset = Vector2(static_cast<float>((mPhase->GetWidth()) + mNumbers[0]->GetWidth()) / 2.0f, 3.0f);
+	DrawTexture(shader, mNumbers[mCurPhaseNum], PhasePos + offset);
 }
 
 void HUD::Reset()
@@ -158,9 +169,13 @@ void HUD::UpdateTimer(float deltaTime)
 	if (mGame->GetState() == Game::EGameplay)
 	{
 		mTimeFloat += deltaTime;
-		if (mTimeFloat >= 10.0f + deltaTime) // 60‚Å•\Ž¦‚³‚ê‚é‚æ‚¤‚É
+		if (mTimeFloat >= 60.0f + deltaTime) // 60‚Å•\Ž¦‚³‚ê‚é‚æ‚¤‚É
 		{
 			mGame->GetPhaseSystem()->ToNextPhase();
+			if (mCurPhaseNum <= 4)
+			{
+				mCurPhaseNum++;
+			}
 		}
 	}
 }

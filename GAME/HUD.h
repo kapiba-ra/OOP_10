@@ -45,6 +45,10 @@ protected:
     // Level
     class Texture* mLevel;
 
+    // Phase
+    class Texture* mPhase;
+    int mCurPhaseNum;
+
     std::vector<class TargetComponent*> mTargetComps;
 };
 

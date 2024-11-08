@@ -15,9 +15,18 @@ SkillSystem::SkillSystem(Game* game)
 
 SkillSystem::~SkillSystem()
 {
-	while (!mSkills.empty())
+	for (auto skill : mSkills)
 	{
-		delete mSkills.back();
+		delete skill;
+	}
+	mSkills.clear();
+}
+
+void SkillSystem::Reset()
+{
+	for (auto skill : mSkills)
+	{
+		skill->curLv = 1;
 	}
 }
 
@@ -29,21 +38,21 @@ void SkillSystem::AddSkill(const std::string& name, int max)
 	mSkills.emplace_back(skill);
 }
 
-void SkillSystem::RemoveSkill(const std::string& name)
-{
-	for (auto iter = mSkills.begin(); iter != mSkills.end(); )
-	{
-		if ((*iter)->name == name)
-		{
-			delete *iter;
-			mSkills.erase(iter);
-		}
-		else
-		{
-			++iter;
-		}
-	}
-}
+//void SkillSystem::RemoveSkill(const std::string& name)
+//{
+//	for (auto iter = mSkills.begin(); iter != mSkills.end(); )
+//	{
+//		if ((*iter)->name == name)
+//		{
+//			delete *iter;
+//			mSkills.erase(iter);
+//		}
+//		else
+//		{
+//			++iter;
+//		}
+//	}
+//}
 
 std::vector<Skill*> SkillSystem::GetRandomSkills()
 {

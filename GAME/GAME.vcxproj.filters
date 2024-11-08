@@ -66,9 +66,6 @@
     <ClCompile Include="FPSCamera.cpp">
       <Filter>component\camera</Filter>
     </ClCompile>
-    <ClCompile Include="FPSActor.cpp">
-      <Filter>actor</Filter>
-    </ClCompile>
     <ClCompile Include="Actor.cpp">
       <Filter>actor</Filter>
     </ClCompile>
@@ -76,9 +73,6 @@
       <Filter>actor</Filter>
     </ClCompile>
     <ClCompile Include="PlaneActor.cpp">
-      <Filter>actor</Filter>
-    </ClCompile>
-    <ClCompile Include="TargetActor.cpp">
       <Filter>actor</Filter>
     </ClCompile>
     <ClCompile Include="Renderer.cpp">
@@ -218,16 +212,10 @@
     <ClInclude Include="Actor.h">
       <Filter>actor</Filter>
     </ClInclude>
-    <ClInclude Include="FPSActor.h">
-      <Filter>actor</Filter>
-    </ClInclude>
     <ClInclude Include="BallActor.h">
       <Filter>actor</Filter>
     </ClInclude>
     <ClInclude Include="PlaneActor.h">
-      <Filter>actor</Filter>
-    </ClInclude>
-    <ClInclude Include="TargetActor.h">
       <Filter>actor</Filter>
     </ClInclude>
     <ClInclude Include="Renderer.h">

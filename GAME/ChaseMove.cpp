@@ -66,7 +66,10 @@ void ChaseMove::Update(float deltaTime)
 		Vector2 diff = nextPoint2D - myPos2D;
 		if (diff.LengthSq() < 400.0f)
 		{
-			mPath.pop_back();
+			if (!mPath.empty())
+			{
+				mPath.pop_back();
+			}
 			if (!mPath.empty())  // ‹ó‚Å‚È‚¢‚±‚Æ‚ðŠm”F
 			{
 				mNextPoint = mPath.back();

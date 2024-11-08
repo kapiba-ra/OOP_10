@@ -27,7 +27,6 @@ EnemyActor::EnemyActor(Game* game)
 	Mesh* mesh = game->GetRenderer()->GetMesh("Assets/Human.gpmesh");
 	mMeshComp->SetMesh(mesh);
 
-	// TODO: ランダムspawnにしたい。Gameクラスで設定
 	WeightedGraph* g = game->GetGraph();
 	size_t size = g->mNodes.size();
 	std::random_device rd;    // シードを生成
@@ -139,4 +138,9 @@ void EnemyActor::FixCollisions()
 			mBoxComp->OnUpdateWorldTransform();
 		}
 	}
+}
+
+void EnemyActor::SetSpeed(float speed)
+{
+	mMyMove->SetForwardSpeed(speed);
 }

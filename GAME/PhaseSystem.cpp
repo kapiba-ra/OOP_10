@@ -26,6 +26,7 @@ void PhaseSystem::Update(float deltaTime)
 		if (mTimer >= 1.0f)
 		{
 			mTimer -= 1.0f;
+
 			new EnemyActor(mGame);
 		}
 	}
@@ -41,6 +42,12 @@ void PhaseSystem::Update(float deltaTime)
 	}
 }
 
+void PhaseSystem::Reset()
+{
+	mCurPhase = Phases::EPhase_1;
+	mOnTransition = false;
+}
+
 void PhaseSystem::StartPhase()
 {
 	class HUD* hud = mGame->GetHUD();
@@ -50,7 +57,7 @@ void PhaseSystem::StartPhase()
 	case Phases::EPhase_1:
 	{
 		hud->ResetTimer();
-		// ーPhase_2ー　みたいな表示をしたい
+		
 		actor = new EnemyActor(mGame);
 		actor = new EnemyActor(mGame);
 		actor->SetPosition(Vector3(-400.0f, 400.0f, 0.0f));
@@ -59,18 +66,27 @@ void PhaseSystem::StartPhase()
 		actor = new EnemyActor(mGame);
 		actor->SetPosition(Vector3(300.0f, -300.0f, 0.0f));
 		actor = new HeartActor(mGame);
+		break;
 	}
 	case Phases::EPhase_2:
 	{
 		hud->ResetTimer();
+		break;
 	}
 	case Phases::EPhase_3:
 	{
 		hud->ResetTimer();
+		break;
 	}
 	case Phases::EPhase_Boss:
 	{
 		hud->ResetTimer();
+		EnemyActor* eActor;
+		eActor = new EnemyActor(mGame);
+		eActor->SetScale(80.0f);
+		eActor->SetMaxHp(20.0f);
+		eActor->SetSpeed(200.0f);
+		break;
 	}
 	}
 }

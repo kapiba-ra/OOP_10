@@ -20,10 +20,13 @@ public:
 
 	void Update(float deltaTime);
 
-	void StartPhase();
+	void Reset();
+
 	void ToNextPhase();
+	void StartPhase();
 
 private:
+
 	class Game* mGame;
 	Phases mCurPhase;
 

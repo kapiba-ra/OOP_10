@@ -15,6 +15,7 @@ public:
     void SetPlayer(Actor* player);
 
     void HitTarget(Actor* target);
+    void SetShotSpeed(float speed);
 
 private:
     class AudioComponent* mAudioComp;

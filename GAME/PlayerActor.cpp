@@ -12,6 +12,7 @@
 #include "BoxComponent.h"
 #include "FollowCamera.h"
 #include "ShotComponent.h"
+#include "AudioComponent.h"
 
 #include "PlaneActor.h" // for collision caluculation
 #include "BallActor.h"
@@ -19,9 +20,7 @@
 
 PlayerActor::PlayerActor(Game* game)
 	: Actor(game, Type::Eplayer)
-	, mBoxComp(nullptr)
 	, mPosState(EOnFloor)
-	, mHUD(nullptr)
 {	
 	mHUD = GetGame()->GetHUD();
 
@@ -41,6 +40,8 @@ PlayerActor::PlayerActor(Game* game)
 	mBoxComp->SetShouldRotate(false);
 
 	mShotComp = new ShotComponent(this);
+
+	mAudioComp = new AudioComponent(this);
 }
 
 void PlayerActor::ActorInput(const InputState& state)
@@ -85,6 +86,10 @@ void PlayerActor::ActorInput(const InputState& state)
 	else
 	{
 		mCameraComp->SetHorzDist(350.0f);
+	}
+	if (state.Keyboard.GetKeyState(SDL_SCANCODE_C) == ButtonState::EPressed)
+	{
+		mCameraComp->SwitchCameraPos();
 	}
 }
 
@@ -175,7 +180,7 @@ void PlayerActor::FixCollisions()
 			SetPosition(pos);
 			mBoxComp->OnUpdateWorldTransform();
 			// ここは落下用の処理
-			// TODO: playerの中心から一本だけのlineでテストしているので修正が必要そう
+			// TODO: playerの中心から一本だけのlineでテストしているので,ステージをいじった際修正が必要そう
 			if (mPosState == EOnFloor)
 			{
 				if (Intersect(line, planeBox, t, norm))
@@ -262,8 +267,9 @@ void PlayerActor::CheckLevelUp()
 	{
 		mParams.level += 1;
 		mParams.exp -= mParams.expToLevelUp;
-		mParams.expToLevelUp += 1.0f;	// 今は適当
+		mParams.expToLevelUp += 1.0f;
 		GetGame()->ChangeState(Game::ELevelUp);
+		mAudioComp->PlayEvent("event:/Ding");
 	}
 }
 
@@ -299,7 +305,12 @@ void PlayerActor::OnLvUpSkill(const std::string& name)
 	}
 	else if (name == "ShotSpeed")
 	{
-		//float speed = mShotComp->
+		float add = 100.0f;
+		mShotComp->IncShotSpeed(add);
+	}
+	else if (name == "Recover")
+	{
+		GainHeart(20.0f);
 	}
 }
 

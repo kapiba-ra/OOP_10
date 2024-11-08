@@ -3,7 +3,6 @@
 #include "Game.h"
 #include "PhysWorld.h"
 #include "BallActor.h"
-#include "TargetActor.h"
 
 BallMove::BallMove(Actor* owner)
 	: MoveComponent(owner)

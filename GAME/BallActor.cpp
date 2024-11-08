@@ -4,7 +4,6 @@
 #include "Mesh.h"
 
 #include "MeshComponent.h"
-#include "AudioComponent.h"
 #include "BallMove.h"
 #include "DamageComponent.h"
 
@@ -16,8 +15,7 @@ BallActor::BallActor(Game* game)
 	Mesh* mesh = GetGame()->GetRenderer()->GetMesh("Assets/Sphere.gpmesh");
 	mc->SetMesh(mesh);
 	mMyMove = new BallMove(this);
-	mMyMove->SetForwardSpeed(1500.0f);
-	mAudioComp = new AudioComponent(this);
+	//mMyMove->SetForwardSpeed(1500.0f);
 
 	mAttackComp = new DamageComponent(this);
 }
@@ -40,6 +38,10 @@ void BallActor::SetPlayer(Actor* player)
 
 void BallActor::HitTarget(Actor* target)
 {
-	mAudioComp->PlayEvent("event:/Ding");
 	mAttackComp->Damage(target);
+}
+
+void BallActor::SetShotSpeed(float speed)
+{
+	mMyMove->SetForwardSpeed(speed);
 }

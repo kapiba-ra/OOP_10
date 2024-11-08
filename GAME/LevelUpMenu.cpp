@@ -146,6 +146,15 @@ void LevelUpMenu::AddButtonRandom()
 			Close();
 		}, buttonOffset);
 	}
+	if (skills.size() == 0)
+	{
+		mButtonBGs.emplace_back(mGame->GetRenderer()->GetTexture("Assets/RecoverBG.png"));
+		AddButton("Recover", [this, player]() {
+			mGame->ChangeState(Game::EGameplay);
+			player->OnLvUpSkill("Recover");
+			Close();
+		}, buttonOffset);
+	}
 
 	/* rekishi */
 	//mButtonBGs.emplace_back(mGame->GetRenderer()->GetTexture("Assets/IncBulletBG.png"));

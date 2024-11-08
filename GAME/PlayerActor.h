@@ -44,6 +44,7 @@ private:
 	class MeshComponent* mMeshComp;
 	class BoxComponent* mBoxComp;
 	class ShotComponent* mShotComp;
+	class AudioComponent* mAudioComp;
 
 public:
 	// parameter related

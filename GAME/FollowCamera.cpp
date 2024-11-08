@@ -3,10 +3,9 @@
 
 FollowCamera::FollowCamera(Actor* owner)
 	: CameraComponent(owner)
+	, mCameraState(CameraState::EBack)
 	, mHorzDist(350.0f)
 	, mVertDist(150.0f)
-	//, mHorzDist(100.0f)
-	//, mVertDist(1000.0f)
 	, mTargetDist(100.0f)
 	, mSpringConstant(64.0f)
 {
@@ -15,6 +14,8 @@ FollowCamera::FollowCamera(Actor* owner)
 void FollowCamera::Update(float deltaTime)
 {
 	CameraComponent::Update(deltaTime);
+
+
 
 	// ‚Î‚Ë’è”‚©‚çŒ¸Š‚ðŒvŽZ
 	float dampening = 2.0f * Math::Sqrt(mSpringConstant);
@@ -47,6 +48,27 @@ void FollowCamera::SnapToIdeal()
 	Vector3 target = mOwner->GetPosition() + mOwner->GetForward() * mTargetDist;
 	Matrix4 view = Matrix4::CreateLookAt(mActualPos, target, Vector3::UnitZ);
 	SetViewMatrix(view);
+}
+
+void FollowCamera::SwitchCameraPos()
+{
+	switch (mCameraState)
+	{
+	case EAbove:
+	{
+		mHorzDist = 100.0f;
+		mVertDist = 1000.0f;
+		mCameraState = EBack;
+		break;
+	}
+	case EBack:
+	{
+		mHorzDist = 350.0f;
+		mVertDist = 150.0f;
+		mCameraState = EAbove;
+		break;
+	}
+	}
 }
 
 Vector3 FollowCamera::ComputeCameraPos() const

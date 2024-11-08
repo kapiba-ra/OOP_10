@@ -16,7 +16,6 @@
 #include "AStar.h"
 
 #include "Actor.h"
-#include "FPSActor.h"
 #include "PlayerActor.h"
 #include "PlaneActor.h"
 #include "BallActor.h"
@@ -137,16 +136,16 @@ void Game::LoadData()
 	for (int i = 0; i < 5; i++)
 	{
 		// 左
-		//actor = new PlaneActor(this);
-		//actor->SetPosition(Vector3(start + i * size, start - size, 0.0f));
-		//actor->SetRotation(q);
+		actor = new PlaneActor(this);
+		actor->SetPosition(Vector3(start + i * size, 2500.0f, 0.0f));
+		actor->SetRotation(q);
 		// 右
 		actor = new PlaneActor(this);
 		actor->SetPosition(Vector3(start + i * size, -2500.0f, 0.0f));
 		actor->SetRotation(q);
 	}
 	// ステージ上の通れないところ(壁)
-	// TODO: 壁四枚でなくオブジェクト１個にしたい
+	// TODO: 壁四枚でなくオブジェクト１個にしたい、かも
 	actor = new PlaneActor(this);
 	actor->SetPosition(Vector3(1500.0f, 0.0f, 0.0f));
 	actor->SetRotation(q);
@@ -184,7 +183,7 @@ void Game::LoadData()
 	mHUD = new HUD(this);
 
 	// Musicスタート
-	mMusicEvent = mAudioSystem->PlayEvent("event:/Music");
+	//mMusicEvent = mAudioSystem->PlayEvent("event:/Music");
 
 	// 相対位置マウスモードを有効に
 	SDL_SetRelativeMouseMode(SDL_TRUE);
@@ -384,6 +383,8 @@ void Game::Reset()
 	//	ui->Reset();
 	//}
 	mHUD->Reset();
+	mSkillSystem->Reset();
+	mPhaseSystem->Reset();
 
 	// 初期配置
 	Actor* actor;
@@ -680,7 +681,6 @@ void Game::CreateNodes()
 			float centerX = -2500.0f + (i * 500.0f) + 250.0f;
 			float centerY = -2500.0f + (j * 500.0f) + 250.0f;
 
-			// TODO: deleteどこでやるのか問題
 			WeightedGraphNode* node = new WeightedGraphNode();
 			node->NodePos.x = centerX;
 			node->NodePos.y = centerY;

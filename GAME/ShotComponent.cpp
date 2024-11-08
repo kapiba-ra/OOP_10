@@ -10,6 +10,7 @@ ShotComponent::ShotComponent(Actor* owner)
 	, mShotInterval(1.0f)
 	, mLastShot(0.0f)
 	, mBallScale(1.0f)
+	, mShotSpeed(1500.0f)
 {
 }
 
@@ -32,7 +33,14 @@ void ShotComponent::Update(float deltaTime)
 			ball->SetScale(mBallScale);
 			ball->SetPosition(start + dir * 50.0f);
 			ball->RotateToNewForward(dir);
+			ball->SetShotSpeed(mShotSpeed);
 			dir = Vector3::Transform(dir, Quaternion(Vector3::UnitZ, shotAngle));
 		}
 	}
+}
+
+void ShotComponent::IncShotSpeed(float add)
+{
+	mShotSpeed += add;
+	
 }

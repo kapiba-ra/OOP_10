@@ -19,6 +19,8 @@ public:
     void FixCollisions();
 
     void TakeDamage(float amount) { mHP -= amount; }
+    void SetMaxHp(float hp) { mHP = hp; }
+    void SetSpeed(float speed);
 
 private:
     MyState mMyState;
