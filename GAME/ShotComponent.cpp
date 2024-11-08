@@ -42,5 +42,12 @@ void ShotComponent::Update(float deltaTime)
 void ShotComponent::IncShotSpeed(float add)
 {
 	mShotSpeed += add;
-	
+}
+
+void ShotComponent::Reset()
+{
+	mBallScale = 1.0f;
+	mShotNum = 1;
+	mShotInterval = 1.0f;
+	mShotSpeed = 1500.0f;
 }

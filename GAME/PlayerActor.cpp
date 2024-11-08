@@ -106,6 +106,7 @@ void PlayerActor::Reset()
 	Actor::SetState(EActive);
 	mPosState = EOnFloor;
 	mParams.Reset();
+	mShotComp->Reset();
 
 	SetPosition(Vector3(0.0f, 0.0f, -50.0f));
 }

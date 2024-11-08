@@ -19,6 +19,8 @@ public:
 
     void IncShotSpeed(float add);
 
+    void Reset();
+
 private:
 
     int mShotNum;
