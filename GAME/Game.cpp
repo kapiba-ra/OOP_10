@@ -57,7 +57,7 @@ bool Game::Initialize()
 	// SDL‚Ì‰Šú‰»
 	if (SDL_Init(SDL_INIT_VIDEO | SDL_INIT_AUDIO) != 0)
 	{
-		SDL_Log("SDL‰Šú‰»¸”s: %s", SDL_GetError());
+		SDL_Log("Failed to initialize SDL: %s", SDL_GetError());
 		return false;
 	}
 
@@ -65,7 +65,9 @@ bool Game::Initialize()
 	mInputSystem = new InputSystem();
 	if (!mInputSystem->Initialize())
 	{
-		SDL_Log("“ü—ÍƒVƒXƒeƒ€‰Šú‰»¸”s");
+		SDL_Log("Failed to initialize InputSystem");
+		delete mInputSystem;
+		mInputSystem = nullptr;
 		return false;
 	}
 
@@ -73,7 +75,7 @@ bool Game::Initialize()
 	mRenderer = new Renderer(this);
 	if (!mRenderer->Initialize(1024.0f, 768.0f))
 	{
-		SDL_Log("Renderer‰Šú‰»¸”s");
+		SDL_Log("Failed to initialize Renderer");
 		delete mRenderer;
 		mRenderer = nullptr;
 		return false;
@@ -99,7 +101,7 @@ bool Game::Initialize()
 	// SDL_TTF‚Ì‰Šú‰»
 	if (TTF_Init() != 0)
 	{
-		SDL_Log(" SDL_ttf‰Šú‰»¸”s");
+		SDL_Log("Failed to initialize SDL_ttf");
 		return false;
 	}
 

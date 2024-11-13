@@ -92,13 +92,13 @@ bool Shader::CompileShader(const std::string& fileName, GLenum shaderType, GLuin
 
         if (!IsCompiled(outShader))
         {
-            SDL_Log("シェーダー %s のコンパイルに失敗", fileName.c_str());
+            SDL_Log("Failded to compile %s", fileName.c_str());
             return false;
         }
     }
     else
     {
-        SDL_Log("シェーダーファイル %s が見つかりません", fileName.c_str());
+        SDL_Log("Failed to find  %s", fileName.c_str());
         return false;
     }
     return true;
@@ -114,7 +114,7 @@ bool Shader::IsCompiled(GLuint shader)
         char buffer[512];
         memset(buffer, 0, 512);
         glGetShaderInfoLog(shader, 511, nullptr, buffer);
-        SDL_Log("GLSLのコンパイルが失敗 : \n%s", buffer);
+        SDL_Log("Failed to compile GLSL : \n%s", buffer);
         return false;
     }
     return true;
@@ -130,7 +130,7 @@ bool Shader::IsValidProgram()
         char buffer[512];
         memset(buffer, 0, 512);
         glGetProgramInfoLog(mShaderProgram, 511, nullptr, buffer);
-        SDL_Log("GLSLのリンクが失敗 : \n%s", buffer);
+        SDL_Log("Failed to link GLSL : \n%s", buffer);
         return false;
     }
     return true;
