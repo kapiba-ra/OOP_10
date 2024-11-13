@@ -25,7 +25,7 @@ private:
 	// Œ»İ‚Ìó‘Ô
 	const Uint8* mCurrState;
 	// ‚PƒtƒŒ[ƒ€‘O‚Ìó‘Ô
-	Uint8* mPrevState[SDL_NUM_SCANCODES];
+	Uint8 mPrevState[SDL_NUM_SCANCODES];
 };
 
 class MouseState
