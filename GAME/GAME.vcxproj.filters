@@ -210,6 +210,9 @@
     <ClCompile Include="Weapon.cpp">
       <Filter>actor\weapon</Filter>
     </ClCompile>
+    <ClCompile Include="JumpComponent.cpp">
+      <Filter>component\move</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Math.h">
@@ -352,6 +355,9 @@
     </ClInclude>
     <ClInclude Include="Weapon.h">
       <Filter>actor\weapon</Filter>
+    </ClInclude>
+    <ClInclude Include="JumpComponent.h">
+      <Filter>component\move</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

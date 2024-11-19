@@ -6,7 +6,6 @@ MoveComponent::MoveComponent(Actor* owner, int updateOrder)
 	, mAngularSpeed(0.0f)
 	, mForwardSpeed(0.0f)
 	, mStrafeSpeed(0.0f)
-	//, mJumpSpeed(0.0f)
 {
 }
 

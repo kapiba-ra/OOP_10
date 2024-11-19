@@ -13,15 +13,6 @@ public:
 	void UpdateActor(float deltaTime) override;
 	void Reset() override;
 
-	enum PosState
-	{
-		EOnFloor,
-		EJumping,	// fallingと分けてるけど現状は活用してない
-		EFalling
-	};
-	PosState GetPosState() const { return mPosState; }
-	void SetPosState(PosState state) { mPosState = state; }
-
 	// 2つのAABBの最小の重なりテストを行う
 	void FixCollisions();
 
@@ -33,13 +24,11 @@ public:
 	class BoxComponent* GetBox() { return mBoxComp; }
 
 private:
-	PosState mPosState;
-
-	void Jump(float deltaTime);
 	void CheckLevelUp();
 
 	class HUD* mHUD;
 	class MoveComponent* mMoveComp;
+	class JumpComponent* mJumpComp;
 	class FollowCamera* mCameraComp;
 	class MeshComponent* mMeshComp;
 	class BoxComponent* mBoxComp;
@@ -52,7 +41,7 @@ public:
 	struct Parameters
 	{
 		float maxForwardSpeed = 400.0f;
-		float jumpSpeed = 0.0f;
+		float maxJumpSpeed = 500.0f;
 		float maxHp = 100.0f;
 		float hp = maxHp;
 		float exp = 0.0f;

@@ -9,6 +9,7 @@
 
 #include "MeshComponent.h"
 #include "MoveComponent.h"
+#include "JumpComponent.h"
 #include "BoxComponent.h"
 #include "FollowCamera.h"
 #include "ShotComponent.h"
@@ -20,7 +21,6 @@
 
 PlayerActor::PlayerActor(Game* game)
 	: Actor(game, Type::Eplayer)
-	, mPosState(EOnFloor)
 {	
 	mHUD = GetGame()->GetHUD();
 
@@ -31,6 +31,8 @@ PlayerActor::PlayerActor(Game* game)
 
 	mMoveComp = new MoveComponent(this);
 	
+	mJumpComp = new JumpComponent(this);
+
 	mCameraComp = new FollowCamera(this);
 	mCameraComp->SnapToIdeal();
 	
@@ -48,7 +50,8 @@ void PlayerActor::ActorInput(const InputState& state)
 {
 	float forwardSpeed = 0.0f;	// 前進速度
 	float angularSpeed = 0.0f;	// 回転速度
-	// 前後と回転の移動
+	float jumpSpeed = 0.0f;		// ジャンプ速度
+	// 前後・回転
 	if (state.Keyboard.GetKeyValue(SDL_SCANCODE_W))
 	{
 		forwardSpeed += mParams.maxForwardSpeed;
@@ -68,10 +71,9 @@ void PlayerActor::ActorInput(const InputState& state)
 	// ジャンプ
 	if (state.Keyboard.GetKeyValue(SDL_SCANCODE_SPACE))
 	{
-		if (mPosState == EOnFloor)
+		if (!mJumpComp->IsJumping())
 		{
-			mPosState = EJumping;
-			mParams.jumpSpeed = 500.0f;
+			mJumpComp->Liftoff(mParams.maxJumpSpeed);
 		}
 	}
 	mMoveComp->SetForwardSpeed(forwardSpeed);
@@ -97,14 +99,12 @@ void PlayerActor::UpdateActor(float deltaTime)
 {
 	Actor::UpdateActor(deltaTime);
 
-	Jump(deltaTime);
 	FixCollisions();
 }
 
 void PlayerActor::Reset()
 {
 	Actor::SetState(EActive);
-	mPosState = EOnFloor;
 	mParams.Reset();
 	mShotComp->Reset();
 
@@ -162,18 +162,9 @@ void PlayerActor::FixCollisions()
 				// 床との衝突であるとき
 				if (dz == dz1) 
 				{
-					//switch (mState)
-					//{
-					//case EOnFloor:
-					//	slip = false;
-					//	break;
-					//case EFalling:
-					//	mState = EOnFloor;
-					//	break;
-					//}
-					if (mPosState == EFalling)
+					if (mJumpComp->IsJumping())
 					{
-						mPosState = EOnFloor;
+						mJumpComp->Land();
 					}
 				}
 			}
@@ -182,7 +173,7 @@ void PlayerActor::FixCollisions()
 			mBoxComp->OnUpdateWorldTransform();
 			// ここは落下用の処理
 			// TODO: playerの中心から一本だけのlineでテストしているので,ステージをいじった際修正が必要そう
-			if (mPosState == EOnFloor)
+			if (!mJumpComp->IsJumping())
 			{
 				if (Intersect(line, planeBox, t, norm))
 				{
@@ -199,9 +190,9 @@ void PlayerActor::FixCollisions()
 		GetGame()->ChangeState(Game::EGameover);
 	}
 	// inAirならEfallingへ
-	else if (inAir && mPosState == EOnFloor)
+	else if (inAir && !mJumpComp->IsJumping())
 	{
-		mPosState = EFalling;
+		mJumpComp->Liftoff(0.0f);
 	}
 
 	// アイテム取得用
@@ -243,23 +234,6 @@ void PlayerActor::GainHeart(float recover)
 		recover = diff;
 	}
 	mParams.hp += recover;
-}
-
-void PlayerActor::Jump(float deltaTime)
-{
-	if (mPosState == EJumping || mPosState == EFalling)
-	{
-		Vector3 pos = GetPosition();
-		pos += Vector3::UnitZ * mParams.jumpSpeed * deltaTime;
-		mParams.jumpSpeed -= 1000.0f * deltaTime;
-
-		if (mPosState == EJumping && mParams.jumpSpeed < 0.0f)
-		{
-			mPosState = EFalling;
-		}
-
-		SetPosition(pos);
-	}
 }
 
 void PlayerActor::CheckLevelUp()
@@ -318,7 +292,7 @@ void PlayerActor::OnLvUpSkill(const std::string& name)
 void PlayerActor::Parameters::Reset()
 {
 	maxForwardSpeed = 400.0f;
-	jumpSpeed = 0.0f;
+	maxJumpSpeed = 500.0f;
 	hp = 100.0f;
 	exp = 0.0f;
 	expToLevelUp = 1.0f;
