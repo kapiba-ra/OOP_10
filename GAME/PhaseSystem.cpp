@@ -11,6 +11,7 @@ PhaseSystem::PhaseSystem(Game* game)
 	, mOnTransition(false)
 	, mTransTime(2.0f)
 	, mTimer(0.0f)
+	, mEnemyGenInterval(1.0f)
 {
 }
 
@@ -23,9 +24,9 @@ void PhaseSystem::Update(float deltaTime)
 	if (!mOnTransition)
 	{
 		mTimer += deltaTime;
-		if (mTimer >= 1.0f)
+		if (mTimer >= mEnemyGenInterval)
 		{
-			mTimer -= 1.0f;
+			mTimer -= mEnemyGenInterval;
 
 			new EnemyActor(mGame);
 		}

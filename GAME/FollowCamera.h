@@ -1,11 +1,9 @@
 #pragma once
 #include "CameraComponent.h"
 
-/*
-*  三人称視点の追従カメラ。
-*  ばねを利用することで、滑らかに追いかけることができる
-*/
-
+/// <summary>
+/// 三人称視点の追従カメラを実現するComponentクラス
+/// </summary>
 class FollowCamera :
     public CameraComponent
 {
@@ -33,6 +31,10 @@ private:
     CameraState mCameraState;
 
     Vector3 ComputeCameraPos() const;
+    /**
+    * @brief CameraとPlayerとの間に障害物(壁のアクター)があればカメラ位置を修正する
+    */
+    void CheckObstacles();
 
     Vector3 mActualPos; // カメラの実際の位置
     Vector3 mVelocity;  // 実際のカメラの速度

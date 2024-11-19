@@ -1,5 +1,9 @@
 #include "FollowCamera.h"
 #include "Actor.h"
+#include "PlaneActor.h"
+#include "Collision.h"
+#include "Game.h"
+#include "BoxComponent.h"
 
 FollowCamera::FollowCamera(Actor* owner)
 	: CameraComponent(owner)
@@ -32,6 +36,8 @@ void FollowCamera::Update(float deltaTime)
 	mVelocity += acel * deltaTime;
 	// 実際のカメラポジションを更新
 	mActualPos += mVelocity * deltaTime;
+	// 障害物をチェックし、交差していたらカメラの位置を交点に更新
+	CheckObstacles();
 	// ターゲットは所有アクターから前方に離れた座標
 	Vector3 target = mOwner->GetPosition() + mOwner->GetForward() * mTargetDist;
 	// 理想ではなく実際のポジションを使う
@@ -56,15 +62,15 @@ void FollowCamera::SwitchCameraPos()
 	{
 	case EAbove:
 	{
-		mHorzDist = 100.0f;
-		mVertDist = 1000.0f;
+		mHorzDist = 350.0f;
+		mVertDist = 150.0f;
 		mCameraState = EBack;
 		break;
 	}
 	case EBack:
 	{
-		mHorzDist = 350.0f;
-		mVertDist = 150.0f;
+		mHorzDist = 100.0f;
+		mVertDist = 1000.0f;
 		mCameraState = EAbove;
 		break;
 	}
@@ -78,4 +84,21 @@ Vector3 FollowCamera::ComputeCameraPos() const
 	cameraPos -= mOwner->GetForward() * mHorzDist;
 	cameraPos += Vector3::UnitZ * mVertDist;
 	return cameraPos;
+}
+
+void FollowCamera::CheckObstacles()
+{
+	LineSegment line(mActualPos, mOwner->GetPosition());
+	auto& planes = mOwner->GetGame()->GetPlanes();
+	for (auto pa : planes)
+	{
+		float t = 0.0f;
+		Vector3 norm(Vector3::Zero);
+		const AABB& planeBox = pa->GetBox()->GetWorldBox();
+
+		if (Intersect(line, planeBox, t, norm))
+		{
+			mActualPos = line.PointOnSegment(t);
+		}
+	}
 }

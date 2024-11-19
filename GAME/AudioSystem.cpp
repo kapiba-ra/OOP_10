@@ -30,7 +30,7 @@ bool AudioSystem::Initialize()
 	result = FMOD::Studio::System::create(&mSystem);
 	if (result != FMOD_OK)
 	{
-		SDL_Log("FMODシステムの作成に失敗 : %s", FMOD_ErrorString(result));
+		SDL_Log("Failed to create FMOD system : %s", FMOD_ErrorString(result));
 		return false;
 	}
 
@@ -43,7 +43,7 @@ bool AudioSystem::Initialize()
 	);
 	if (result != FMOD_OK)
 	{
-		SDL_Log("FMODシステムの初期化に失敗 : %s", FMOD_ErrorString(result));
+		SDL_Log("Failed to initialize FMOD system : %s", FMOD_ErrorString(result));
 		return false;
 	}
 

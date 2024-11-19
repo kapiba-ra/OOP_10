@@ -4,7 +4,7 @@
 SkillSystem::SkillSystem(Game* game)
 	: mGame(game)
 {
-	// —Í‹Z
+	// —Í‹Z Power play
 	AddSkill("MaxHp");
 	AddSkill("PlayerSpeed");
 	AddSkill("ShotSize");

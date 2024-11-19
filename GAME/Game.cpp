@@ -54,14 +54,12 @@ Game::Game()
 
 bool Game::Initialize()
 {
-	// SDLの初期化
 	if (SDL_Init(SDL_INIT_VIDEO | SDL_INIT_AUDIO) != 0)
 	{
 		SDL_Log("Failed to initialize SDL: %s", SDL_GetError());
 		return false;
 	}
 
-	// InputSystemの作成と初期化
 	mInputSystem = new InputSystem();
 	if (!mInputSystem->Initialize())
 	{
@@ -71,7 +69,6 @@ bool Game::Initialize()
 		return false;
 	}
 
-	// Rendererを作成して初期化
 	mRenderer = new Renderer(this);
 	if (!mRenderer->Initialize(1024.0f, 768.0f))
 	{
@@ -81,7 +78,6 @@ bool Game::Initialize()
 		return false;
 	}
 
-	// AudioSystemを作成して初期化
 	mAudioSystem = new AudioSystem(this);
 	if (!mAudioSystem->Initialize())
 	{
@@ -92,9 +88,7 @@ bool Game::Initialize()
 		return false;
 	}
 
-	// PhysWorldを作成
 	mPhysWorld = new PhysWorld(this);
-
 	mSkillSystem = new SkillSystem(this);
 	mPhaseSystem = new PhaseSystem(this);
 
@@ -106,6 +100,8 @@ bool Game::Initialize()
 	}
 
 	LoadText("Assets/English.gptext");
+
+
 	new MainMenu(this);
 
 	mTicksCount = SDL_GetTicks();
@@ -250,7 +246,6 @@ void Game::ProcessInput()
 	mInputSystem->Update();
 
 	const InputState& state = mInputSystem->GetState();
-	//const Uint8* state = SDL_GetKeyboardState(NULL);
 	if (mGameState == EGameplay)
 	{
 		for (auto actor : mActors)
@@ -517,15 +512,17 @@ void Game::Shutdown()
 	delete mSkillSystem;
 	delete mInputSystem;
 
-	if (mGraph) {
-		for (WeightedGraphNode* node : mGraph->mNodes) {
-			// 各ノードのエッジを解放
-			for (WeightedEdge* edge : node->mEdges) {
-				delete edge; // エッジのメモリを解放
+	if (mGraph)
+	{
+		for (WeightedGraphNode* node : mGraph->mNodes)
+		{
+			for (WeightedEdge* edge : node->mEdges)
+			{
+				delete edge;
 			}
-			delete node; // ノードのメモリを解放
+			delete node;
 		}
-		delete mGraph; // グラフ自体のメモリを解放
+		delete mGraph;
 	}
 
 	SDL_Quit();

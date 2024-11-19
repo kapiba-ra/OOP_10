@@ -3,6 +3,10 @@
 #include <cstdint>
 #include "Math.h"
 
+/// <summary>
+/// ゲーム中の全てのオブジェクトの基底クラス
+/// Transform,状態管理,アタッチする全Componentを格納した配列等を持つ
+/// </summary>
 class Actor
 {
 public:

@@ -46,8 +46,23 @@
     <Filter Include="ui\menu">
       <UniqueIdentifier>{3b484cc9-2187-4e08-a387-b1c41f8c5810}</UniqueIdentifier>
     </Filter>
+    <Filter Include="actor\base">
+      <UniqueIdentifier>{14f73555-a44c-421f-8e16-d1ee2205f651}</UniqueIdentifier>
+    </Filter>
     <Filter Include="actor\item">
       <UniqueIdentifier>{9338abed-b552-44c4-8611-19f41e3e3d02}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="actor\item\base">
+      <UniqueIdentifier>{bb041c2b-25dc-4441-ab7d-b6b177156607}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="actor\enemy">
+      <UniqueIdentifier>{1c76ce14-e7bc-4b81-8746-4ca00f76c04b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="actor\enemy\base">
+      <UniqueIdentifier>{b500f376-95af-45b9-9bab-18b5e6c9875e}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="actor\weapon">
+      <UniqueIdentifier>{0fd99000-78ca-40d6-8725-86b7e650f3aa}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -65,9 +80,6 @@
     </ClCompile>
     <ClCompile Include="FPSCamera.cpp">
       <Filter>component\camera</Filter>
-    </ClCompile>
-    <ClCompile Include="Actor.cpp">
-      <Filter>actor</Filter>
     </ClCompile>
     <ClCompile Include="BallActor.cpp">
       <Filter>actor</Filter>
@@ -110,9 +122,6 @@
     </ClCompile>
     <ClCompile Include="ChaseMove.cpp">
       <Filter>component\move</Filter>
-    </ClCompile>
-    <ClCompile Include="EnemyActor.cpp">
-      <Filter>actor</Filter>
     </ClCompile>
     <ClCompile Include="DamageComponent.cpp">
       <Filter>component</Filter>
@@ -177,9 +186,6 @@
     <ClCompile Include="ShotComponent.cpp">
       <Filter>component</Filter>
     </ClCompile>
-    <ClCompile Include="ItemActor.cpp">
-      <Filter>actor\item</Filter>
-    </ClCompile>
     <ClCompile Include="SkillSystem.cpp">
       <Filter>manager</Filter>
     </ClCompile>
@@ -191,6 +197,18 @@
     </ClCompile>
     <ClCompile Include="PhaseSystem.cpp">
       <Filter>manager</Filter>
+    </ClCompile>
+    <ClCompile Include="ItemActor.cpp">
+      <Filter>actor\item\base</Filter>
+    </ClCompile>
+    <ClCompile Include="Actor.cpp">
+      <Filter>actor\base</Filter>
+    </ClCompile>
+    <ClCompile Include="EnemyActor.cpp">
+      <Filter>actor\enemy\base</Filter>
+    </ClCompile>
+    <ClCompile Include="Weapon.cpp">
+      <Filter>actor\weapon</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -208,9 +226,6 @@
     </ClInclude>
     <ClInclude Include="FPSCamera.h">
       <Filter>component\camera</Filter>
-    </ClInclude>
-    <ClInclude Include="Actor.h">
-      <Filter>actor</Filter>
     </ClInclude>
     <ClInclude Include="BallActor.h">
       <Filter>actor</Filter>
@@ -253,9 +268,6 @@
     </ClInclude>
     <ClInclude Include="ChaseMove.h">
       <Filter>component\move</Filter>
-    </ClInclude>
-    <ClInclude Include="EnemyActor.h">
-      <Filter>actor</Filter>
     </ClInclude>
     <ClInclude Include="DamageComponent.h">
       <Filter>component</Filter>
@@ -317,9 +329,6 @@
     <ClInclude Include="ShotComponent.h">
       <Filter>component</Filter>
     </ClInclude>
-    <ClInclude Include="ItemActor.h">
-      <Filter>actor\item</Filter>
-    </ClInclude>
     <ClInclude Include="SkillSystem.h">
       <Filter>manager</Filter>
     </ClInclude>
@@ -331,6 +340,18 @@
     </ClInclude>
     <ClInclude Include="PhaseSystem.h">
       <Filter>manager</Filter>
+    </ClInclude>
+    <ClInclude Include="ItemActor.h">
+      <Filter>actor\item\base</Filter>
+    </ClInclude>
+    <ClInclude Include="Actor.h">
+      <Filter>actor\base</Filter>
+    </ClInclude>
+    <ClInclude Include="EnemyActor.h">
+      <Filter>actor\enemy\base</Filter>
+    </ClInclude>
+    <ClInclude Include="Weapon.h">
+      <Filter>actor\weapon</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

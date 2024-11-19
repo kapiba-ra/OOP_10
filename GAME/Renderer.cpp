@@ -118,8 +118,8 @@ void Renderer::UnloadData()
 
 void Renderer::Draw()
 {
-	// クリアカラーの設定(黒)
-	glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
+	// Sky color
+	glClearColor(0.8f, 0.9f, 0.9f, 1.0f);
 	// Color buffer, Depth buffer をそれぞれクリア
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
@@ -132,7 +132,7 @@ void Renderer::Draw()
 	SetLightUniforms(mMeshShader);
 	for (auto mc : mMeshComps)
 	{
-		if (mc->GetVisible()) // 見える状態なら(カメラによって見えるものは切り替わる)
+		if (mc->GetVisible())
 		{
 			mc->Draw(mMeshShader);
 		}

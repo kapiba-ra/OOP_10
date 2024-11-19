@@ -33,5 +33,6 @@ private:
 	bool mOnTransition;
 	float mTransTime;
 	float mTimer;
+	float mEnemyGenInterval;
 };
 
