@@ -16,19 +16,23 @@ public:
 	// 2つのAABBの最小の重なりテストを行う
 	void FixCollisions();
 
-	void TakeDamage(float amount);
+	//void TakeDamage(float amount);
 
 	void GainExp(float exp);
-	void GainHeart(float recover);
+	//void GainHeart(float recover);
 
 	class BoxComponent* GetBox() { return mBoxComp; }
+	class HpComponent* GetHpComp() { return mHpComp; }
 
 private:
 	void CheckLevelUp();
 
 	class HUD* mHUD;
+	// ステータス,パラメータに関連するもの
 	class MoveComponent* mMoveComp;
 	class JumpComponent* mJumpComp;
+	class HpComponent* mHpComp;
+
 	class FollowCamera* mCameraComp;
 	class MeshComponent* mMeshComp;
 	class BoxComponent* mBoxComp;
@@ -37,15 +41,14 @@ private:
 
 public:
 	// parameter related
-	// Dataクラスから初期化したいかも
 	struct Parameters
 	{
 		float maxForwardSpeed = 400.0f;
 		float maxJumpSpeed = 500.0f;
-		float maxHp = 100.0f;
-		float hp = maxHp;
-		float exp = 0.0f;
+		//float maxHp = 100.0f;
+		//float hp = maxHp;
 		float expToLevelUp = 1.0f;
+		float exp = 0.0f;
 		int level = 1;
 
 		void Reset();

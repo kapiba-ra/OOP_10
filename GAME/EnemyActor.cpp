@@ -9,6 +9,7 @@
 #include "MeshComponent.h"
 #include "BoxComponent.h"
 #include "TargetComponent.h"
+#include "HpComponent.h"
 
 #include "PlayerActor.h"
 #include "PlaneActor.h"
@@ -101,7 +102,8 @@ void EnemyActor::FixCollisions()
 		// 敵の位置をプレイヤーから少し離す
 		
 		// プレイヤーのHPをへらす
-		player->TakeDamage(1.0f);
+		//player->TakeDamage(1.0f);
+		player->GetHpComp()->TakeDamage(1.0f);
 	}
 
 	// 壁・床との衝突

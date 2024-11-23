@@ -6,6 +6,7 @@
 #include "MeshComponent.h"
 #include "BoxComponent.h"
 #include "MoveComponent.h"
+#include "HpComponent.h"
 
 #include "PlayerActor.h"
 
@@ -33,5 +34,6 @@ void HeartActor::OnAcquired()
 	ItemActor::OnAcquired();
 
 	PlayerActor* player = GetGame()->GetPlayer();
-	player->GainHeart(mRecoverAmount);
+	//player->GainHeart(mRecoverAmount);
+	player->GetHpComp()->Recover(mRecoverAmount);
 }

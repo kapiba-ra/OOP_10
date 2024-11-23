@@ -4,6 +4,8 @@
 #include "EnemyActor.h"
 #include "PlayerActor.h"
 
+#include "HpComponent.h"
+
 DamageComponent::DamageComponent(Actor* owner)
 	: Component(owner)
 	, mDamageAmt(1.0f)
@@ -26,7 +28,7 @@ void DamageComponent::Damage(Actor* target)
 	}
 	case Actor::Type::Eplayer:
 	{
-		static_cast<PlayerActor*>(target)->TakeDamage(mDamageAmt);
+		static_cast<PlayerActor*>(target)->GetHpComp()->TakeDamage(mDamageAmt);
 		break;
 	}
 	}

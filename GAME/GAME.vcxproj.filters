@@ -213,6 +213,7 @@
     <ClCompile Include="JumpComponent.cpp">
       <Filter>component\move</Filter>
     </ClCompile>
+    <ClCompile Include="HpComponent.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Math.h">
@@ -359,6 +360,7 @@
     <ClInclude Include="JumpComponent.h">
       <Filter>component\move</Filter>
     </ClInclude>
+    <ClInclude Include="HpComponent.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Shaders\Sprite.frag">

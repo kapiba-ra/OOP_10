@@ -11,6 +11,7 @@
 #include "EnemyActor.h"
 
 #include "TargetComponent.h"
+#include "HpComponent.h"
 
 HUD::HUD(Game* game)
 	: UIScreen(game)
@@ -43,7 +44,8 @@ void HUD::Update(float deltaTime)
 void HUD::Draw(Shader* shader)
 {
 	// prepare! キャッシュしておくと表現できるらしい
-	PlayerActor::Parameters pParams = mGame->GetPlayer()->GetParams();
+	PlayerActor* player = mGame->GetPlayer();
+	PlayerActor::Parameters pParams = player->GetParams();
 
 	// レーダーの描画
 	const Vector2 cRaderPos(-390.0f, 275.0f);
@@ -57,7 +59,7 @@ void HUD::Draw(Shader* shader)
 	// HPバーの描画
 	Vector2 hpBarPos(-350.0f, -350.0f);
 	DrawTexture(shader, mHPbarBG, hpBarPos);
-	mHPdiscardRange = pParams.hp / pParams.maxHp; // updateの範疇な気がしないでもない
+	mHPdiscardRange = mGame->GetPlayer()->GetHpComp()->GetHpPercentage();
 	if (mHPdiscardRange >= 0.0f)
 	{
 		DrawTexture(shader, mHPbar, hpBarPos, 1.0f, mHPdiscardRange);
@@ -66,7 +68,7 @@ void HUD::Draw(Shader* shader)
 	// HP(number)の描画
 	Vector2 NumPos(-460.0f, -315.0f);
 	Vector2 offset(20.0f, 0.0f);
-	std::string hp = std::to_string(static_cast<int>(pParams.hp));
+	std::string hp = std::to_string(static_cast<int>(player->GetHpComp()->GetCurHp()));
 	for (size_t i = 0;i < hp.length(); i++)
 	{
 		int digitIndex = hp[i] - '0';

@@ -10,6 +10,7 @@
 #include "MeshComponent.h"
 #include "MoveComponent.h"
 #include "JumpComponent.h"
+#include "HpComponent.h"
 #include "BoxComponent.h"
 #include "FollowCamera.h"
 #include "ShotComponent.h"
@@ -32,6 +33,9 @@ PlayerActor::PlayerActor(Game* game)
 	mMoveComp = new MoveComponent(this);
 	
 	mJumpComp = new JumpComponent(this);
+
+	float initialHp = 100.0f;
+	mHpComp = new HpComponent(this, initialHp);
 
 	mCameraComp = new FollowCamera(this);
 	mCameraComp->SnapToIdeal();
@@ -100,12 +104,19 @@ void PlayerActor::UpdateActor(float deltaTime)
 	Actor::UpdateActor(deltaTime);
 
 	FixCollisions();
+
+	if (mHpComp->IsKilled())
+	{
+		Actor::SetState(EPaused);
+		GetGame()->ChangeState(Game::EGameover);
+	}
 }
 
 void PlayerActor::Reset()
 {
 	Actor::SetState(EActive);
 	mParams.Reset();
+	mHpComp->Reset(100.0f);
 	mShotComp->Reset();
 
 	SetPosition(Vector3(0.0f, 0.0f, -50.0f));
@@ -209,16 +220,17 @@ void PlayerActor::FixCollisions()
 	}
 }
 
-void PlayerActor::TakeDamage(float amount)
-{
-	// TODO: 当たってから数フレーム,色が変わるようにしたら面白いかも
-	mParams.hp -= amount;
-	if (mParams.hp <= 0.0f)
-	{
-		Actor::SetState(EPaused);
-		GetGame()->ChangeState(Game::EGameover);
-	}
-}
+//void PlayerActor::TakeDamage(float amount)
+//{
+//	// TODO: 当たってから数フレーム,色が変わるようにしたら面白いかも
+//	mParams.hp -= amount;
+//
+//	if (mParams.hp <= 0.0f)
+//	{
+//		Actor::SetState(EPaused);
+//		GetGame()->ChangeState(Game::EGameover);
+//	}
+//}
 
 void PlayerActor::GainExp(float exp)
 {
@@ -226,15 +238,17 @@ void PlayerActor::GainExp(float exp)
 	CheckLevelUp();
 }
 
-void PlayerActor::GainHeart(float recover)
-{
-	float diff = mParams.maxHp - mParams.hp;
-	if (diff < recover)
-	{
-		recover = diff;
-	}
-	mParams.hp += recover;
-}
+//void PlayerActor::GainHeart(float recover)
+//{
+//	float diff = mParams.maxHp - mParams.hp;
+//	//float diff = mParams.maxHp - mHpComp->GetHp();	
+//	
+//	if (diff < recover)
+//	{
+//		recover = diff;
+//	}
+//	mParams.hp += recover;
+//}
 
 void PlayerActor::CheckLevelUp()
 {
@@ -253,8 +267,9 @@ void PlayerActor::OnLvUpSkill(const std::string& name)
 	// 文字列でやってるのがちょい不満
 	if (name == "MaxHp")
 	{
-		mParams.maxHp += 20;
-		mParams.hp += 20;
+		//mParams.maxHp += 20;
+		//mParams.hp += 20;
+		mHpComp->AddMaxHp(20.0f);
 	}
 	else if (name == "PlayerSpeed")
 	{
@@ -285,7 +300,8 @@ void PlayerActor::OnLvUpSkill(const std::string& name)
 	}
 	else if (name == "Recover")
 	{
-		GainHeart(20.0f);
+		//GainHeart(20.0f);
+		mHpComp->Recover(20.0f);
 	}
 }
 
@@ -293,7 +309,7 @@ void PlayerActor::Parameters::Reset()
 {
 	maxForwardSpeed = 400.0f;
 	maxJumpSpeed = 500.0f;
-	hp = 100.0f;
+	//hp = 100.0f;
 	exp = 0.0f;
 	expToLevelUp = 1.0f;
 	level = 1;
