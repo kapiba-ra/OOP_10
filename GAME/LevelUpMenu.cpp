@@ -7,6 +7,7 @@
 #include <SDL/SDL.h>
 
 #include "PlayerActor.h"
+#include "HpComponent.h"
 
 LevelUpMenu::LevelUpMenu(Game* game)
 	: UIScreen(game)
@@ -138,64 +139,25 @@ void LevelUpMenu::AddButtonRandom()
 	std::vector<Skill*> skills = mSkillSystem->GetRandomSkills();
 	for (auto skill : skills)
 	{
-		mButtonBGs.emplace_back(mGame->GetRenderer()->GetTexture("Assets/" + skill->name + "BG.png"));
-		AddButton(skill->name, [this, skill, player]() {
+		//mButtonBGs.emplace_back(mGame->GetRenderer()->GetTexture("Assets/" + skill->name + "BG.png"));
+		mButtonBGs.emplace_back(mGame->GetRenderer()->GetTexture("Assets/" + skill->GetName() + "BG.png"));
+		//AddButton(skill->name, [this, skill, player]() {
+		AddButton(skill->GetName(), [this, skill, player]() {
 			mGame->ChangeState(Game::EGameplay);
-			skill->curLv += 1;
-			player->OnLvUpSkill(skill->name);
+			//skill->curLv += 1;
+			skill->OnLevelUp(player);
+			//player->OnLvUpSkill(skill->name);
 			Close();
 		}, buttonOffset);
 	}
+	// ‚±‚±o—ˆ‚Ä‚È‚¢‚Á‚Û‚¢
 	if (skills.size() == 0)
 	{
 		mButtonBGs.emplace_back(mGame->GetRenderer()->GetTexture("Assets/RecoverBG.png"));
 		AddButton("Recover", [this, player]() {
 			mGame->ChangeState(Game::EGameplay);
-			player->OnLvUpSkill("Recover");
+			player->GetHpComp()->Recover(20.0f);
 			Close();
 		}, buttonOffset);
 	}
-
-	/* rekishi */
-	//mButtonBGs.emplace_back(mGame->GetRenderer()->GetTexture("Assets/IncBulletBG.png"));
-	//AddButton("IncBulletButton", [this]() {
-	//	mGame->ChangeState(Game::EGameplay);
-	//	mGame->GetPlayer()->LvUpSkill(PlayerActor::Skills::s_shotNum);
-	//	Close();
-	//}, buttonOffset);
-	//
-	//mButtonBGs.emplace_back(mGame->GetRenderer()->GetTexture("Assets/MoveSpeedUpBG.png"));
-	//AddButton("MoveSpeedUpButton", [this]() {
-	//	mGame->ChangeState(Game::EGameplay);
-	//	mGame->GetPlayer()->LvUpSkill(PlayerActor::Skills::s_moveSpeed);
-	//	Close();
-	//}, buttonOffset);
-	//
-	//mButtonBGs.emplace_back(mGame->GetRenderer()->GetTexture("Assets/BiggerBulletBG.png"));
-	//AddButton("BiggerBulletButton", [this]() {
-	//	mGame->ChangeState(Game::EGameplay);
-	//	mGame->GetPlayer()->LvUpSkill(PlayerActor::Skills::s_ballScale);
-	//	Close();
-	//}, buttonOffset);
-	//
-	//mButtonBGs.emplace_back(mGame->GetRenderer()->GetTexture("Assets/MaxHpUpBG.png"));
-	//AddButton("MaxHpUpButton", [this]() {
-	//	mGame->ChangeState(Game::EGameplay);
-	//	mGame->GetPlayer()->LvUpSkill(PlayerActor::Skills::s_);
-	//	Close();
-	//}, buttonOffset);
-	//
-	//mButtonBGs.emplace_back(mGame->GetRenderer()->GetTexture("Assets/ShotSpeedUpBG.png"));
-	//AddButton("ShotSpeedUpButton", [this]() {
-	//	mGame->ChangeState(Game::EGameplay);
-	//	mGame->GetPlayer()->LvUpSkill(PlayerActor::Skills::s_);
-	//	Close();
-	//}, buttonOffset);
-	//
-	//mButtonBGs.emplace_back(mGame->GetRenderer()->GetTexture("Assets/ShotIntervalUpBG.png"));
-	//AddButton("ShotIntervalUpButton", [this]() {
-	//	mGame->ChangeState(Game::EGameplay);
-	//	mGame->GetPlayer()->LvUpSkill(PlayerActor::Skills::s_);
-	//	Close();
-	//}, buttonOffset);
 }

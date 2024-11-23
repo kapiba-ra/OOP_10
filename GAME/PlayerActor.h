@@ -23,6 +23,8 @@ public:
 
 	class BoxComponent* GetBox() { return mBoxComp; }
 	class HpComponent* GetHpComp() { return mHpComp; }
+	// å„Ç≈è¡Ç∑
+	class ShotComponent* GetShotComp() { return mShotComp; }
 
 private:
 	void CheckLevelUp();
@@ -45,17 +47,12 @@ public:
 	{
 		float maxForwardSpeed = 400.0f;
 		float maxJumpSpeed = 500.0f;
-		//float maxHp = 100.0f;
-		//float hp = maxHp;
 		float expToLevelUp = 1.0f;
 		float exp = 0.0f;
 		int level = 1;
 
 		void Reset();
 	};
-
-	void OnLvUpSkill(const std::string& name);
-
 	Parameters& GetParams() { return mParams; }
 
 private:

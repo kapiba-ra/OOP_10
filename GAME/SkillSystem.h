@@ -3,14 +3,12 @@
 #include <vector>
 #include <unordered_map>
 #include <functional>
+#include "Skill.h"
 
-struct Skill
-{
-	std::string name;
-	int maxLv = 5;
-	int curLv = 1;
-};
-
+/// <summary>
+/// Playerのスキルを管理する.
+/// 尚、スキルとは武器とPlayerのステータス(hpや移動速度)の二つを指す。
+/// </summary>
 class SkillSystem
 {
 public:
@@ -19,14 +17,12 @@ public:
 
 	void Reset();
 
-	void AddSkill(const std::string& name, int max = 5);
+	void AddSkill(const std::string& name, std::function<void(class PlayerActor*, int)> effect);
 	//void RemoveSkill(const std::string& name);
 
 	std::vector<Skill*> GetRandomSkills();
 
 private:
 	class Game* mGame;
-
 	std::vector<Skill*> mSkills;
-	//std::unordered_map<std::string, std::function<void()>> mSkillMap;
 };

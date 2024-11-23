@@ -15,7 +15,6 @@ BallActor::BallActor(Game* game)
 	Mesh* mesh = GetGame()->GetRenderer()->GetMesh("Assets/Sphere.gpmesh");
 	mc->SetMesh(mesh);
 	mMyMove = new BallMove(this);
-	//mMyMove->SetForwardSpeed(1500.0f);
 
 	mAttackComp = new DamageComponent(this);
 }

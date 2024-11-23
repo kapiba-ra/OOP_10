@@ -209,6 +209,7 @@ xcopy "C:\Program Files (x86)\FMOD SoundSystem\FMOD Studio API Windows\api\studi
     <ClCompile Include="PhysWorld.cpp" />
     <ClCompile Include="PlaneActor.cpp" />
     <ClCompile Include="Renderer.cpp" />
+    <ClCompile Include="Skill.cpp" />
     <ClCompile Include="Weapon.cpp" />
     <ClInclude Include="AStar.h" />
     <ClCompile Include="Shader.cpp" />
@@ -222,6 +223,7 @@ xcopy "C:\Program Files (x86)\FMOD SoundSystem\FMOD Studio API Windows\api\studi
     <ClCompile Include="VertexArray.cpp" />
     <ClInclude Include="HpComponent.h" />
     <ClInclude Include="JumpComponent.h" />
+    <ClInclude Include="Skill.h" />
     <ClInclude Include="Weapon.h" />
   </ItemGroup>
   <ItemGroup>

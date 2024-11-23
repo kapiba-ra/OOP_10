@@ -64,6 +64,9 @@
     <Filter Include="actor\weapon">
       <UniqueIdentifier>{0fd99000-78ca-40d6-8725-86b7e650f3aa}</UniqueIdentifier>
     </Filter>
+    <Filter Include="manager\skill">
+      <UniqueIdentifier>{41e313bb-5f37-4995-818d-5dea7eda7843}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Math.cpp">
@@ -186,9 +189,6 @@
     <ClCompile Include="ShotComponent.cpp">
       <Filter>component</Filter>
     </ClCompile>
-    <ClCompile Include="SkillSystem.cpp">
-      <Filter>manager</Filter>
-    </ClCompile>
     <ClCompile Include="ExpActor.cpp">
       <Filter>actor\item</Filter>
     </ClCompile>
@@ -214,6 +214,10 @@
       <Filter>component\move</Filter>
     </ClCompile>
     <ClCompile Include="HpComponent.cpp" />
+    <ClCompile Include="SkillSystem.cpp">
+      <Filter>manager\skill</Filter>
+    </ClCompile>
+    <ClCompile Include="Skill.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Math.h">
@@ -333,9 +337,6 @@
     <ClInclude Include="ShotComponent.h">
       <Filter>component</Filter>
     </ClInclude>
-    <ClInclude Include="SkillSystem.h">
-      <Filter>manager</Filter>
-    </ClInclude>
     <ClInclude Include="ExpActor.h">
       <Filter>actor\item</Filter>
     </ClInclude>
@@ -361,6 +362,10 @@
       <Filter>component\move</Filter>
     </ClInclude>
     <ClInclude Include="HpComponent.h" />
+    <ClInclude Include="SkillSystem.h">
+      <Filter>manager\skill</Filter>
+    </ClInclude>
+    <ClInclude Include="Skill.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Shaders\Sprite.frag">

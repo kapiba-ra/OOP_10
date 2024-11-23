@@ -262,48 +262,47 @@ void PlayerActor::CheckLevelUp()
 	}
 }
 
-void PlayerActor::OnLvUpSkill(const std::string& name)
-{
-	// •¶Žš—ñ‚Å‚â‚Á‚Ä‚é‚Ì‚ª‚¿‚å‚¢•s–ž
-	if (name == "MaxHp")
-	{
-		//mParams.maxHp += 20;
-		//mParams.hp += 20;
-		mHpComp->AddMaxHp(20.0f);
-	}
-	else if (name == "PlayerSpeed")
-	{
-		mParams.maxForwardSpeed += 50.0f;
-	}
-	else if (name == "ShotSize")
-	{
-		float scale = mShotComp->GetBallScale();
-		scale += 0.2f;
-		mShotComp->SetBallScale(scale);
-	}
-	else if (name == "ShotNum")
-	{
-		int shotNum = mShotComp->GetShotNum();
-		shotNum += 1;
-		mShotComp->SetShotNum(shotNum);
-	}
-	else if (name == "ShotInterval")
-	{
-		float interval = mShotComp->GetShotInterval();
-		interval *= 0.9f;
-		mShotComp->SetShotInterval(interval);
-	}
-	else if (name == "ShotSpeed")
-	{
-		float add = 100.0f;
-		mShotComp->IncShotSpeed(add);
-	}
-	else if (name == "Recover")
-	{
-		//GainHeart(20.0f);
-		mHpComp->Recover(20.0f);
-	}
-}
+//void PlayerActor::OnLvUpSkill(const std::string& name)
+//{
+//	// •¶Žš—ñ‚Å‚â‚Á‚Ä‚é‚Ì‚ª‚¿‚å‚¢•s–ž
+//	if (name == "MaxHp")
+//	{
+//		//mParams.maxHp += 20;
+//		//mParams.hp += 20;
+//		mHpComp->AddMaxHp(20.0f);
+//	}
+//	else if (name == "PlayerSpeed")
+//	{
+//		mParams.maxForwardSpeed += 50.0f;
+//	}
+//	else if (name == "ShotSize")
+//	{
+//		float scale = mShotComp->GetBallScale();
+//		scale += 0.2f;
+//		mShotComp->SetBallScale(scale);
+//	}
+//	else if (name == "ShotNum")
+//	{
+//		int shotNum = mShotComp->GetShotNum();
+//		shotNum += 1;
+//		mShotComp->SetShotNum(shotNum);
+//	}
+//	else if (name == "ShotInterval")
+//	{
+//		float interval = mShotComp->GetShotInterval();
+//		interval *= 0.9f;
+//		mShotComp->SetShotInterval(interval);
+//	}
+//	else if (name == "ShotSpeed")
+//	{
+//		float add = 100.0f;
+//		mShotComp->IncShotSpeed(add);
+//	}
+//	else if (name == "Recover")
+//	{
+//		mHpComp->Recover(20.0f);
+//	}
+//}
 
 void PlayerActor::Parameters::Reset()
 {

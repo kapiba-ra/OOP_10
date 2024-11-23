@@ -26,5 +26,3 @@ protected:
     float mUniqueInterval;
     float mUniqueSpeed;
 };
-
-// ƒŒƒxƒ‹‚É‚æ‚Á‚Ä‹­‰»“à—e‚ð•Ï‚¦‚ç‚ê‚é‚æ‚¤‚É‚·‚×‚«
