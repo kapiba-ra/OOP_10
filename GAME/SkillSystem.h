@@ -21,6 +21,7 @@ public:
 	//void RemoveSkill(const std::string& name);
 
 	std::vector<Skill*> GetRandomSkills();
+	//Skill* GetSkill(std::string name) const;
 
 private:
 	class Game* mGame;

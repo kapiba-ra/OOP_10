@@ -67,6 +67,15 @@
     <Filter Include="manager\skill">
       <UniqueIdentifier>{41e313bb-5f37-4995-818d-5dea7eda7843}</UniqueIdentifier>
     </Filter>
+    <Filter Include="component\weapon">
+      <UniqueIdentifier>{0108f206-e8ed-4f56-b22e-a0fb36a1d359}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="actor\weapon\base">
+      <UniqueIdentifier>{96ce1467-688e-4cd3-90e3-977a532d1dd8}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="component\move\base">
+      <UniqueIdentifier>{6e64d010-f18e-4851-a394-54fae3b85ab0}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Math.cpp">
@@ -83,9 +92,6 @@
     </ClCompile>
     <ClCompile Include="FPSCamera.cpp">
       <Filter>component\camera</Filter>
-    </ClCompile>
-    <ClCompile Include="BallActor.cpp">
-      <Filter>actor</Filter>
     </ClCompile>
     <ClCompile Include="PlaneActor.cpp">
       <Filter>actor</Filter>
@@ -118,9 +124,6 @@
       <Filter>manager\collision</Filter>
     </ClCompile>
     <ClCompile Include="BallMove.cpp">
-      <Filter>component\move</Filter>
-    </ClCompile>
-    <ClCompile Include="MoveComponent.cpp">
       <Filter>component\move</Filter>
     </ClCompile>
     <ClCompile Include="ChaseMove.cpp">
@@ -186,9 +189,6 @@
     <ClCompile Include="LevelUpMenu.cpp">
       <Filter>ui\menu</Filter>
     </ClCompile>
-    <ClCompile Include="ShotComponent.cpp">
-      <Filter>component</Filter>
-    </ClCompile>
     <ClCompile Include="ExpActor.cpp">
       <Filter>actor\item</Filter>
     </ClCompile>
@@ -207,17 +207,37 @@
     <ClCompile Include="EnemyActor.cpp">
       <Filter>actor\enemy\base</Filter>
     </ClCompile>
-    <ClCompile Include="Weapon.cpp">
-      <Filter>actor\weapon</Filter>
-    </ClCompile>
     <ClCompile Include="JumpComponent.cpp">
       <Filter>component\move</Filter>
     </ClCompile>
-    <ClCompile Include="HpComponent.cpp" />
     <ClCompile Include="SkillSystem.cpp">
       <Filter>manager\skill</Filter>
     </ClCompile>
-    <ClCompile Include="Skill.cpp" />
+    <ClCompile Include="WeaponComponent.cpp">
+      <Filter>component\weapon</Filter>
+    </ClCompile>
+    <ClCompile Include="ShotComponent.cpp">
+      <Filter>component\weapon</Filter>
+    </ClCompile>
+    <ClCompile Include="HpComponent.cpp">
+      <Filter>component</Filter>
+    </ClCompile>
+    <ClCompile Include="Skill.cpp">
+      <Filter>manager\skill</Filter>
+    </ClCompile>
+    <ClCompile Include="BallActor.cpp">
+      <Filter>actor\weapon</Filter>
+    </ClCompile>
+    <ClCompile Include="WeaponActor.cpp">
+      <Filter>actor\weapon\base</Filter>
+    </ClCompile>
+    <ClCompile Include="SwordActor.cpp">
+      <Filter>actor\weapon</Filter>
+    </ClCompile>
+    <ClCompile Include="MoveComponent.cpp">
+      <Filter>component\move\base</Filter>
+    </ClCompile>
+    <ClCompile Include="SwordComponent.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Math.h">
@@ -234,9 +254,6 @@
     </ClInclude>
     <ClInclude Include="FPSCamera.h">
       <Filter>component\camera</Filter>
-    </ClInclude>
-    <ClInclude Include="BallActor.h">
-      <Filter>actor</Filter>
     </ClInclude>
     <ClInclude Include="PlaneActor.h">
       <Filter>actor</Filter>
@@ -269,9 +286,6 @@
       <Filter>manager\collision</Filter>
     </ClInclude>
     <ClInclude Include="BallMove.h">
-      <Filter>component\move</Filter>
-    </ClInclude>
-    <ClInclude Include="MoveComponent.h">
       <Filter>component\move</Filter>
     </ClInclude>
     <ClInclude Include="ChaseMove.h">
@@ -334,9 +348,6 @@
     <ClInclude Include="LevelUpMenu.h">
       <Filter>ui\menu</Filter>
     </ClInclude>
-    <ClInclude Include="ShotComponent.h">
-      <Filter>component</Filter>
-    </ClInclude>
     <ClInclude Include="ExpActor.h">
       <Filter>actor\item</Filter>
     </ClInclude>
@@ -355,17 +366,37 @@
     <ClInclude Include="EnemyActor.h">
       <Filter>actor\enemy\base</Filter>
     </ClInclude>
-    <ClInclude Include="Weapon.h">
-      <Filter>actor\weapon</Filter>
-    </ClInclude>
     <ClInclude Include="JumpComponent.h">
       <Filter>component\move</Filter>
     </ClInclude>
-    <ClInclude Include="HpComponent.h" />
     <ClInclude Include="SkillSystem.h">
       <Filter>manager\skill</Filter>
     </ClInclude>
-    <ClInclude Include="Skill.h" />
+    <ClInclude Include="WeaponComponent.h">
+      <Filter>component\weapon</Filter>
+    </ClInclude>
+    <ClInclude Include="ShotComponent.h">
+      <Filter>component\weapon</Filter>
+    </ClInclude>
+    <ClInclude Include="HpComponent.h">
+      <Filter>component</Filter>
+    </ClInclude>
+    <ClInclude Include="Skill.h">
+      <Filter>manager\skill</Filter>
+    </ClInclude>
+    <ClInclude Include="BallActor.h">
+      <Filter>actor\weapon</Filter>
+    </ClInclude>
+    <ClInclude Include="WeaponActor.h">
+      <Filter>actor\weapon\base</Filter>
+    </ClInclude>
+    <ClInclude Include="SwordActor.h">
+      <Filter>actor\weapon</Filter>
+    </ClInclude>
+    <ClInclude Include="MoveComponent.h">
+      <Filter>component\move\base</Filter>
+    </ClInclude>
+    <ClInclude Include="SwordComponent.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Shaders\Sprite.frag">

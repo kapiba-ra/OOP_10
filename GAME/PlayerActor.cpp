@@ -14,6 +14,7 @@
 #include "BoxComponent.h"
 #include "FollowCamera.h"
 #include "ShotComponent.h"
+#include "SwordComponent.h"
 #include "AudioComponent.h"
 
 #include "PlaneActor.h" // for collision caluculation
@@ -46,7 +47,7 @@ PlayerActor::PlayerActor(Game* game)
 	mBoxComp->SetShouldRotate(false);
 
 	mShotComp = new ShotComponent(this);
-
+	//new SwordComponent(this);
 	mAudioComp = new AudioComponent(this);
 }
 
@@ -118,6 +119,7 @@ void PlayerActor::Reset()
 	mParams.Reset();
 	mHpComp->Reset(100.0f);
 	mShotComp->Reset();
+	// 武器をリセットする
 
 	SetPosition(Vector3(0.0f, 0.0f, -50.0f));
 }
@@ -249,6 +251,22 @@ void PlayerActor::GainExp(float exp)
 //	}
 //	mParams.hp += recover;
 //}
+
+void PlayerActor::AddWeapon(WeaponComponent* weapon)
+{
+	mWeaponComps.emplace_back(weapon);
+}
+
+void PlayerActor::RemoveWeapon(WeaponComponent* weapon)
+{
+	auto iter = std::find(mWeaponComps.begin(), mWeaponComps.end(), weapon);
+	if (iter != mWeaponComps.end())
+	{
+		*iter = nullptr;
+	}
+	// erase(iter)みたいなdelete処理はActor基底クラスがやってくれてます
+	Actor::RemoveComponent(weapon);
+}
 
 void PlayerActor::CheckLevelUp()
 {

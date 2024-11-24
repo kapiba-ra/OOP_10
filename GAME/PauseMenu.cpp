@@ -8,13 +8,11 @@ PauseMenu::PauseMenu(Game* game)
 	: UIScreen(game)
 	, mDialogBox(nullptr)
 {
-	//mGame->SetState(Game::EPaused);
 	SetRelativeMouseMode(false);
 	SetTitle("PauseTitle");
 	AddButton("ResumeButton", [this]() {
 		Close();
 		SetRelativeMouseMode(true);
-		//mGame->SetState(Game::EGameplay);
 		mGame->ChangeState(Game::EGameplay);
 	});
 	AddButton("QuitButton", [this]() {
@@ -22,7 +20,6 @@ PauseMenu::PauseMenu(Game* game)
 			[this]() {
 				this->Close();		 // PauseMenu‚ÌClose()
 				mDialogBox->Close(); // DialogBox‚ÌClose()
-				//mGame->OnChangeState(Game::EMainMenu, Game::EPaused);
 				mGame->ChangeState(Game::EMainMenu);
 		});
 	});

@@ -6,7 +6,6 @@
 
 BallMove::BallMove(Actor* owner)
 	: MoveComponent(owner)
-	, mPlayer(nullptr)
 {
 }
 
@@ -23,18 +22,12 @@ void BallMove::Update(float deltaTime)
 	PhysWorld* phys = mOwner->GetGame()->GetPhysWorld();
 	PhysWorld::CollisionInfo info;
 	// Playerとは衝突しないようにしている
-	if (phys->SegmentCast(ls, info) && info.mActor!= mPlayer)
+	if (phys->SegmentCast(ls, info) && info.mActor->GetType() != Actor::Eplayer)
 	{
 		// 衝突したら法線の向きで方向を反射させる
 		dir = Vector3::Reflect(dir, info.mNormal);
 		mOwner->RotateToNewForward(dir);
 		/* ターゲットにヒットしたか */
-		//info.mActor->GetType() == Actor::Type::Etarget;
-		//TargetActor* target = dynamic_cast<TargetActor*>(info.mActor);
-		//if (target)
-		//{
-		//	static_cast<BallActor*>(mOwner)->HitTarget();
-		//}
 		if (info.mActor->GetType() == Actor::Type::Eenemy)
 		{
 			mOwner->SetState(Actor::State::EDead); // erase ball

@@ -7,6 +7,7 @@
 // 仮に
 #include "HpComponent.h"
 #include "ShotComponent.h"
+#include "SwordComponent.h"
 
 SkillSystem::SkillSystem(Game* game)
 	: mGame(game)
@@ -34,6 +35,61 @@ SkillSystem::SkillSystem(Game* game)
 		player->GetShotComp()->IncShotSpeed(100.0f);
 	});
 
+	// WeaponCommonの処理
+	//AddSkill("WeaponSize", [](PlayerActor* player, int curLv) {
+	//	player->GetParams().WeaponSizeFactor *= 1.2f;
+	//});
+	//AddSkill("WeaponInterval", [](PlayerActor* player, int curLv) {
+	//	player->GetParams().WeaponIntervalFactor *= 0.9f;
+	//});
+	//AddSkill("WeaponSpeed", [](PlayerActor* player, int curLv) {
+	//	player->GetParams().WeaponSpeedFactor *= 1.1f;
+	//});
+	// WeaponCommonの処理
+
+
+	// ボール	BallWeapon
+	// カタナ	SwordWeapon
+	AddSkill("Sword", [this](PlayerActor* player, int curLv) {
+		if (curLv == 1)
+		{
+			SwordComponent* sc = new SwordComponent(player);
+			player->AddWeapon(sc);
+		}
+		else
+		{
+			// player->LvUpWeapon(name, curLv);
+		}
+	});
+
+	// 矢		ArrowWeapon
+	// 犬		DogWeapon
+	// 爆弾		BombWeapon
+	//AddSkill("Ball", [](PlayerActor* player, int curLv) {
+	//	// 一連の処理はShotComponentへ移す方がいいだろう
+	//	switch (curLv)
+	//	{
+	//	case 1:	// ここは発動しないだろう
+	//		ShotComponent* sc = new ShotComponent(player);
+	//		player->AddWeapon(sc);
+	//		// plyaer->SetFactors(sc);のような関数
+	//	case 2:
+	//		int shotNum = player->GetShotComp()->GetShotNum();
+	//		player->GetShotComp()->SetShotNum(shotNum + 1);
+	//		float interval = player->GetShotComp()->GetShotInterval();
+	//		interval *= 0.9f;
+	//		player->GetShotComp()->SetShotInterval(interval);
+	//	case 3:
+	//		int shotNum = player->GetShotComp()->GetShotNum();
+	//		player->GetShotComp()->SetShotNum(shotNum + 1);
+	//	case 4:
+	//		int shotNum = player->GetShotComp()->GetShotNum();
+	//		player->GetShotComp()->SetShotNum(shotNum + 1);
+	//	case 5:
+	//		int shotNum = player->GetShotComp()->GetShotNum();
+	//		player->GetShotComp()->SetShotNum(shotNum + 1);
+	//	}
+	//});
 }
 
 SkillSystem::~SkillSystem()
@@ -49,7 +105,6 @@ void SkillSystem::Reset()
 {
 	for (auto skill : mSkills)
 	{
-		//skill->curLv = 1;
 		skill->SetCurLv(1);
 	}
 }
@@ -86,7 +141,6 @@ std::vector<Skill*> SkillSystem::GetRandomSkills()
 
 	for (const auto& skill : mSkills)
 	{
-		//if (skill->curLv < skill->maxLv) 
 		if (!skill->IsLevelMax()) 
 		{
 			ret.push_back(skill);
@@ -99,4 +153,17 @@ std::vector<Skill*> SkillSystem::GetRandomSkills()
 
 	return ret;
 }
+
+//Skill* SkillSystem::GetSkill(std::string name) const
+//{
+//	for (const auto& skill : mSkills)
+//	{
+//		if (skill->GetName() == name)
+//		{
+//			return skill;
+//			break;
+//		}
+//	}
+//	return nullptr;
+//}
 

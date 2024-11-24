@@ -2,22 +2,22 @@
 #include "WeaponActor.h"
 
 /// <summary>
-/// 発射する弾のアクター
+/// 武器:ソード
+/// SwordMoveを作成する必要がある
 /// </summary>
-class BallActor :
+class SwordActor :
     public WeaponActor
 {
 public:
-    BallActor(class Game* game);
+    SwordActor(class Game* game);
 
     void UpdateActor(float deltaTime) override;
 
-    //void HitTarget(Actor* target);
     void SetShotSpeed(float speed);
 
 private:
-    class AudioComponent* mAudioComp;
     class BallMove* mMyMove;
-    //class DamageComponent* mAttackComp;
+    //class AudioComponent* mAudioComp;
 };
+
 

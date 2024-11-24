@@ -1,8 +1,10 @@
 #pragma once
-#include "Component.h"
+//#include "Component.h"
+#include "WeaponComponent.h"
 
 class ShotComponent :
-    public Component
+    //public Component
+    public WeaponComponent
 {
 public:
     ShotComponent(class Actor* owner);
@@ -22,7 +24,6 @@ public:
     void Reset();
 
 private:
-
     int mShotNum;
     float mShotInterval;
     float mBallScale;

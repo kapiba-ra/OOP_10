@@ -5,7 +5,8 @@
 #include "BallActor.h"
 
 ShotComponent::ShotComponent(Actor* owner)
-	: Component(owner)
+	//: Component(owner)
+	: WeaponComponent(owner)
 	, mShotNum(1)
 	, mShotInterval(1.0f)
 	, mLastShot(0.0f)
@@ -29,7 +30,6 @@ void ShotComponent::Update(float deltaTime)
 		{
 			// ’e‚ðì¬‚µ‚ÄFXÝ’è
 			BallActor* ball = new BallActor(mOwner->GetGame());
-			ball->SetPlayer(mOwner);
 			ball->SetScale(mBallScale);
 			ball->SetPosition(start + dir * 50.0f);
 			ball->RotateToNewForward(dir);

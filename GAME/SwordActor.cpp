@@ -1,23 +1,22 @@
-#include "BallActor.h"
+#include "SwordActor.h"
 #include "Game.h"
 #include "Renderer.h"
 #include "Mesh.h"
 
 #include "MeshComponent.h"
 #include "BallMove.h"
+#include "DamageComponent.h"
 
-BallActor::BallActor(Game* game)
+SwordActor::SwordActor(Game* game)
 	: WeaponActor(game)
 {
 	MeshComponent* mc = new MeshComponent(this);
-	Mesh* mesh = GetGame()->GetRenderer()->GetMesh("Assets/Sphere.gpmesh");
+	Mesh* mesh = GetGame()->GetRenderer()->GetMesh("Assets/Sword.gpmesh");
 	mc->SetMesh(mesh);
 	mMyMove = new BallMove(this);
-
-	//mAttackComp = new DamageComponent(this);
 }
 
-void BallActor::UpdateActor(float deltaTime)
+void SwordActor::UpdateActor(float deltaTime)
 {
 	Actor::UpdateActor(deltaTime);
 
@@ -28,12 +27,7 @@ void BallActor::UpdateActor(float deltaTime)
 	}
 }
 
-//void BallActor::HitTarget(Actor* target)
-//{
-//	mAttackComp->Damage(target);
-//}
-
-void BallActor::SetShotSpeed(float speed)
+void SwordActor::SetShotSpeed(float speed)
 {
 	mMyMove->SetForwardSpeed(speed);
 }

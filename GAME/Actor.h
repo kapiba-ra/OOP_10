@@ -26,7 +26,7 @@ public:
 		Eenemy,
 		Etarget,
 		Eitem,
-		Eball
+		Eweapon
 	};
 
 	Actor(class Game* game, Type type = Type::Enone);

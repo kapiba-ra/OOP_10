@@ -16,15 +16,15 @@ public:
 	// 2つのAABBの最小の重なりテストを行う
 	void FixCollisions();
 
-	//void TakeDamage(float amount);
-
 	void GainExp(float exp);
-	//void GainHeart(float recover);
 
 	class BoxComponent* GetBox() { return mBoxComp; }
 	class HpComponent* GetHpComp() { return mHpComp; }
 	// 後で消す
 	class ShotComponent* GetShotComp() { return mShotComp; }
+	std::vector<class WeaponComponent*> GetWeaponComps() const { return mWeaponComps; }
+	void AddWeapon(class WeaponComponent* weapon);
+	void RemoveWeapon(class WeaponComponent* weapon);
 
 private:
 	void CheckLevelUp();
@@ -34,12 +34,14 @@ private:
 	class MoveComponent* mMoveComp;
 	class JumpComponent* mJumpComp;
 	class HpComponent* mHpComp;
-
+	// essential
 	class FollowCamera* mCameraComp;
 	class MeshComponent* mMeshComp;
 	class BoxComponent* mBoxComp;
-	class ShotComponent* mShotComp;
 	class AudioComponent* mAudioComp;
+	// weapon
+	std::vector<class WeaponComponent*> mWeaponComps;
+	class ShotComponent* mShotComp;
 
 public:
 	// parameter related
@@ -47,6 +49,10 @@ public:
 	{
 		float maxForwardSpeed = 400.0f;
 		float maxJumpSpeed = 500.0f;
+		float WeaponSizeFactor = 1.0f;
+		float WeaponIntervalFactor= 1.0f;
+		float WeaponSpeedFactor = 1.0f;
+
 		float expToLevelUp = 1.0f;
 		float exp = 0.0f;
 		int level = 1;

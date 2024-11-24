@@ -3,7 +3,7 @@
 
 Skill::Skill(const std::string& name, std::function<void(PlayerActor*, int)> effect)
 	: mName(name)
-	, mCurLv(1)
+	, mCurLv(0)
 	, mMaxLv(5)
 	, mEffect(effect)
 {
