@@ -8,16 +8,20 @@ WeaponComponent::WeaponComponent(Actor* owner)
 	, mIntervalFactor(1.0f)
 	, mSpeedFactor(1.0f)
 {
-	if (owner->GetType() == Actor::Eplayer)
-	{
-		static_cast<PlayerActor*>(owner)->AddWeapon(this);
-	}
+	//if (owner->GetType() == Actor::Eplayer)
+	//{
+	//	static_cast<PlayerActor*>(owner)->AddWeapon(this);
+	//}
 }
 
 WeaponComponent::~WeaponComponent()
 {
-	if (mOwner->GetType() == Actor::Eplayer)
-	{
-		static_cast<PlayerActor*>(mOwner)->RemoveWeapon(this);
-	}
+	//if (mOwner->GetType() == Actor::Eplayer)
+	//{
+	//	static_cast<PlayerActor*>(mOwner)->RemoveWeapon(this);
+	//}
+}
+
+void WeaponComponent::LevelUp(int CurLv)
+{
 }

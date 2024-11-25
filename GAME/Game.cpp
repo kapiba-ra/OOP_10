@@ -477,6 +477,10 @@ void Game::GenerateOutput()
 
 void Game::UnloadData()
 {
+	// ‘½•ª•K—v
+	mSkillSystem->Reset();
+	mPhaseSystem->Reset();
+	
 	while (!mActors.empty())
 	{
 		delete mActors.back();

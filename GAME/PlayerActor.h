@@ -8,6 +8,7 @@ class PlayerActor :
 {
 public:
 	PlayerActor(class Game* game);
+	~PlayerActor();
 
 	void ActorInput(const struct InputState& state) override;
 	void UpdateActor(float deltaTime) override;
@@ -22,9 +23,12 @@ public:
 	class HpComponent* GetHpComp() { return mHpComp; }
 	// 後で消す
 	class ShotComponent* GetShotComp() { return mShotComp; }
-	std::vector<class WeaponComponent*> GetWeaponComps() const { return mWeaponComps; }
-	void AddWeapon(class WeaponComponent* weapon);
-	void RemoveWeapon(class WeaponComponent* weapon);
+	void AddWeapon(std::string name, class WeaponComponent* weapon);
+	// nameはいずれ参照になる(enumでskillのタイプを分ける)
+	void LevelUpWeapon(std::string name, int lv);
+	// 基底クラスがメモリは解放してくれるのでとりあえず要らない
+	//void RemoveWeapon(WeaponComponent* weapon);
+	float GetForwardSpeed();
 
 private:
 	void CheckLevelUp();
@@ -40,7 +44,7 @@ private:
 	class BoxComponent* mBoxComp;
 	class AudioComponent* mAudioComp;
 	// weapon
-	std::vector<class WeaponComponent*> mWeaponComps;
+	std::unordered_map<std::string, class WeaponComponent*> mWeapons;
 	class ShotComponent* mShotComp;
 
 public:

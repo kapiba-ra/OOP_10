@@ -1,5 +1,7 @@
 #pragma once
 #include "WeaponComponent.h"
+#include <utility>
+#include <vector>
 
 class SwordComponent :
     public WeaponComponent
@@ -8,6 +10,8 @@ public:
     SwordComponent(class Actor* owner);
 
     void Update(float deltaTime) override;
+
+    void LevelUp(int curLv) override;
 
     // getter,setter
     int GetNum() const { return mNum; }
@@ -20,6 +24,9 @@ public:
     void Reset();
 
 private:
+    // Œ•‚Æ‰ñ“]Šp“x‚Ìpair
+    std::vector<std::pair<class SwordActor*, float>> mSwords;
+
     int mNum;
     float mInterval;
     float mScale;

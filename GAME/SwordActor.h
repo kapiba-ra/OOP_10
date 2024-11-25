@@ -13,11 +13,22 @@ public:
 
     void UpdateActor(float deltaTime) override;
 
+    // 敵との衝突
+    void FixCollision();
+
     void SetShotSpeed(float speed);
+    void SetRotationSpeed(float speed);
+    
+    // 回転の中心と基準となるOffset(回転半径)を設定する関数
+    void SetPivotAndRadius(class Actor* actor, const class Vector3& offset);
 
 private:
-    class BallMove* mMyMove;
+    // 回転中心となるアクター
+    // このポインタをSwordActor側に用意する事で、SwordMoveは
+    // "与えられた座標を中心に回転する"という機能に留めた
+    class Actor* mPivotActor;
+
+    class SwordMove* mMyMove;
+    class BoxComponent* mBoxComp;
     //class AudioComponent* mAudioComp;
 };
-
-

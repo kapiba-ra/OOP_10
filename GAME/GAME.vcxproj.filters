@@ -238,6 +238,7 @@
       <Filter>component\move\base</Filter>
     </ClCompile>
     <ClCompile Include="SwordComponent.cpp" />
+    <ClCompile Include="SwordMove.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Math.h">
@@ -397,6 +398,7 @@
       <Filter>component\move\base</Filter>
     </ClInclude>
     <ClInclude Include="SwordComponent.h" />
+    <ClInclude Include="SwordMove.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Shaders\Sprite.frag">

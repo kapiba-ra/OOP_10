@@ -12,6 +12,9 @@ public:
     WeaponComponent(class Actor* owner);
     ~WeaponComponent();
 
+    //  強化内容を派生クラスで設定する,Lv2以降の強化内容を設定する
+    virtual void LevelUp(int CurLv);
+
     void SetSizeFactor(float factor) { mSizeFactor = factor; }
     void SetIntervalFactor(float factor) { mIntervalFactor = factor; }
     void SetSpeedFactor(float factor) { mSpeedFactor = factor; }

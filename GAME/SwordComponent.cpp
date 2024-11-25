@@ -6,12 +6,9 @@
 
 SwordComponent::SwordComponent(Actor* owner)
 	: WeaponComponent(owner)
-	, mNum(1)
-	, mInterval(2.0f)
 	, mLastShot(0.0f)
-	, mScale(10.0f)
-	, mSpeed(1000.0f)
 {
+	Reset();
 }
 
 void SwordComponent::Update(float deltaTime)
@@ -23,23 +20,64 @@ void SwordComponent::Update(float deltaTime)
 		Vector3 start = mOwner->GetPosition();
 		Vector3 dir = mOwner->GetForward();
 		float shotAngle = Math::Pi / 6;
-		dir = Vector3::Transform(dir, Quaternion(Vector3::UnitY, -shotAngle * (mNum - 1) / 2));
+		//dir = Vector3::Transform(dir, Quaternion(Vector3::UnitY, -shotAngle * (mNum - 1) / 2));
+		 //Quaternion::Concatenate(Quaternion(Vector3::UnitX, -Math::PiOver2), )
 		for (int i = 0; i < mNum; ++i)
 		{
 			SwordActor* sword = new SwordActor(mOwner->GetGame());
 			sword->SetScale(mScale);
-			sword->SetPosition(start + dir * 20.0f);
+			Vector3 SwordOffset = dir * 100.0f;
+			sword->SetPosition(start + SwordOffset);
+			sword->SetPivotAndRadius(mOwner, SwordOffset);
+			sword->SetRotationSpeed(Math::PiOver2);
+
+			/* Œ•‚ÌŒü‚«‚ðŒˆ’è‚µ‚Ä‚¢‚é...Œ•‚Ìƒ‚ƒfƒ‹‚ÍZŽ²‚ªã‚ÅXŽ²‚Én‚Æ‚¢‚¤ó‘Ô */ 
+			// 1:Œ•‚ðQ‚©‚·‰ñ“]
+			Quaternion first = Quaternion(Vector3::UnitY, Math::PiOver2);
+			// 2:Œ•‚ðOwner‚Ì³–Ê•ûŒü‚ÖŒü‚¯‚é‰ñ“]
 			sword->RotateToNewForward(dir);
-			sword->SetShotSpeed(mSpeed);
-			dir = Vector3::Transform(dir, Quaternion(Vector3::UnitY, shotAngle));
+			Quaternion second = sword->GetRotation();
+			// 3: 1->2‚Ì‡‚É‰ñ“]‚³‚¹‚é
+			sword->SetRotation(Quaternion::Concatenate(first, second));
+
+			dir = Vector3::Transform(dir, Quaternion(Vector3::UnitZ, shotAngle));
 		}
+	}
+}
+
+void SwordComponent::LevelUp(int curLv)
+{
+	// LevelUp‚Ì“à—e
+	switch (curLv)
+	{
+	case 2:
+	{
+		mInterval *= 0.9f;
+		break;
+	}
+	case 3:
+	{
+		mScale += 2.0f;
+		break;
+	}
+	case 4:
+	{
+		mNum += 1;
+		break;
+	}
+	case 5:
+	{
+		mScale += 2.0f;
+		mInterval *= 0.9f;
+		break;
+	}
 	}
 }
 
 void SwordComponent::Reset()
 {
-	mScale = 1.0f;
 	mNum = 1;
+	mScale = 10.0f;
 	mInterval = 2.0f;
-	mSpeed = 1000.0f;
+	mSpeed = Math::PiOver2;
 }

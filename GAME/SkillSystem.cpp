@@ -54,11 +54,11 @@ SkillSystem::SkillSystem(Game* game)
 		if (curLv == 1)
 		{
 			SwordComponent* sc = new SwordComponent(player);
-			player->AddWeapon(sc);
+			player->AddWeapon("Sword", sc);
 		}
 		else
 		{
-			// player->LvUpWeapon(name, curLv);
+			player->LevelUpWeapon("Sword", curLv);
 		}
 	});
 
@@ -105,7 +105,7 @@ void SkillSystem::Reset()
 {
 	for (auto skill : mSkills)
 	{
-		skill->SetCurLv(1);
+		skill->SetCurLv(0);
 	}
 }
 

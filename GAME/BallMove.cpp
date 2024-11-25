@@ -13,8 +13,8 @@ void BallMove::Update(float deltaTime)
 {
 	// 進行方向の線分を構築
 	const float segmentLength = 30.0f;
-	Vector3 start = mOwner->GetPosition(); // 始点
-	Vector3 dir = mOwner->GetForward();	   // 進行方向
+	Vector3 start = mOwner->GetPosition();	// 始点
+	Vector3 dir = mOwner->GetForward();		// 進行方向
 	Vector3 end = start + dir * segmentLength; // 終点
 	LineSegment ls(start, end);
 

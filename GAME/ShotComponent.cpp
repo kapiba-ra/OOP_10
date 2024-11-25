@@ -39,6 +39,29 @@ void ShotComponent::Update(float deltaTime)
 	}
 }
 
+void ShotComponent::LevelUp(int curLv)
+{
+	switch (curLv)
+	{
+	case 2:
+	{
+		break;
+	}
+	case 3:
+	{
+		break;
+	}
+	case 4:
+	{
+		break;
+	}
+	case 5:
+	{
+		break;
+	}
+	}
+}
+
 void ShotComponent::IncShotSpeed(float add)
 {
 	mShotSpeed += add;

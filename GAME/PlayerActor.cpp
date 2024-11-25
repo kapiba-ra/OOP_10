@@ -1,4 +1,5 @@
 #include "PlayerActor.h"
+#include <algorithm>
 #include "Game.h"
 #include "Renderer.h"
 #include "Mesh.h"
@@ -47,8 +48,16 @@ PlayerActor::PlayerActor(Game* game)
 	mBoxComp->SetShouldRotate(false);
 
 	mShotComp = new ShotComponent(this);
+	
+	// デバッグ用,武器お試し
 	//new SwordComponent(this);
+	
+	
 	mAudioComp = new AudioComponent(this);
+}
+
+PlayerActor::~PlayerActor()
+{
 }
 
 void PlayerActor::ActorInput(const InputState& state)
@@ -252,21 +261,44 @@ void PlayerActor::GainExp(float exp)
 //	mParams.hp += recover;
 //}
 
-void PlayerActor::AddWeapon(WeaponComponent* weapon)
+void PlayerActor::AddWeapon(std::string name, WeaponComponent* weapon)
 {
-	mWeaponComps.emplace_back(weapon);
+	mWeapons[name] = weapon;
 }
 
-void PlayerActor::RemoveWeapon(WeaponComponent* weapon)
+void PlayerActor::LevelUpWeapon(std::string name, int lv)
 {
-	auto iter = std::find(mWeaponComps.begin(), mWeaponComps.end(), weapon);
-	if (iter != mWeaponComps.end())
-	{
-		*iter = nullptr;
-	}
-	// erase(iter)みたいなdelete処理はActor基底クラスがやってくれてます
-	Actor::RemoveComponent(weapon);
+	mWeapons[name]->LevelUp(lv);
 }
+
+float PlayerActor::GetForwardSpeed()
+{
+	return mMoveComp->GetForwardSpeed();
+}
+
+//void PlayerActor::RemoveWeapon(WeaponComponent* weapon)
+//{
+//	// バグのこってるよ
+//	// mapなのに値の情報だけで削除したい人
+//	for (auto iter = mWeapons.begin(); iter != mWeapons.end();)
+//	{
+//		if (iter->second == weapon)
+//		{
+//			iter = mWeapons.erase(iter); // 削除後、新しいイテレータを返す
+//			break; // 一つだけ削除して終了
+//		}
+//		else
+//		{
+//			++iter; // 一致しない場合は次の要素へ進む
+//		}
+//	}
+//	//auto iter = mWeapons.find(name);
+//	//if (iter != mWeapons.end())
+//	//{
+//	//	mWeapons.erase(iter);
+//	//}
+//	//Actor::RemoveComponent(weapon);
+//}
 
 void PlayerActor::CheckLevelUp()
 {

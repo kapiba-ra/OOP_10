@@ -11,6 +11,8 @@ public:
 
     void Update(float deltaTime) override;
 
+    void LevelUp(int curLv) override;
+
     // getter,setter
     int GetShotNum() const { return mShotNum; }
     float GetShotInterval() const { return mShotInterval; }

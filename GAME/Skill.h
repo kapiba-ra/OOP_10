@@ -4,6 +4,7 @@
 
 /// <summary>
 /// Playerが持つ各スキルに関するクラス
+/// Skillにenum変数Typeを持たせ、武器かパラメータ関連かで処理を分ける方法を試してみたい
 /// </summary>
 class Skill
 {
