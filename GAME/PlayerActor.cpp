@@ -48,7 +48,7 @@ PlayerActor::PlayerActor(Game* game)
 	mBoxComp->SetShouldRotate(false);
 
 	mShotComp = new ShotComponent(this);
-	
+	AddWeapon("Gun", mShotComp);
 	// デバッグ用,武器お試し
 	//new SwordComponent(this);
 	
@@ -274,6 +274,58 @@ void PlayerActor::LevelUpWeapon(std::string name, int lv)
 float PlayerActor::GetForwardSpeed()
 {
 	return mMoveComp->GetForwardSpeed();
+}
+
+void PlayerActor::AddPerk(std::string name)
+{
+	// もし同じのがなかったらがあってもいいかも
+	mPerk.push_back(name);
+}
+
+void PlayerActor::LevelUpPerk(std::string name, int lv)
+{
+	if (name == "MaxHp")
+	{
+		mHpComp->AddMaxHp(20.0f);
+	}
+	else if (name == "PlayerSpeed")
+	{
+		mParams.maxForwardSpeed += 50.0f;
+	}
+	else if (name == "ShotSize")
+	{
+		mParams.WeaponSizeFactor += 0.2f;
+		for (auto weapon : mWeapons)
+		{
+			weapon.second->SetSizeFactor(mParams.WeaponSizeFactor);
+		}
+	}
+	else if (name == "ShotSpeed")
+	{
+		mParams.WeaponSpeedFactor += 0.2f;
+		for (auto weapon : mWeapons)
+		{
+			weapon.second->SetSpeedFactor(mParams.WeaponSpeedFactor);
+		}
+	}
+	else if (name == "ShotInterval")
+	{
+		mParams.WeaponIntervalFactor *= 0.9f;
+		for (auto weapon : mWeapons)
+		{
+			weapon.second->SetIntervalFactor(mParams.WeaponIntervalFactor);
+		}
+	}
+}
+
+void PlayerActor::ApplyWeaponFactors()
+{
+	for (auto weapon : mWeapons)
+	{
+		weapon.second->SetIntervalFactor(mParams.WeaponIntervalFactor);
+		weapon.second->SetSizeFactor(mParams.WeaponSizeFactor);
+		weapon.second->SetSpeedFactor(mParams.WeaponSpeedFactor);
+	}
 }
 
 //void PlayerActor::RemoveWeapon(WeaponComponent* weapon)

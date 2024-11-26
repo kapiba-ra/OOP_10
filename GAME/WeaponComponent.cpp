@@ -22,6 +22,18 @@ WeaponComponent::~WeaponComponent()
 	//}
 }
 
-void WeaponComponent::LevelUp(int CurLv)
+void WeaponComponent::LevelUp(int preLv)
 {
+	switch (preLv)
+	{
+	case 1:
+		break;
+	case 2:
+		break;
+	case 3:
+		break;
+	case 4:
+		break;
+	// Lv5->Lv6‚Í(¡‚ÌŠ)‘¶Ý‚µ‚È‚¢‚Ì‚ÅI—¹
+	}
 }

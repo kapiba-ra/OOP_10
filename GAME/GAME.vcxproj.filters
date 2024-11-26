@@ -237,8 +237,12 @@
     <ClCompile Include="MoveComponent.cpp">
       <Filter>component\move\base</Filter>
     </ClCompile>
-    <ClCompile Include="SwordComponent.cpp" />
-    <ClCompile Include="SwordMove.cpp" />
+    <ClCompile Include="SwordComponent.cpp">
+      <Filter>component\weapon</Filter>
+    </ClCompile>
+    <ClCompile Include="SwordMove.cpp">
+      <Filter>component\move</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Math.h">
@@ -397,8 +401,12 @@
     <ClInclude Include="MoveComponent.h">
       <Filter>component\move\base</Filter>
     </ClInclude>
-    <ClInclude Include="SwordComponent.h" />
-    <ClInclude Include="SwordMove.h" />
+    <ClInclude Include="SwordComponent.h">
+      <Filter>component\weapon</Filter>
+    </ClInclude>
+    <ClInclude Include="SwordMove.h">
+      <Filter>component\move</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include="Shaders\Sprite.frag">

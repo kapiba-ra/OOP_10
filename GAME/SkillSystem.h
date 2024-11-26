@@ -17,7 +17,10 @@ public:
 
 	void Reset();
 
-	void AddSkill(const std::string& name, std::function<void(class PlayerActor*, int)> effect);
+	//void AddSkill(const std::string& name, std::function<void(class PlayerActor*, int)> effect);
+	//void AddSkill(const std::string& name, Skill::Type type, std::function<void(class PlayerActor*)> onGetSkill);
+	void AddWeaponSkill(const std::string& name, std::function<void(class PlayerActor*)> onAcquireSkill);
+	void AddPerkSkill(const std::string& name, std::function<void(class PlayerActor*)> levelUpEffect);
 	//void RemoveSkill(const std::string& name);
 
 	std::vector<Skill*> GetRandomSkills();

@@ -29,6 +29,11 @@ public:
 	// 基底クラスがメモリは解放してくれるのでとりあえず要らない
 	//void RemoveWeapon(WeaponComponent* weapon);
 	float GetForwardSpeed();
+	
+	void AddPerk(std::string name);
+	void LevelUpPerk(std::string name, int lv);
+	// 全てのWeaponFactorsを今持つすべての武器に適用する
+	void ApplyWeaponFactors();
 
 private:
 	void CheckLevelUp();
@@ -46,9 +51,11 @@ private:
 	// weapon
 	std::unordered_map<std::string, class WeaponComponent*> mWeapons;
 	class ShotComponent* mShotComp;
+	// perk
+	std::vector<std::string> mPerk;
 
 public:
-	// parameter related
+	// parameter related, Perkとも関連する,というか呼び名Perkに統一しようかな
 	struct Parameters
 	{
 		float maxForwardSpeed = 400.0f;

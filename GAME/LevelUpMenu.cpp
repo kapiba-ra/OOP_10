@@ -17,9 +17,11 @@ LevelUpMenu::LevelUpMenu(Game* game)
 {
 	mSkillSystem = mGame->GetSkillSystem();
 
+	// ボタンのテクスチャを設定,Offは透明,Onはピンクの枠
 	mButtonOn = mGame->GetRenderer()->GetTexture("Assets/LevelUpButtonOn.png");
 	mButtonOff = mGame->GetRenderer()->GetTexture("Assets/LevelUpButtonOff.png");
 	
+	// Menuに表示するテキストを設定
 	SetTitle("LevelUpTitle");
 	
 	SetRelativeMouseMode(false);
@@ -91,16 +93,18 @@ void LevelUpMenu::Draw(Shader* shader)
 	int i = 0;
 	for (auto b : mButtons)
 	{
-		// ボタンの背景を描画
-		if (mButtonBGs[i])
+		// ボタンのアイコンを描画
+		if (mButtonBGs[i] && mIcons[i])
 		{
 			DrawTexture(shader, mButtonBGs[i], b->GetPosition());
+			DrawTexture(shader, mIcons[i], b->GetPosition() - Vector2(165.0f, 0.0f));
 		}
+		++i;
 		Texture* tex = b->GetHighlighted() ? mButtonOn : mButtonOff;
-		// ボタン(フレーム的な役割)とテキストを描画,テキストがボタンに依存してる感じ
+		// ボタン(ピンクの枠みたいな,カーソル乗ってないと何もない)とテキストを描画
+		// テキストとボタンはセットになっている
 		DrawTexture(shader, tex, b->GetPosition());
 		DrawTexture(shader, b->GetNameTex(), b->GetPosition() + Vector2(50.0f, 0.0f), 0.5f);
-		++i;
 	}
 }
 
@@ -108,45 +112,17 @@ void LevelUpMenu::AddButtonRandom()
 {
 	Vector2 buttonOffset = Vector2(0.0f, 10.0f);
 
-	//std::unordered_map<PlayerActor::Skills, std::string> skillToButtonName = {
-	//	{PlayerActor::Skills::s_shotNum, "IncBulletButton"},
-	//	{PlayerActor::Skills::s_moveSpeed, "MoveSpeedUpButton"},
-	//	{PlayerActor::Skills::s_ballScale, "BiggerBulletButton"}
-	//};
-	//
-	//std::unordered_map<PlayerActor::Skills, int> Lvs = mGame->GetPlayer()->GetSkillLvs();
-	//for (auto lv : Lvs)
-	//{
-	//	if (lv.second >= 8)
-	//	{
-	//		skillToButtonName[lv.first].erase();
-	//	}
-	//}
-	//
-	//// random
-	//std::random_device rd;
-	//std::mt19937 gen(rd());
-	//std::uniform_int_distribution<> dist(0, skillToButtonName.size() - 1);
-	//int randomIndex = dist(gen);
-	//// random
-	
-	// パラメータ名を持つ必要がある
-	// "Assets/" + ParamName + "BG.png"
-	// ParamName + "Button"
-
 	PlayerActor* player = mGame->GetPlayer();
 
 	std::vector<Skill*> skills = mSkillSystem->GetRandomSkills();
 	for (auto skill : skills)
 	{
-		//mButtonBGs.emplace_back(mGame->GetRenderer()->GetTexture("Assets/" + skill->name + "BG.png"));
-		mButtonBGs.emplace_back(mGame->GetRenderer()->GetTexture("Assets/" + skill->GetName() + "BG.png"));
-		//AddButton(skill->name, [this, skill, player]() {
+		// BGの部分は変わるかも
+		mButtonBGs.emplace_back(mGame->GetRenderer()->GetTexture("Assets/SkillBG.png"));
+		mIcons.emplace_back(skill->GetIconTex());
 		AddButton(skill->GetName(), [this, skill, player]() {
 			mGame->ChangeState(Game::EGameplay);
-			//skill->curLv += 1;
-			skill->OnLevelUp(player);
-			//player->OnLvUpSkill(skill->name);
+			skill->LevelUp(player);
 			Close();
 		}, buttonOffset);
 	}

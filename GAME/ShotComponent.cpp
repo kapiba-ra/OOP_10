@@ -5,22 +5,18 @@
 #include "BallActor.h"
 
 ShotComponent::ShotComponent(Actor* owner)
-	//: Component(owner)
 	: WeaponComponent(owner)
-	, mShotNum(1)
-	, mShotInterval(1.0f)
 	, mLastShot(0.0f)
-	, mBallScale(1.0f)
-	, mShotSpeed(1500.0f)
 {
+	Reset();
 }
 
 void ShotComponent::Update(float deltaTime)
 {
 	mLastShot += deltaTime;
-	if (mLastShot > mShotInterval)
+	if (mLastShot > mShotInterval * mIntervalFactor)
 	{
-		mLastShot -= mShotInterval;
+		mLastShot -= mShotInterval * mIntervalFactor;
 		/* 弾の位置、方向を決める */
 		Vector3 start = mOwner->GetPosition();
 		Vector3 dir = mOwner->GetForward();
@@ -30,35 +26,42 @@ void ShotComponent::Update(float deltaTime)
 		{
 			// 弾を作成して色々設定
 			BallActor* ball = new BallActor(mOwner->GetGame());
-			ball->SetScale(mBallScale);
+			ball->SetScale(mBallScale * mSizeFactor);
 			ball->SetPosition(start + dir * 50.0f);
 			ball->RotateToNewForward(dir);
-			ball->SetShotSpeed(mShotSpeed);
+			ball->SetShotSpeed(mShotSpeed * mSpeedFactor);
 			dir = Vector3::Transform(dir, Quaternion(Vector3::UnitZ, shotAngle));
 		}
 	}
 }
 
-void ShotComponent::LevelUp(int curLv)
+void ShotComponent::LevelUp(int preLv)
 {
-	switch (curLv)
+	mShotNum += 1;
+	switch (preLv)
 	{
+	case 1:
+	{
+		break;
+	}
 	case 2:
 	{
+		mBallScale += 2.0f;
 		break;
 	}
 	case 3:
 	{
+		mShotSpeed += 200.0f;
+		mShotInterval *= 0.9f;
 		break;
 	}
 	case 4:
 	{
+		mShotInterval *= 0.9f;
+		mBallScale += 2.0f;
 		break;
 	}
-	case 5:
-	{
-		break;
-	}
+	// MaxLv5なので終了
 	}
 }
 

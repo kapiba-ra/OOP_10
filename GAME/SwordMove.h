@@ -2,6 +2,10 @@
 #include "MoveComponent.h"
 #include "Math.h"
 
+/// <summary>
+/// SwordWeaponの挙動用のComponent,中心(Pivot)を通るZ方向軸で回転する
+/// 実際はPivotMoveのような名前で運用してもいいかも？(というかそれを目指した)
+/// </summary>
 class SwordMove :
     public MoveComponent
 {
@@ -16,7 +20,7 @@ public:
 private:
     // 回転の中心
     class Vector3 mPivot;
-    // 回転半径を決めるもの,一度だけ設定されることを期待する
+    // 回転の中心からどれくらい離れるか
     class Vector3 mOffset;
 };
 

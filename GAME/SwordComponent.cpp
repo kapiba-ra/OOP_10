@@ -14,9 +14,9 @@ SwordComponent::SwordComponent(Actor* owner)
 void SwordComponent::Update(float deltaTime)
 {
 	mLastShot += deltaTime;
-	if (mLastShot > mInterval)
+	if (mLastShot > mInterval * mIntervalFactor)
 	{
-		mLastShot -= mInterval;
+		mLastShot -= mInterval * mIntervalFactor;
 		Vector3 start = mOwner->GetPosition();
 		Vector3 dir = mOwner->GetForward();
 		float shotAngle = Math::Pi / 6;
@@ -25,11 +25,11 @@ void SwordComponent::Update(float deltaTime)
 		for (int i = 0; i < mNum; ++i)
 		{
 			SwordActor* sword = new SwordActor(mOwner->GetGame());
-			sword->SetScale(mScale);
+			sword->SetScale(mScale * mSizeFactor);
 			Vector3 SwordOffset = dir * 100.0f;
 			sword->SetPosition(start + SwordOffset);
 			sword->SetPivotAndRadius(mOwner, SwordOffset);
-			sword->SetRotationSpeed(Math::PiOver2);
+			sword->SetRotationSpeed(Math::PiOver2 / 6 * mSpeedFactor);
 
 			/* Œ•‚ÌŒü‚«‚ğŒˆ’è‚µ‚Ä‚¢‚é...Œ•‚Ìƒ‚ƒfƒ‹‚ÍZ²‚ªã‚ÅX²‚Én‚Æ‚¢‚¤ó‘Ô */ 
 			// 1:Œ•‚ğQ‚©‚·‰ñ“]

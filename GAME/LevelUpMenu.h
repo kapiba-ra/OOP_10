@@ -25,8 +25,10 @@ private:
     float mSlideEndPosX;
     float mSlideSpeed;
 
-    // ボタンの背景用,
+    // スキルアイコンと説明文の背景
     std::vector<class Texture*> mButtonBGs;
+    // アイコン
+    std::vector<class Texture*> mIcons;
     class SkillSystem* mSkillSystem;
 };
 
