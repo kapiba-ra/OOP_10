@@ -29,6 +29,5 @@ private:
     std::vector<class Texture*> mButtonBGs;
     // ÉAÉCÉRÉì
     std::vector<class Texture*> mIcons;
-    class SkillSystem* mSkillSystem;
 };
 

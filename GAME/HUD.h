@@ -1,10 +1,11 @@
 #pragma once
 #include "UIScreen.h"
-#include <vector>
+#include <vector> 
 
-// HUD(ヘッドアップディスプレイ)
-// コンピューターゲーム内で画面に重ねて表示される情報のこと
-
+/// <summary>
+/// HUD(ヘッドアップディスプレイ),ゲーム内で画面に重ねて表示される情報のこと
+/// HUDの表示を担当するクラス
+/// </summary>
 class HUD :
     public UIScreen
 {
@@ -25,30 +26,33 @@ protected:
     void UpdateRadar(float deltaTime);
     void UpdateTimer(float deltaTime);
 
-    // HPバーのテクスチャ
-    class Texture* mHPbar;
-    class Texture* mHPbarBG;
-    float mHPdiscardRange;
+    /* HP */
+    class Texture* mHPbar;      // 緑の部分
+    class Texture* mHPbarBG;    // 背景
+    float mHPdiscardRange;      // Hpbarの描画範囲を決定(0-1)
+    /* レーダー */
+    class Texture* mRader;          // レーダーDisplayの丸い円
+    class Texture* mBlipTex;        // 敵の位置を示す
+    std::vector<Vector2> mBlips;    // レーダー中心から輝点への2D相対オフセット
+    float mRaderRange;      // ワールド空間でのレーダー範囲
+    float mRaderRadius;     // RaderDisplayでのレーダー半径
+    std::vector<class TargetComponent*> mTargetComps;   // 敵の位置を取得できる
+    /* スキルのレベル */
+    std::vector<class Texture*> mIcons; // 獲得したスキルのアイコン
+    class Texture* mIconFrame;       // アイコンのフレーム
 
-    // レーダー用のテクスチャ
-    class Texture* mRader;
-    class Texture* mBlipTex;
-    // レーダー中心から輝点への2D相対オフセット
-    std::vector<Vector2> mBlips;
-    // レーダーの(ワールド空間での)範囲とレーダーディスプレイの半径
-    float mRaderRange;
-    float mRaderRadius;
+    class Texture* mLevel;  // 「Lv.」 のテキストテクスチャ
+    class Texture* mPhase;  // 「Phase」のテキストテクスチャ
+    int mCurPhaseNum;       // 現在のフェーズ
+    float mTimeFloat;       // Phase開始からの時間を記録する
 
-    // タイマー用
-    float mTimeFloat;
-
-    // Level
-    class Texture* mLevel;
-
-    // Phase
-    class Texture* mPhase;
-    int mCurPhaseNum;
-
-    std::vector<class TargetComponent*> mTargetComps;
+    /* 表示位置系,Updateで使う日に備えてメンバにしておいた(基本はDrawで使用) */
+    class Vector2 mHpbarPos;    // Hpbarの表示位置
+    class Vector2 mHpNumPos;    // Hp(数字)の表示位置
+    class Vector2 mRaderPos;    // Raderの表示位置
+    class Vector2 mSkillPos;    // Skillの表示位置
+    class Vector2 mLevelPos;    // 「Lv.」表示位置
+    class Vector2 mPhasePos;    // 「Phase」表示位置
+    class Vector2 mTimePos;     // Phase経過時間のテクスチャ位置
 };
 

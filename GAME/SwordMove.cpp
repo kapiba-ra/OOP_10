@@ -25,7 +25,4 @@ void SwordMove::Update(float deltaTime)
     rota = Quaternion::Concatenate(rota, inc);
     
     mOwner->SetRotation(rota);
-
-    // アクター自身の回転
-    //MoveComponent::Update(deltaTime);
 }

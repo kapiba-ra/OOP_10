@@ -1,8 +1,10 @@
 #include "SkillSystem.h"
+#include <random>
+#include <numeric>
 #include "Game.h"
 #include "Renderer.h"
 #include "Texture.h"
-#include <random>
+#include "HUD.h"
 
 #include "PlayerActor.h"
 
@@ -85,36 +87,7 @@ SkillSystem::SkillSystem(Game* game)
 	//	player->AddPerk("PlayerSpeed");
 	//});
 
-	// 新たなるAddSkill関連
-	// AddWeaponSkillで設定する関数はスキル獲得時の処理
-	// AddPerkSkillで設定する関数はレベルアップ時の処理
-	AddWeaponSkill("Sword", [](PlayerActor* player) {
-		SwordComponent* sc = new SwordComponent(player);
-		player->AddWeapon("Sword", sc);
-	});
-	AddPerkSkill("MaxHp", [](PlayerActor* player) {
-		float add = 20.0f;
-		player->GetHpComp()->AddMaxHp(add);
-	});
-	AddPerkSkill("PlayerSpeed", [](PlayerActor* player) {
-		float add = 100.0f;
-		player->GetParams().maxForwardSpeed += add;
-	});
-	AddPerkSkill("ShotSize", [](PlayerActor* player) {
-		float multiplier = 1.2f;
-		player->GetParams().WeaponSizeFactor *= multiplier;
-		player->ApplyWeaponFactors();
-	});
-	AddPerkSkill("ShotInterval", [](PlayerActor* player) {
-		float multiplier = 0.9f;
-		player->GetParams().WeaponIntervalFactor *= multiplier;
-		player->ApplyWeaponFactors();
-	});
-	AddPerkSkill("ShotSpeed", [](PlayerActor* player) {
-		float multiplier = 1.2f;
-		player->GetParams().WeaponSpeedFactor *= multiplier;
-		player->ApplyWeaponFactors();
-	});
+	Initialize();
 
 	// 矢		ArrowWeapon
 	// 犬		DogWeapon
@@ -155,29 +128,62 @@ SkillSystem::~SkillSystem()
 	mSkills.clear();
 }
 
+void SkillSystem::Initialize()
+{
+	// 新たなるAddSkill関連
+	// AddWeaponSkillで設定する関数はスキル獲得時の処理
+	// AddPerkSkillで設定する関数はレベルアップ時の処理
+	
+	// WeaponはPlayerの方に一旦おいてみる
+	// Weapon
+	AddWeaponSkill("Sword", [this](PlayerActor* player) {
+		SwordComponent* sc = new SwordComponent(player);
+		player->AddWeapon("Sword", sc);
+	});
+	AddWeaponSkill("Gun", [](PlayerActor* player) {
+		ShotComponent* sc = new ShotComponent(player);
+		player->AddWeapon("Gun", sc);
+	});
+
+
+	// 以下Perk
+	AddPerkSkill("MaxHp", [](PlayerActor* player) {
+		float add = 20.0f;
+		player->GetHpComp()->AddMaxHp(add);
+	});
+	AddPerkSkill("PlayerSpeed", [](PlayerActor* player) {
+		float add = 100.0f;
+		player->GetParams().maxForwardSpeed += add;
+	});
+	AddPerkSkill("ShotSize", [](PlayerActor* player) {
+		float multiplier = 1.2f;
+		player->GetParams().WeaponSizeFactor *= multiplier;
+		player->ApplyWeaponFactors();
+	});
+	AddPerkSkill("ShotInterval", [](PlayerActor* player) {
+		float multiplier = 0.9f;
+		player->GetParams().WeaponIntervalFactor *= multiplier;
+		player->ApplyWeaponFactors();
+	});
+	AddPerkSkill("ShotSpeed", [](PlayerActor* player) {
+		float multiplier = 1.2f;
+		player->GetParams().WeaponSpeedFactor *= multiplier;
+		player->ApplyWeaponFactors();
+	});
+}
+
 void SkillSystem::Reset()
 {
 	for (auto skill : mSkills)
 	{
 		skill->SetCurLv(0);
 	}
+	mAcquiredSkills.clear();
 }
-
-//void SkillSystem::AddSkill(const std::string& name, std::function<void(class PlayerActor*, int)> effect)
-//{
-//	Skill* skill = new Skill(name, effect);
-//	mSkills.push_back(skill);
-//}
-
-//void SkillSystem::AddSkill(const std::string& name, Skill::Type type, std::function<void(PlayerActor*)> onGetSkill)
-//{
-//	Skill* skill = new Skill(name, type, onGetSkill);
-//	mSkills.push_back(skill);
-//}
 
 void SkillSystem::AddWeaponSkill(const std::string& name, std::function<void(PlayerActor*)> onAcquireSkill)
 {
-	WeaponSkill* skill = new WeaponSkill(name, onAcquireSkill);
+	WeaponSkill* skill = new WeaponSkill(name, onAcquireSkill, Skill::Type::EWeapon);
 	// Iconを設定
 	Texture* tex = mGame->GetRenderer()->GetTexture("Assets/Icon/" + name + ".png");
 	skill->SetIconTex(tex);
@@ -187,12 +193,34 @@ void SkillSystem::AddWeaponSkill(const std::string& name, std::function<void(Pla
 
 void SkillSystem::AddPerkSkill(const std::string& name, std::function<void(class PlayerActor*)> levelUpEffect)
 {
-	PerkSkill* skill = new PerkSkill(name, levelUpEffect);
+	PerkSkill* skill = new PerkSkill(name, levelUpEffect, Skill::Type::EPerk);
 	// Iconを設定
 	Texture* tex = mGame->GetRenderer()->GetTexture("Assets/Icon/" + name + ".png");
 	skill->SetIconTex(tex);
 	// 配列に追加
 	mSkills.push_back(skill);
+}
+
+void SkillSystem::SetInitialWeapon(const std::string& name, PlayerActor* player)
+{
+	for (const auto& skill : mSkills)
+	{
+		if (skill->GetName() == name && skill->GetCurLv() == 0) // 一応Lv0であることをチェック
+		{
+			mAcquiredSkills.push_back(skill);
+			// 現状,Plaeyr初期化中に呼ばれるので,playerをmGame->GetPlayer()とするのはおかしい
+			skill->LevelUp(player);
+		}
+	}
+}
+
+void SkillSystem::OnLevelUp(Skill* skill)
+{
+	if (skill->GetCurLv() == 0)
+	{
+		mAcquiredSkills.push_back(skill);
+	}
+	skill->LevelUp(mGame->GetPlayer());
 }
 
 //void SkillSystem::RemoveSkill(const std::string& name)
@@ -214,16 +242,18 @@ void SkillSystem::AddPerkSkill(const std::string& name, std::function<void(class
 std::vector<Skill*> SkillSystem::GetRandomSkills()
 {
 	std::vector<Skill*> ret;
+	std::vector<int> indices(mSkills.size());
+	std::iota(indices.begin(), indices.end(), 0); // 0, 1, 2, ..., mSkills.size() - 1
 
 	std::random_device rd;
 	std::mt19937 gen(rd());
-	std::shuffle(mSkills.begin(), mSkills.end(), gen);
+	std::shuffle(indices.begin(), indices.end(), gen); // インデックスだけをシャッフル
 
-	for (const auto& skill : mSkills)
+	for (int i : indices)
 	{
-		if (!skill->IsLevelMax()) 
+		if (!mSkills[i]->IsLevelMax())
 		{
-			ret.push_back(skill);
+			ret.push_back(mSkills[i]);
 			if (ret.size() == 3)
 			{
 				break;

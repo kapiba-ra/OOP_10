@@ -22,7 +22,6 @@ public:
 	class BoxComponent* GetBox() { return mBoxComp; }
 	class HpComponent* GetHpComp() { return mHpComp; }
 	// 後で消す
-	class ShotComponent* GetShotComp() { return mShotComp; }
 	void AddWeapon(std::string name, class WeaponComponent* weapon);
 	// nameはいずれ参照になる(enumでskillのタイプを分ける)
 	void LevelUpWeapon(std::string name, int lv);
@@ -30,8 +29,6 @@ public:
 	//void RemoveWeapon(WeaponComponent* weapon);
 	float GetForwardSpeed();
 	
-	void AddPerk(std::string name);
-	void LevelUpPerk(std::string name, int lv);
 	// 全てのWeaponFactorsを今持つすべての武器に適用する
 	void ApplyWeaponFactors();
 
@@ -50,9 +47,6 @@ private:
 	class AudioComponent* mAudioComp;
 	// weapon
 	std::unordered_map<std::string, class WeaponComponent*> mWeapons;
-	class ShotComponent* mShotComp;
-	// perk
-	std::vector<std::string> mPerk;
 
 public:
 	// parameter related, Perkとも関連する,というか呼び名Perkに統一しようかな

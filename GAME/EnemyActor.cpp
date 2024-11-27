@@ -10,6 +10,7 @@
 #include "BoxComponent.h"
 #include "TargetComponent.h"
 #include "HpComponent.h"
+#include "DamageComponent.h"
 
 #include "PlayerActor.h"
 #include "PlaneActor.h"
@@ -17,12 +18,9 @@
 
 EnemyActor::EnemyActor(Game* game)
 	: Actor(game, Type::Eenemy)
-	, mMoveComp(nullptr)
-	, mMeshComp(nullptr)
-	, mBoxComp(nullptr)
 	, mMyState(MyState::EAlive)
-	, mHP(1.0f)
-	, mTimer(0.0f)
+	, mInvincibleDuration(0.5f)	// –³“GŽžŠÔ,‰ŠúÝ’è‚Í0.5•b
+	, mInvincibilityTimer(0.0f)
 {
 	mMeshComp = new MeshComponent(this);
 	Mesh* mesh = game->GetRenderer()->GetMesh("Assets/Human.gpmesh");
@@ -51,6 +49,10 @@ EnemyActor::EnemyActor(Game* game)
 	mBoxComp->SetObjectBox(mesh->GetBox());
 	mBoxComp->SetShouldRotate(false);
 
+	// Damage(UŒ‚—Í),Hp‹¤‚ÉƒfƒtƒHƒ‹ƒg‚Ì,1
+	mDamageComp = new DamageComponent(this);
+	mHpComp = new HpComponent(this, 2.0f);
+
 	// ƒŒ[ƒ_[‚Ö‚Ì•\Ž¦‚ÉŽg‚¤
 	new TargetComponent(this);
 }
@@ -58,6 +60,8 @@ EnemyActor::EnemyActor(Game* game)
 void EnemyActor::UpdateActor(float deltaTime)
 {
 	Actor::UpdateActor(deltaTime);
+
+	mInvincibilityTimer += deltaTime;	// –³“GŽžŠÔ—p‚Ìƒ^ƒCƒ}[‚Í‚±‚±‚Å‰ÁŽZ‚µ‘±‚¯‚é
 
 	if (mMyState == MyState::EDying)
 	{
@@ -71,7 +75,8 @@ void EnemyActor::UpdateActor(float deltaTime)
 			a->SetPosition(GetPosition());
 		}
 	}
-	else if (mHP <= 0.0f && mMyState == MyState::EAlive)
+	// “|‚³‚ê‚½uŠÔ‚Ìˆ—
+	else if (mHpComp->IsKilled() && mMyState == MyState::EAlive)
 	{
 		mMyState = MyState::EDying;
 		mMyMove->SetForwardSpeed(0.0f);
@@ -139,6 +144,15 @@ void EnemyActor::FixCollisions()
 			SetPosition(pos);
 			mBoxComp->OnUpdateWorldTransform();
 		}
+	}
+}
+
+void EnemyActor::TakeDamage(float amount)
+{
+	if (mInvincibilityTimer >= mInvincibleDuration)
+	{
+		mHpComp->TakeDamage(amount);
+		mInvincibilityTimer = 0.0f;
 	}
 }
 

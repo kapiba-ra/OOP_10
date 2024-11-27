@@ -85,7 +85,6 @@ void PhaseSystem::StartPhase()
 		EnemyActor* eActor;
 		eActor = new EnemyActor(mGame);
 		eActor->SetScale(80.0f);
-		eActor->SetMaxHp(20.0f);
 		eActor->SetSpeed(200.0f);
 		break;
 	}

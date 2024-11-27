@@ -1,6 +1,10 @@
 #pragma once
 #include "Component.h"
 
+/// <summary>
+/// ダメージを与える仕組みを担当する
+/// 攻撃力に当たるパラメータを持つ
+/// </summary>
 class DamageComponent :
     public Component
 {

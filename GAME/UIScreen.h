@@ -91,7 +91,7 @@ protected:
 	Vector2 mTitlePos;
 	Vector2 mNextButtonPos;
 	Vector2 mBGPos;
-	Vector2 mNumPos;
+	//Vector2 mNumPos;
 
 	UIState mState;
 };

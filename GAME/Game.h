@@ -65,6 +65,8 @@ public:
 	// ˆêŽž“I‚Épublic‚É‚µ‚Ä‚¢‚é
 	void LoadData();
 	void UnloadData();
+	// ‚ß‚Á‚¿‚á–¼‘O‚Í“K“–
+	void OnReturnToMainMenu();
 
 private:
 	// processes in RunLoop()

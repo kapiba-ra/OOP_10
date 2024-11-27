@@ -12,6 +12,7 @@ public:
     void Update(float deltaTime) override;
 
     void LevelUp(int curLv) override;
+    void Reset() override;
 
     // getter,setter
     int GetNum() const { return mNum; }
@@ -21,7 +22,6 @@ public:
     void SetInterval(float f) { mInterval = f; }
     void SetScale(float f) { mScale = f; }
 
-    void Reset();
 
 private:
     // Œ•‚Æ‰ñ“]Šp“x‚Ìpair

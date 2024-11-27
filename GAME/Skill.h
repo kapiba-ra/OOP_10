@@ -47,21 +47,31 @@
 class Skill
 {
 public:
-	Skill(const std::string& name);
+	// スキルはこの二つに分類される
+	enum class Type
+	{
+		EWeapon,
+		EPerk
+	};
+
+	Skill(const std::string& name, Type type);
 	virtual ~Skill();
 
-	virtual void LevelUp(class PlayerActor* player);
+	virtual void LevelUp(class PlayerActor* player) {};
 
 	std::string GetName() const { return mName; }
 	void SetCurLv(int lv) { mCurLv = lv; }
+	int GetCurLv() const { return mCurLv; }
 	class Texture* GetIconTex() const { return mIcon; }
 	void SetIconTex(class Texture* tex) { mIcon = tex; }
+	Type GetType() const { return mType; }
 
 	bool IsLevelMax() const { return mCurLv == mMaxLv; }
 
 protected:
 	std::string mName;		// スキル名
 	class Texture* mIcon;	// スキルのアイコン画像
+	Type mType;				// スキルの分類(武器orPerk)
 	int mCurLv;				// 0が初期状態
 	int mMaxLv;				// 5がデフォルトのMax
 };
@@ -73,7 +83,9 @@ class WeaponSkill
 	: public Skill
 {
 public:
-	WeaponSkill(const std::string& name, std::function<void(class PlayerActor* player)> onAcquireSkill);
+	WeaponSkill(const std::string& name,
+		std::function<void(class PlayerActor* player)> onAcquireSkill,
+		Type type);
 
 	void LevelUp(class PlayerActor* player) override;
 	
@@ -88,7 +100,9 @@ class PerkSkill
 	: public Skill
 {
 public:
-	PerkSkill(const std::string& name, std::function<void(class PlayerActor* player)> effect);
+	PerkSkill(const std::string& name,
+		std::function<void(class PlayerActor* player)> effect,
+		Type type);
 
 	void LevelUp(class PlayerActor* player) override;
 

@@ -1,5 +1,7 @@
 #include "Skill.h"
 #include "PlayerActor.h"
+#include "Texture.h"
+#include "SkillSystem.h"
 
 //Skill::Skill(const std::string& name, std::function<void(PlayerActor*, int)> effect)
 //	: mName(name)
@@ -55,9 +57,10 @@
 //
 //}
 
-Skill::Skill(const std::string& name)
+Skill::Skill(const std::string& name, Type type)
 	: mName(name)
 	, mIcon(nullptr)
+	, mType(type)
 	, mCurLv(0)	// 初期値が0である事に注意(そういう仕様)
 	, mMaxLv(5)
 {
@@ -69,20 +72,17 @@ Skill::~Skill()
 {
 }
 
-void Skill::LevelUp(PlayerActor* player)
-{
-	// 基底クラスで内容をかく
-}
-
-WeaponSkill::WeaponSkill(const std::string& name, std::function<void(class PlayerActor* player)> onAcquireSkill)
-	: Skill(name)
+WeaponSkill::WeaponSkill(const std::string& name,
+	std::function<void(class PlayerActor* player)> onAcquireSkill,
+	Type type)
+	: Skill(name, type)
 	, mOnAcquireSkill(onAcquireSkill)
 {
 }
 
 void WeaponSkill::LevelUp(PlayerActor* player)
 {
-	if (mCurLv == 0)
+	if (mCurLv == 0 && player != nullptr)
 	{
 		// PlayerのAddWeaponを呼び出す必要がある
 		// その際にWeaponComponentのポインタを渡す必要がある
@@ -97,8 +97,10 @@ void WeaponSkill::LevelUp(PlayerActor* player)
 	mCurLv += 1;
 }
 
-PerkSkill::PerkSkill(const std::string& name, std::function<void(class PlayerActor* player)> effect)
-	: Skill(name)
+PerkSkill::PerkSkill(const std::string& name,
+	std::function<void(class PlayerActor* player)> effect,
+	Type type)
+	: Skill(name, type)
 	, mEffect(effect)
 {
 }

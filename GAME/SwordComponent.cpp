@@ -7,6 +7,7 @@
 SwordComponent::SwordComponent(Actor* owner)
 	: WeaponComponent(owner)
 	, mLastShot(0.0f)
+	, mNum(2)
 {
 	Reset();
 }
@@ -79,5 +80,5 @@ void SwordComponent::Reset()
 	mNum = 1;
 	mScale = 10.0f;
 	mInterval = 2.0f;
-	mSpeed = Math::PiOver2;
+	mSpeed = Math::Pi;
 }

@@ -16,10 +16,6 @@ WeaponComponent::WeaponComponent(Actor* owner)
 
 WeaponComponent::~WeaponComponent()
 {
-	//if (mOwner->GetType() == Actor::Eplayer)
-	//{
-	//	static_cast<PlayerActor*>(mOwner)->RemoveWeapon(this);
-	//}
 }
 
 void WeaponComponent::LevelUp(int preLv)
@@ -36,4 +32,8 @@ void WeaponComponent::LevelUp(int preLv)
 		break;
 	// Lv5->Lv6‚Í(¡‚ÌŠ)‘¶İ‚µ‚È‚¢‚Ì‚ÅI—¹
 	}
+}
+
+void WeaponComponent::Reset()
+{
 }

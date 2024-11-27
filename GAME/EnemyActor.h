@@ -18,19 +18,18 @@ public:
 
     void FixCollisions();
 
-    void TakeDamage(float amount) { mHP -= amount; }
-    void SetMaxHp(float hp) { mHP = hp; }
+    void TakeDamage(float amount);
     void SetSpeed(float speed);
 
 private:
     MyState mMyState;
-    float mHP;
-    float mTimer;
+    float mInvincibleDuration;  // 無敵時間
+    float mInvincibilityTimer;  // 無敵時間用のタイマー
 
-    class MoveComponent* mMoveComp;
     class ChaseMove* mMyMove;
     class MeshComponent* mMeshComp;
     class BoxComponent* mBoxComp;
-
+    class DamageComponent* mDamageComp;
+    class HpComponent* mHpComp;
 };
 

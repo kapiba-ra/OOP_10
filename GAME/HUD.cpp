@@ -5,6 +5,7 @@
 #include "Texture.h"
 #include "Font.h"
 #include "PhaseSystem.h"
+#include "SkillSystem.h"
 
 #include "Actor.h"
 #include "PlayerActor.h"
@@ -20,12 +21,20 @@ HUD::HUD(Game* game)
 	, mHPdiscardRange(1.0f)
 	, mTimeFloat(0.0f)
 	, mCurPhaseNum(1)
+	, mRaderPos(-390.0f, 275.0f)
+	, mHpbarPos(-350.0f, -350.0f)
+	, mHpNumPos(-460.0f, -315.0f)
+	, mTimePos(-20.0f, 340.0f)
+	, mLevelPos(400.0f, 350.0f)
+	, mPhasePos(300.0f, 350.0f)
+	, mSkillPos(-480.0f, 0.0f)
 {
 	Renderer* r = mGame->GetRenderer();
 	mRader = r->GetTexture("Assets/Radar.png");
 	mBlipTex = r->GetTexture("Assets/Blip.png");
 	mHPbarBG = r->GetTexture("Assets/HPBarBG.png");
 	mHPbar = r->GetTexture("Assets/HPBar.png");
+	mIconFrame = r->GetTexture("Assets/Icon/Frame.png");
 	mLevel = mFont->RenderText("LevelText");
 	mPhase = mFont->RenderText("PhaseText");
 }
@@ -43,65 +52,80 @@ void HUD::Update(float deltaTime)
 
 void HUD::Draw(Shader* shader)
 {
-	// prepare! キャッシュしておくと表現できるらしい
+	// prepare! キャッシュしておく,と表現する
 	PlayerActor* player = mGame->GetPlayer();
 	PlayerActor::Parameters pParams = player->GetParams();
+	Vector2 offset(Vector2::Zero);	// 使いまわす
 
 	// レーダーの描画
-	const Vector2 cRaderPos(-390.0f, 275.0f);
-	DrawTexture(shader, mRader, cRaderPos);
+	DrawTexture(shader, mRader, mRaderPos);
 	// レーダー上の輝点の描画
 	for (const Vector2& blip : mBlips)
 	{
-		DrawTexture(shader, mBlipTex, cRaderPos + blip);
+		DrawTexture(shader, mBlipTex, mRaderPos + blip);
 	}
 
 	// HPバーの描画
-	Vector2 hpBarPos(-350.0f, -350.0f);
-	DrawTexture(shader, mHPbarBG, hpBarPos);
-	mHPdiscardRange = mGame->GetPlayer()->GetHpComp()->GetHpPercentage();
+	DrawTexture(shader, mHPbarBG, mHpbarPos);
+	mHPdiscardRange = player->GetHpComp()->GetHpPercentage();
 	if (mHPdiscardRange >= 0.0f)
 	{
-		DrawTexture(shader, mHPbar, hpBarPos, 1.0f, mHPdiscardRange);
+		DrawTexture(shader, mHPbar, mHpbarPos, 1.0f, mHPdiscardRange);
 	}
-
 	// HP(number)の描画
-	Vector2 NumPos(-460.0f, -315.0f);
-	Vector2 offset(20.0f, 0.0f);
+	offset = Vector2(mNumbers[0]->GetWidthF(), 0.0f);
 	std::string hp = std::to_string(static_cast<int>(player->GetHpComp()->GetCurHp()));
 	for (size_t i = 0;i < hp.length(); i++)
 	{
 		int digitIndex = hp[i] - '0';
 		if (0 <= digitIndex && digitIndex <= 9) //一応範囲外アクセスしないように
 		{
-			DrawTexture(shader, mNumbers[digitIndex], NumPos + offset * static_cast<float>(i));
+			DrawTexture(shader, mNumbers[digitIndex], mHpNumPos + offset * static_cast<float>(i));
 		}
 	}
 
+	// スキルのアイコンの描画
+	Vector2 nextSkillPos(mSkillPos);
+	std::vector<Skill*> skills = mGame->GetSkillSystem()->GetAcquiredSkills();
+	float scale = 0.4f;
+	for (auto skill : skills)
+	{
+		if (skill->GetType() == Skill::Type::EWeapon)
+		{
+			DrawTexture(shader, skill->GetIconTex(), nextSkillPos, scale);
+			Vector2 offset(Vector2(0.0f, skill->GetIconTex()->GetmHeightF() * scale));
+			Vector2 space(0.0f, 6.0f);
+			nextSkillPos -= (offset + space);
+		}
+	} 
+	Vector2 nextFramePos(mSkillPos);
+	for (int i = 0; i < 5; ++i)
+	{
+		DrawTexture(shader, mIconFrame, nextFramePos);
+		nextFramePos -= Vector2(0.0f, mIconFrame->GetmHeightF() + 2.0f);
+	}
+
 	// タイマーの描画(2桁)
-	NumPos = Vector2(-20.0f, 340.0f);
-	offset = Vector2(40.0f, 0.0f);
-	float scale = 2.0f;
+	scale = 2.0f;		// タイマーの数字のスケール
+	offset = Vector2(mNumbers[0]->GetWidthF() * scale, 0.0f);
 	int tens = static_cast<int>(mTimeFloat / 10);
 	int ones = static_cast<int>(mTimeFloat - tens * 10) % 10;
-	DrawTexture(shader, mNumbers[tens], NumPos, scale);
-	DrawTexture(shader, mNumbers[ones], NumPos + offset, scale);
+	DrawTexture(shader, mNumbers[tens], mTimePos, scale);
+	DrawTexture(shader, mNumbers[ones], mTimePos + offset, scale);
 
 	// Levelの描画
-	Vector2 lvPos(400.0f, 350.0f);
-	DrawTexture(shader, mLevel, lvPos);
+	DrawTexture(shader, mLevel, mLevelPos);
 	int level = pParams.level;
-	offset = Vector2(static_cast<float>(mLevel->GetWidth()), 3.0f);
+	offset = Vector2(mLevel->GetWidthF(), 3.0f);
 	tens = level / 10;
 	ones = level % 10;
-	DrawTexture(shader, mNumbers[tens], lvPos + offset);
-	DrawTexture(shader, mNumbers[ones], lvPos + offset + Vector2(static_cast<float>(mNumbers[0]->GetWidth()), 0.0f));
+	DrawTexture(shader, mNumbers[tens], mLevelPos + offset);
+	DrawTexture(shader, mNumbers[ones], mLevelPos + offset + Vector2(static_cast<float>(mNumbers[0]->GetWidth()), 0.0f));
 
 	// Phaseの描画
-	Vector2 PhasePos(lvPos - Vector2(100.0f, 0.0f));
-	DrawTexture(shader, mPhase, PhasePos);
-	offset = Vector2(static_cast<float>((mPhase->GetWidth()) + mNumbers[0]->GetWidth()) / 2.0f, 3.0f);
-	DrawTexture(shader, mNumbers[mCurPhaseNum], PhasePos + offset);
+	DrawTexture(shader, mPhase, mPhasePos);
+	offset = Vector2((mPhase->GetWidthF() + mNumbers[0]->GetWidthF()) / 2.0f, 3.0f);
+	DrawTexture(shader, mNumbers[mCurPhaseNum], mPhasePos + offset);
 }
 
 void HUD::Reset()

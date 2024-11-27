@@ -15,8 +15,6 @@ LevelUpMenu::LevelUpMenu(Game* game)
 	, mSlideEndPosX(0.0f)
 	, mSlideSpeed(2000.0f)
 {
-	mSkillSystem = mGame->GetSkillSystem();
-
 	// ボタンのテクスチャを設定,Offは透明,Onはピンクの枠
 	mButtonOn = mGame->GetRenderer()->GetTexture("Assets/LevelUpButtonOn.png");
 	mButtonOff = mGame->GetRenderer()->GetTexture("Assets/LevelUpButtonOff.png");
@@ -113,16 +111,18 @@ void LevelUpMenu::AddButtonRandom()
 	Vector2 buttonOffset = Vector2(0.0f, 10.0f);
 
 	PlayerActor* player = mGame->GetPlayer();
-
-	std::vector<Skill*> skills = mSkillSystem->GetRandomSkills();
+	SkillSystem* skillSystem = mGame->GetSkillSystem();
+	
+	std::vector<Skill*> skills = skillSystem->GetRandomSkills();
 	for (auto skill : skills)
 	{
 		// BGの部分は変わるかも
 		mButtonBGs.emplace_back(mGame->GetRenderer()->GetTexture("Assets/SkillBG.png"));
 		mIcons.emplace_back(skill->GetIconTex());
-		AddButton(skill->GetName(), [this, skill, player]() {
+		AddButton(skill->GetName(), [this, skill, skillSystem]() {
 			mGame->ChangeState(Game::EGameplay);
-			skill->LevelUp(player);
+			//skill->LevelUp(player);
+			skillSystem->OnLevelUp(skill);
 			Close();
 		}, buttonOffset);
 	}

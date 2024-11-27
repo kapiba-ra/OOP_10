@@ -15,6 +15,8 @@ SwordActor::SwordActor(Game* game)
 	: WeaponActor(game)
 	, mPivotActor(nullptr)
 {
+	mLifeSpan = 1.0f;	// ’Z‚ß‚É
+
 	// mesh
 	MeshComponent* mc = new MeshComponent(this);
 	Mesh* mesh = GetGame()->GetRenderer()->GetMesh("Assets/Sword.gpmesh");

@@ -4,6 +4,7 @@
 #include "Renderer.h"
 #include "Mesh.h"
 #include "InputSystem.h"
+#include "SkillSystem.h"
 
 #include "HUD.h"
 //#include "LevelUpMenu.h"
@@ -46,13 +47,10 @@ PlayerActor::PlayerActor(Game* game)
 	AABB myBox(Vector3(-0.5f, -0.5f, -0.5f), Vector3(0.5f, 0.5f, 0.5f));
 	mBoxComp->SetObjectBox(myBox);
 	mBoxComp->SetShouldRotate(false);
+	
+	// 初期武器設定,名前をここで指定する(武器名全ての名前はSkillSystemのInitialize()で知れる)
+	game->GetSkillSystem()->SetInitialWeapon("Gun", this);
 
-	mShotComp = new ShotComponent(this);
-	AddWeapon("Gun", mShotComp);
-	// デバッグ用,武器お試し
-	//new SwordComponent(this);
-	
-	
 	mAudioComp = new AudioComponent(this);
 }
 
@@ -127,8 +125,21 @@ void PlayerActor::Reset()
 	Actor::SetState(EActive);
 	mParams.Reset();
 	mHpComp->Reset(100.0f);
-	mShotComp->Reset();
+	
 	// 武器をリセットする
+	for (auto weapon : mWeapons)
+	{
+		// 親が持ってる配列からWeaponComponentを消して
+		Actor::RemoveComponent(weapon.second);
+		// メモリを解放
+		delete weapon.second;
+	}
+	mWeapons.clear();
+	auto skillSystem = GetGame()->GetSkillSystem();
+	if (skillSystem)	// 安全運転でnullチェック
+	{
+		skillSystem->SetInitialWeapon("Gun", this);
+	}
 
 	SetPosition(Vector3(0.0f, 0.0f, -50.0f));
 }
@@ -231,18 +242,6 @@ void PlayerActor::FixCollisions()
 	}
 }
 
-//void PlayerActor::TakeDamage(float amount)
-//{
-//	// TODO: 当たってから数フレーム,色が変わるようにしたら面白いかも
-//	mParams.hp -= amount;
-//
-//	if (mParams.hp <= 0.0f)
-//	{
-//		Actor::SetState(EPaused);
-//		GetGame()->ChangeState(Game::EGameover);
-//	}
-//}
-
 void PlayerActor::GainExp(float exp)
 {
 	mParams.exp += exp;
@@ -274,48 +273,6 @@ void PlayerActor::LevelUpWeapon(std::string name, int lv)
 float PlayerActor::GetForwardSpeed()
 {
 	return mMoveComp->GetForwardSpeed();
-}
-
-void PlayerActor::AddPerk(std::string name)
-{
-	// もし同じのがなかったらがあってもいいかも
-	mPerk.push_back(name);
-}
-
-void PlayerActor::LevelUpPerk(std::string name, int lv)
-{
-	if (name == "MaxHp")
-	{
-		mHpComp->AddMaxHp(20.0f);
-	}
-	else if (name == "PlayerSpeed")
-	{
-		mParams.maxForwardSpeed += 50.0f;
-	}
-	else if (name == "ShotSize")
-	{
-		mParams.WeaponSizeFactor += 0.2f;
-		for (auto weapon : mWeapons)
-		{
-			weapon.second->SetSizeFactor(mParams.WeaponSizeFactor);
-		}
-	}
-	else if (name == "ShotSpeed")
-	{
-		mParams.WeaponSpeedFactor += 0.2f;
-		for (auto weapon : mWeapons)
-		{
-			weapon.second->SetSpeedFactor(mParams.WeaponSpeedFactor);
-		}
-	}
-	else if (name == "ShotInterval")
-	{
-		mParams.WeaponIntervalFactor *= 0.9f;
-		for (auto weapon : mWeapons)
-		{
-			weapon.second->SetIntervalFactor(mParams.WeaponIntervalFactor);
-		}
-	}
 }
 
 void PlayerActor::ApplyWeaponFactors()
@@ -363,48 +320,6 @@ void PlayerActor::CheckLevelUp()
 		mAudioComp->PlayEvent("event:/Ding");
 	}
 }
-
-//void PlayerActor::OnLvUpSkill(const std::string& name)
-//{
-//	// 文字列でやってるのがちょい不満
-//	if (name == "MaxHp")
-//	{
-//		//mParams.maxHp += 20;
-//		//mParams.hp += 20;
-//		mHpComp->AddMaxHp(20.0f);
-//	}
-//	else if (name == "PlayerSpeed")
-//	{
-//		mParams.maxForwardSpeed += 50.0f;
-//	}
-//	else if (name == "ShotSize")
-//	{
-//		float scale = mShotComp->GetBallScale();
-//		scale += 0.2f;
-//		mShotComp->SetBallScale(scale);
-//	}
-//	else if (name == "ShotNum")
-//	{
-//		int shotNum = mShotComp->GetShotNum();
-//		shotNum += 1;
-//		mShotComp->SetShotNum(shotNum);
-//	}
-//	else if (name == "ShotInterval")
-//	{
-//		float interval = mShotComp->GetShotInterval();
-//		interval *= 0.9f;
-//		mShotComp->SetShotInterval(interval);
-//	}
-//	else if (name == "ShotSpeed")
-//	{
-//		float add = 100.0f;
-//		mShotComp->IncShotSpeed(add);
-//	}
-//	else if (name == "Recover")
-//	{
-//		mHpComp->Recover(20.0f);
-//	}
-//}
 
 void PlayerActor::Parameters::Reset()
 {

@@ -12,6 +12,7 @@ public:
     void Update(float deltaTime) override;
 
     void LevelUp(int preLv) override;
+    void Reset() override;
 
     // getter,setter
     int GetShotNum() const { return mShotNum; }
@@ -23,7 +24,6 @@ public:
 
     void IncShotSpeed(float add);
 
-    void Reset();
 
 private:
     int mShotNum;

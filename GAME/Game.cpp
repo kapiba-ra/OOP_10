@@ -319,7 +319,8 @@ void Game::OnEnter(GameState state)
 		// LoadData();
 		break;
 	case EMainMenu:
-		UnloadData();
+		//UnloadData();
+		OnReturnToMainMenu();
 		new MainMenu(this);
 		break;
 	case EPaused:
@@ -370,6 +371,8 @@ void Game::OnExit(GameState nextState)
 
 void Game::Reset()
 {
+	// 先にSkillSystemをResetする
+	mSkillSystem->Reset();
 	for (auto actor : mActors)
 	{
 		actor->Reset();
@@ -380,7 +383,6 @@ void Game::Reset()
 	//	ui->Reset();
 	//}
 	mHUD->Reset();
-	mSkillSystem->Reset();
 	mPhaseSystem->Reset();
 
 	// 初期配置
@@ -498,10 +500,28 @@ void Game::UnloadData()
 	}
 }
 
+void Game::OnReturnToMainMenu()
+{
+	// 多分必要
+	mSkillSystem->Reset();
+	mPhaseSystem->Reset();
+
+	while (!mActors.empty())
+	{
+		delete mActors.back();
+	}
+	while (!mUIStack.empty())
+	{
+		delete mUIStack.back();
+		mUIStack.pop_back();
+	}
+}
+
 void Game::Shutdown()
 {
 	UnloadData();
 	TTF_Quit();
+	delete mSkillSystem;
 	delete mPhysWorld;
 	if (mRenderer)
 	{
@@ -513,7 +533,6 @@ void Game::Shutdown()
 	}
 
 	delete mPhaseSystem;
-	delete mSkillSystem;
 	delete mInputSystem;
 
 	if (mGraph)

@@ -16,6 +16,11 @@ public:
 
 	int GetWidth() const { return mWidth; }
 	int GetHeight() const { return mHeight; }
+	/* static_cast<float>()...‚Á‚Ä‘‚­‚Æ’·‚¢‚©‚ç—pˆÓ... */
+	// Get width as float
+	float GetWidthF() const { return static_cast<float>(mWidth); }
+	// Get height as float
+	float GetmHeightF() const { return static_cast<float>(mHeight); }
 
 private:
 	unsigned int mTextureID;
