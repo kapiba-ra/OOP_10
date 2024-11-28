@@ -18,7 +18,7 @@ void SwordComponent::Update(float deltaTime)
 	if (mLastShot > mInterval * mIntervalFactor)
 	{
 		mLastShot -= mInterval * mIntervalFactor;
-		Vector3 start = mOwner->GetPosition();
+		Vector3 start = mOwner->GetPosition() + Vector3(0.0f, 0.0f, 50.0f);
 		Vector3 dir = mOwner->GetForward();
 		float shotAngle = Math::Pi / 6;
 		//dir = Vector3::Transform(dir, Quaternion(Vector3::UnitY, -shotAngle * (mNum - 1) / 2));

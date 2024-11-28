@@ -255,7 +255,9 @@
     <ClCompile Include="SkeletalMeshComponent.cpp">
       <Filter>manager\animation</Filter>
     </ClCompile>
-    <ClCompile Include="Animation.cpp" />
+    <ClCompile Include="Animation.cpp">
+      <Filter>manager\animation</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Math.h">
@@ -429,8 +431,10 @@
     <ClInclude Include="SkeletalMeshComponent.h">
       <Filter>manager\animation</Filter>
     </ClInclude>
-    <ClInclude Include="Animation.h" />
     <ClInclude Include="MatrixPalette.h">
+      <Filter>manager\animation</Filter>
+    </ClInclude>
+    <ClInclude Include="Animation.h">
       <Filter>manager\animation</Filter>
     </ClInclude>
   </ItemGroup>

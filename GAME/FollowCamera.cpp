@@ -19,8 +19,6 @@ void FollowCamera::Update(float deltaTime)
 {
 	CameraComponent::Update(deltaTime);
 
-
-
 	// ‚Î‚Ë’è”‚©‚çŒ¸Š‚ðŒvŽZ
 	float dampening = 2.0f * Math::Sqrt(mSpringConstant);
 
@@ -88,10 +86,12 @@ Vector3 FollowCamera::ComputeCameraPos() const
 
 void FollowCamera::CheckObstacles()
 {
-	LineSegment line(mActualPos, mOwner->GetPosition());
+	LineSegment line(mActualPos, mOwner->GetPosition() + Vector3(0.0f, 0.0f, 50.0f));
 	auto& planes = mOwner->GetGame()->GetPlanes();
 	for (auto pa : planes)
 	{
+		//if (pa->GetType() == Actor::EWall)
+		//{
 		float t = 0.0f;
 		Vector3 norm(Vector3::Zero);
 		const AABB& planeBox = pa->GetBox()->GetWorldBox();
@@ -100,5 +100,6 @@ void FollowCamera::CheckObstacles()
 		{
 			mActualPos = line.PointOnSegment(t);
 		}
+		//}
 	}
 }

@@ -41,7 +41,7 @@ void SwordActor::UpdateActor(float deltaTime)
 	// PivotActor not null‚Å
 	if (mPivotActor)
 	{
-		Vector3 pivot = mPivotActor->GetPosition();
+		Vector3 pivot = mPivotActor->GetPosition() + Vector3(0.0f, 0.0f, 50.0f);
 		mMyMove->SetPivot(pivot);
 	}
 	
