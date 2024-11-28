@@ -61,6 +61,8 @@ public:
 
 	void LoadText(const std::string& fileName);
 	const std::string& GetText(const std::string& key);
+	class Skeleton* GetSkeleton(const std::string& fileName);
+	class Animation* GetAnimation(const std::string& fileName);
 
 	// ˆêŽž“I‚Épublic‚É‚µ‚Ä‚¢‚é
 	void LoadData();
@@ -84,6 +86,8 @@ private:
 	std::vector<class UIScreen*> mUIStack;
 	std::unordered_map<std::string, class Font*> mFonts;
 	std::unordered_map<std::string, std::string> mText;
+	std::unordered_map<std::string, class Skeleton*> mSkeletons;
+	std::unordered_map<std::string, class Animation*> mAnims;
 
 	class Renderer* mRenderer;
 	class AudioSystem* mAudioSystem;

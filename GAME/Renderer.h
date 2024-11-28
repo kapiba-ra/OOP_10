@@ -57,17 +57,20 @@ private:
 	* mTextures      : mapで管理する
 	* mMeshes        : loadされるMesh
 	* mSprites		 : Spriteの配列
-	* mMeshComps	 : 描画されるMeshコンポーネント
+	* mMeshComps	 : 描画されるMesh(ボーンなし)の配列
+	* mSkeletalMeshs : 描画されるSkeletalMeshの配列
 	*/
 	std::unordered_map<std::string, class Texture*> mTextures;
 	std::unordered_map<std::string, class Mesh*> mMeshes;
 	std::vector<class SpriteComponent*> mSprites;
 	std::vector<class MeshComponent*> mMeshComps;
+	std::vector<class SkeletalMeshComponent*> mSkeletalMeshes;
 
 	class Game* mGame;
 	class Shader* mSpriteShader;
 	class VertexArray* mSpriteVerts;
-	class Shader* mMeshShader;
+	class Shader* mMeshShader;		// 普通のメッシュ用シェーダー
+	class Shader* mSkinnedShader;	// スケルタルメッシュ用シェーダー
 
 	Matrix4 mView;			// ビュー行列
 	Matrix4 mProjection;	// 射影行列

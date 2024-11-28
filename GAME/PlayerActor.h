@@ -42,11 +42,13 @@ private:
 	class HpComponent* mHpComp;
 	// essential
 	class FollowCamera* mCameraComp;
-	class MeshComponent* mMeshComp;
+	class SkeletalMeshComponent* mMeshComp;
 	class BoxComponent* mBoxComp;
 	class AudioComponent* mAudioComp;
 	// weapon
 	std::unordered_map<std::string, class WeaponComponent*> mWeapons;
+
+	bool mMoving;
 
 public:
 	// parameter related, Perk‚Æ‚àŠÖ˜A‚·‚é,‚Æ‚¢‚¤‚©ŒÄ‚Ñ–¼Perk‚É“ˆê‚µ‚æ‚¤‚©‚È

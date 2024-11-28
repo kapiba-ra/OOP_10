@@ -7,6 +7,7 @@
 #include "Mesh.h"
 #include "VertexArray.h"
 #include "MeshComponent.h"
+#include "SkeletalMeshComponent.h"
 #include "SpriteComponent.h"
 
 Renderer::Renderer(Game* game)
@@ -93,6 +94,8 @@ void Renderer::Shutdown()
 	delete mSpriteShader;
 	mMeshShader->Unload();
 	delete mMeshShader;
+	mSkinnedShader->Unload();
+	delete mSkinnedShader;
 	SDL_GL_DeleteContext(mContext);
 	SDL_DestroyWindow(mWindow);
 }
@@ -123,7 +126,7 @@ void Renderer::Draw()
 	// Color buffer, Depth buffer をそれぞれクリア
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
-	// Mesh components の描画
+	// 3D 描画
 	glEnable(GL_DEPTH_TEST);	// Depth Buffer を有効に
 	glDisable(GL_BLEND);		// Alpha blending を無効に
 	// Meshシェーダーをアクティブにしてビュー射影行列を更新
@@ -137,6 +140,18 @@ void Renderer::Draw()
 			mc->Draw(mMeshShader);
 		}
 	}
+	mSkinnedShader->SetActive();
+	mSkinnedShader->SetMatrixUniform("uViewProj", mView * mProjection);
+	SetLightUniforms(mSkinnedShader);
+	for (auto sm : mSkeletalMeshes)
+	{
+		if (sm->GetVisible())
+		{
+			sm->Draw(mSkinnedShader);
+		}
+	}
+
+	// 2D 描画
 	glDisable(GL_DEPTH_TEST);	// Depth Buffer を無効に
 	glEnable(GL_BLEND);		// Alpha blending を有効に
 	glBlendEquationSeparate(GL_FUNC_ADD, GL_FUNC_ADD);
@@ -189,14 +204,28 @@ void Renderer::RemoveSprite(SpriteComponent* sprite)
 
 void Renderer::AddMeshComp(MeshComponent* mesh)
 {
-	mMeshComps.emplace_back(mesh);
+	if (mesh->GetIsSkeletal())
+	{
+		SkeletalMeshComponent* sk = static_cast<SkeletalMeshComponent*>(mesh);
+		mSkeletalMeshes.emplace_back(sk);
+	}
+	else
+	{
+		mMeshComps.emplace_back(mesh);
+	}
 }
 
 void Renderer::RemoveMeshComp(MeshComponent* mesh)
 {
-	auto iter = std::find(mMeshComps.begin(), mMeshComps.end(), mesh);
-	if (iter != mMeshComps.end())
+	if (mesh->GetIsSkeletal())
 	{
+		SkeletalMeshComponent* sk = static_cast<SkeletalMeshComponent*>(mesh);
+		auto iter = std::find(mSkeletalMeshes.begin(), mSkeletalMeshes.end(), sk);
+		mSkeletalMeshes.erase(iter);
+	}
+	else
+	{
+		auto iter = std::find(mMeshComps.begin(), mMeshComps.end(), mesh);
 		mMeshComps.erase(iter);
 	}
 }
@@ -316,6 +345,16 @@ bool Renderer::LoadShaders()
 	);
 	mMeshShader->SetMatrixUniform("uViewProj", mView * mProjection);
 
+	/* ----- SkinnedMeshシェーダーの作成 ----- */
+	mSkinnedShader = new Shader();
+	if (!mSkinnedShader->Load("Shaders/Skinned.vert", "Shaders/Phong.frag"))
+	{
+		return false;
+	}
+	mSkinnedShader->SetActive();
+	// ビュー射影はMeshと同じ
+	mSkinnedShader->SetMatrixUniform("uViewProj", mView * mProjection);
+	
 	return true;
 }
 
@@ -333,7 +372,7 @@ void Renderer::CreateSpriteVerts()
 		0, 1, 2,
 		2, 3, 0
 	};
-	mSpriteVerts = new VertexArray(vertices, 4, indices, 6);
+	mSpriteVerts = new VertexArray(vertices, 4, VertexArray::PosNormTex, indices, 6);
 }
 
 void Renderer::SetLightUniforms(Shader* shader)

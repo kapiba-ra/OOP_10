@@ -76,6 +76,9 @@
     <Filter Include="component\move\base">
       <UniqueIdentifier>{6e64d010-f18e-4851-a394-54fae3b85ab0}</UniqueIdentifier>
     </Filter>
+    <Filter Include="manager\animation">
+      <UniqueIdentifier>{ffc076ab-7a02-4d0d-8979-b13deedbfcf9}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Math.cpp">
@@ -243,6 +246,16 @@
     <ClCompile Include="SwordMove.cpp">
       <Filter>component\move</Filter>
     </ClCompile>
+    <ClCompile Include="BoneTransform.cpp">
+      <Filter>manager\animation</Filter>
+    </ClCompile>
+    <ClCompile Include="Skeleton.cpp">
+      <Filter>manager\animation</Filter>
+    </ClCompile>
+    <ClCompile Include="SkeletalMeshComponent.cpp">
+      <Filter>manager\animation</Filter>
+    </ClCompile>
+    <ClCompile Include="Animation.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Math.h">
@@ -407,6 +420,19 @@
     <ClInclude Include="SwordMove.h">
       <Filter>component\move</Filter>
     </ClInclude>
+    <ClInclude Include="BoneTransform.h">
+      <Filter>manager\animation</Filter>
+    </ClInclude>
+    <ClInclude Include="Skeleton.h">
+      <Filter>manager\animation</Filter>
+    </ClInclude>
+    <ClInclude Include="SkeletalMeshComponent.h">
+      <Filter>manager\animation</Filter>
+    </ClInclude>
+    <ClInclude Include="Animation.h" />
+    <ClInclude Include="MatrixPalette.h">
+      <Filter>manager\animation</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include="Shaders\Sprite.frag">
@@ -425,6 +451,9 @@
       <Filter>manager\renderer\shader</Filter>
     </None>
     <None Include="Shaders\Sprite.vert">
+      <Filter>manager\renderer\shader</Filter>
+    </None>
+    <None Include="Shaders\Skinned.vert">
       <Filter>manager\renderer\shader</Filter>
     </None>
   </ItemGroup>

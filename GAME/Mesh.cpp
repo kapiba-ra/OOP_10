@@ -7,6 +7,15 @@
 #include "Renderer.h"
 #include "Math.h"
 
+namespace
+{
+	union Vertex
+	{
+		float f;		
+		uint8_t b[4];	// ボーンindex用
+	};
+}
+
 Mesh::Mesh()
 	: mVertexArray(nullptr)
 	, mRadius(0.0f)
@@ -54,7 +63,17 @@ bool Mesh::Load(const std::string& fileName, Renderer* renderer)
 
 	mShaderName = doc["shader"].GetString();
 
-	size_t vertSize = 8; // 頂点1つに含まれる情報の数
+	// 頂点レイアウトとサイズを設定する,デフォルトはボーンなし
+	VertexArray::Layout layout = VertexArray::PosNormTex;
+	size_t vertSize = 8;
+
+	std::string vertexFormat = doc["vertexformat"].GetString();
+	if (vertexFormat == "PosNormSkinTex")	// ボーンありならば
+	{
+		layout = VertexArray::PosNormSkinTex;
+		// ボーンのインデックス,ウェイトの二つを追加するので10に
+		vertSize = 10;
+	}
 
 	const rapidjson::Value& textures = doc["textures"];
 	if (!textures.IsArray() || textures.Size() < 1)
@@ -91,14 +110,13 @@ bool Mesh::Load(const std::string& fileName, Renderer* renderer)
 		return false;
 	}
 
-	std::vector<float> vertices;
+	std::vector<Vertex> vertices;
 	vertices.reserve(vertsJson.Size() * vertSize);	// 静的に確保しておく	
 	mRadius = 0.0f;
 	for (rapidjson::SizeType i = 0; i < vertsJson.Size(); i++)
 	{
-		// 要素数 : 8
 		const rapidjson::Value& vert = vertsJson[i];
-		if (!vert.IsArray() || vert.Size() != 8)
+		if (!vert.IsArray())
 		{
 			SDL_Log("Unexpected vertex format for %s", fileName.c_str());
 			return false;
@@ -107,10 +125,45 @@ bool Mesh::Load(const std::string& fileName, Renderer* renderer)
 		Vector3 pos(vert[0].GetFloat(), vert[1].GetFloat(), vert[2].GetFloat());
 		mRadius = Math::Max(mRadius, pos.LengthSq());
 		mBox.UpdateMinMax(pos);	// mBox.mMinとmBox.mMaxに設定される
-		// 頂点1つが持つ情報の数だけ繰り返す
-		for (rapidjson::SizeType i = 0; i < vert.Size(); i++)
+
+		// ボーンなし
+		if (layout == VertexArray::PosNormTex)
 		{
-			vertices.emplace_back(static_cast<float>(vert[i].GetDouble()));
+			Vertex v;
+			// 頂点1つが持つ情報の数だけ繰り返す
+			for (rapidjson::SizeType j = 0; j < vert.Size(); j++)
+			{
+				// 8つ全部がfloatの情報
+				v.f = static_cast<float>(vert[j].GetDouble());
+				vertices.emplace_back(v);
+			}
+		}
+		// ボーンあり
+		else
+		{
+			Vertex v;
+			// 位置と法線
+			for (rapidjson::SizeType j = 0; j < 6; j++)
+			{
+				v.f = static_cast<float>(vert[j].GetDouble());
+				vertices.emplace_back(v);
+			}
+			// スキンの情報を入れる(ボーンのインデックス,ウェイト)
+			for (rapidjson::SizeType j = 6; j < 14; j += 4)
+			{
+				// v.b(uint_8)を使っていることに注意
+				v.b[0] = vert[j].GetUint();
+				v.b[1] = vert[j + 1].GetUint();
+				v.b[2] = vert[j + 2].GetUint();
+				v.b[3] = vert[j + 3].GetUint();
+				vertices.emplace_back(v);
+			}
+			// テクスチャ
+			for (rapidjson::SizeType j = 14; j < vert.Size(); j++)
+			{
+				v.f = static_cast<float>(vert[j].GetDouble());
+				vertices.emplace_back(v);
+			}
 		}
 	}
 	mRadius = Math::Sqrt(mRadius); // 2乗を取っておく
@@ -140,11 +193,13 @@ bool Mesh::Load(const std::string& fileName, Renderer* renderer)
 
 	// 頂点配列を作成
 	mVertexArray = new VertexArray(
-		vertices.data(),
-		static_cast<unsigned>(vertices.size()) / vertSize, // 頂点の数
+		vertices.data(),	// データ先頭へのポインタを送る
+		static_cast<unsigned>(vertices.size()) / vertSize, // 頂点の数を計算している
+		layout,
 		indices.data(),
 		static_cast<unsigned>(indices.size())
 	);
+
 	return true;
 }
 

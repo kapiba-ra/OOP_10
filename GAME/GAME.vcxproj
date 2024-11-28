@@ -170,7 +170,9 @@ xcopy "C:\Program Files (x86)\FMOD SoundSystem\FMOD Studio API Windows\api\studi
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="Actor.cpp" />
+    <ClCompile Include="Animation.cpp" />
     <ClCompile Include="AStar.cpp" />
+    <ClCompile Include="BoneTransform.cpp" />
     <ClCompile Include="DamageComponent.cpp" />
     <ClCompile Include="AudioComponent.cpp" />
     <ClCompile Include="AudioSystem.cpp" />
@@ -209,12 +211,15 @@ xcopy "C:\Program Files (x86)\FMOD SoundSystem\FMOD Studio API Windows\api\studi
     <ClCompile Include="PhysWorld.cpp" />
     <ClCompile Include="PlaneActor.cpp" />
     <ClCompile Include="Renderer.cpp" />
+    <ClCompile Include="SkeletalMeshComponent.cpp" />
+    <ClCompile Include="Skeleton.cpp" />
     <ClCompile Include="Skill.cpp" />
     <ClCompile Include="SwordActor.cpp" />
     <ClCompile Include="SwordComponent.cpp" />
     <ClCompile Include="SwordMove.cpp" />
     <ClCompile Include="WeaponActor.cpp" />
     <ClCompile Include="WeaponComponent.cpp" />
+    <ClInclude Include="Animation.h" />
     <ClInclude Include="AStar.h" />
     <ClCompile Include="Shader.cpp" />
     <ClCompile Include="ShotComponent.cpp" />
@@ -225,8 +230,12 @@ xcopy "C:\Program Files (x86)\FMOD SoundSystem\FMOD Studio API Windows\api\studi
     <ClCompile Include="Texture.cpp" />
     <ClCompile Include="UIScreen.cpp" />
     <ClCompile Include="VertexArray.cpp" />
+    <ClInclude Include="BoneTransform.h" />
     <ClInclude Include="HpComponent.h" />
     <ClInclude Include="JumpComponent.h" />
+    <ClInclude Include="MatrixPalette.h" />
+    <ClInclude Include="SkeletalMeshComponent.h" />
+    <ClInclude Include="Skeleton.h" />
     <ClInclude Include="Skill.h" />
     <ClInclude Include="SwordActor.h" />
     <ClInclude Include="SwordComponent.h" />
@@ -286,6 +295,7 @@ xcopy "C:\Program Files (x86)\FMOD SoundSystem\FMOD Studio API Windows\api\studi
     <None Include="Shaders\BasicMesh.vert" />
     <None Include="Shaders\Phong.frag" />
     <None Include="Shaders\Phong.vert" />
+    <None Include="Shaders\Skinned.vert" />
     <None Include="Shaders\Sprite.frag" />
     <None Include="Shaders\Sprite.vert" />
   </ItemGroup>

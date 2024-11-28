@@ -10,6 +10,7 @@
 //#include "LevelUpMenu.h"
 
 #include "MeshComponent.h"
+#include "SkeletalMeshComponent.h"
 #include "MoveComponent.h"
 #include "JumpComponent.h"
 #include "HpComponent.h"
@@ -23,15 +24,28 @@
 #include "BallActor.h"
 #include "ItemActor.h"
 
+#include "Skeleton.h"
+#include "Animation.h"
+
 PlayerActor::PlayerActor(Game* game)
 	: Actor(game, Type::Eplayer)
+	, mMoving(false)
 {	
 	mHUD = GetGame()->GetHUD();
 
-	mMeshComp = new MeshComponent(this);
-	mMeshComp->SetMesh(game->GetRenderer()->GetMesh("Assets/Cube.gpmesh"));
+	//mMeshComp = new MeshComponent(this);
+	//mMeshComp->SetMesh(game->GetRenderer()->GetMesh("Assets/Cube.gpmesh"));
+	mMeshComp = new SkeletalMeshComponent(this);
+	Mesh* mesh = game->GetRenderer()->GetMesh("Assets/CatWarrior.gpmesh");
+	mMeshComp->SetMesh(mesh);
+	mMeshComp->SetSkeleton(game->GetSkeleton("Assets/CatWarrior.gpskel"));
+	mMeshComp->PlayAnimation(game->GetAnimation("Assets/CatActionIdle.gpanim"));
 	SetPosition(Vector3(0.0f, 0.0f, -50.0f));
-	SetScale(100.0f);
+	//SetScale(100.0f);
+
+	mBoxComp = new BoxComponent(this);
+	mBoxComp->SetObjectBox(mesh->GetBox());
+	mBoxComp->SetShouldRotate(false);
 
 	mMoveComp = new MoveComponent(this);
 	
@@ -43,10 +57,10 @@ PlayerActor::PlayerActor(Game* game)
 	mCameraComp = new FollowCamera(this);
 	mCameraComp->SnapToIdeal();
 	
-	mBoxComp = new BoxComponent(this);
-	AABB myBox(Vector3(-0.5f, -0.5f, -0.5f), Vector3(0.5f, 0.5f, 0.5f));
-	mBoxComp->SetObjectBox(myBox);
-	mBoxComp->SetShouldRotate(false);
+	//mBoxComp = new BoxComponent(this);
+	//AABB myBox(Vector3(-0.5f, -0.5f, -0.5f), Vector3(0.5f, 0.5f, 0.5f));
+	//mBoxComp->SetObjectBox(myBox);
+	//mBoxComp->SetShouldRotate(false);
 	
 	// 初期武器設定,名前をここで指定する(武器名全ての名前はSkillSystemのInitialize()で知れる)
 	game->GetSkillSystem()->SetInitialWeapon("Gun", this);
@@ -88,6 +102,18 @@ void PlayerActor::ActorInput(const InputState& state)
 			mJumpComp->Liftoff(mParams.maxJumpSpeed);
 		}
 	}
+
+	if (!mMoving && !Math::NearZero(forwardSpeed))
+	{
+		mMoving = true;
+		mMeshComp->PlayAnimation(GetGame()->GetAnimation("Assets/CatRunSprint.gpanim"), 1.25f);
+	}
+	else if (mMoving && Math::NearZero(forwardSpeed))
+	{
+		mMoving = false;
+		mMeshComp->PlayAnimation(GetGame()->GetAnimation("Assets/CatActionIdle.gpanim"));
+	}
+
 	mMoveComp->SetForwardSpeed(forwardSpeed);
 	mMoveComp->SetAngularSpeed(angularSpeed);
 

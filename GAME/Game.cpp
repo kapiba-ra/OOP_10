@@ -13,6 +13,8 @@
 #include "SkillSystem.h"
 #include "PhaseSystem.h"
 #include "Font.h"
+#include "Skeleton.h"
+#include "Animation.h"
 #include "AStar.h"
 
 #include "Actor.h"
@@ -487,16 +489,23 @@ void Game::UnloadData()
 	{
 		delete mActors.back();
 	}
-
 	while (!mUIStack.empty())
 	{
 		delete mUIStack.back();
 		mUIStack.pop_back();
 	}
-
 	if (mRenderer)
 	{
 		mRenderer->UnloadData();
+	}
+	for (auto f : mFonts)
+	{
+		f.second->Unload();
+		delete f.second;
+	}
+	for (auto s : mSkeletons)
+	{
+		delete s.second;
 	}
 }
 
@@ -685,6 +694,53 @@ const std::string& Game::GetText(const std::string& key)
 	else
 	{
 		return errorMsg;
+	}
+}
+
+Skeleton* Game::GetSkeleton(const std::string& fileName)
+{
+	// 既にあるならポインタを返して、ないならロードする
+	auto iter = mSkeletons.find(fileName);
+	if (iter != mSkeletons.end())
+	{
+		return iter->second;
+	}
+	else
+	{
+		Skeleton* sk = new Skeleton();
+		if (sk->Load(fileName))
+		{
+			mSkeletons.emplace(fileName, sk);
+		}
+		else
+		{
+			delete sk;
+			sk = nullptr;
+		}
+		return sk;
+	}
+}
+
+Animation* Game::GetAnimation(const std::string& fileName)
+{
+	auto iter = mAnims.find(fileName);
+	if (iter != mAnims.end())
+	{
+		return iter->second;
+	}
+	else
+	{
+		Animation* anim = new Animation();
+		if (anim->Load(fileName))
+		{
+			mAnims.emplace(fileName, anim);
+		}
+		else
+		{
+			delete anim;
+			anim = nullptr;
+		}
+		return anim;
 	}
 }
 
