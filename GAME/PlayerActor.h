@@ -31,6 +31,8 @@ public:
 	
 	// 全てのWeaponFactorsを今持つすべての武器に適用する
 	void ApplyWeaponFactors();
+	// 指定の名前のボーンのワールド空間位置を計算する
+	class Vector3 GetBoneWorldPosition(std::string boneName);
 
 private:
 	void CheckLevelUp();

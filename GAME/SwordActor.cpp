@@ -5,6 +5,7 @@
 #include "PhysWorld.h"
 #include "Actor.h"
 #include "EnemyActor.h"
+#include "PlayerActor.h"
 
 #include "MeshComponent.h"
 #include "SwordMove.h"
@@ -41,7 +42,11 @@ void SwordActor::UpdateActor(float deltaTime)
 	// PivotActor not null‚Å
 	if (mPivotActor)
 	{
-		Vector3 pivot = mPivotActor->GetPosition() + Vector3(0.0f, 0.0f, 50.0f);
+		Vector3 pivot = mPivotActor->GetPosition();
+		if (mPivotActor->GetType() == Actor::Eplayer)
+		{
+			pivot = static_cast<PlayerActor*>(mPivotActor)->GetBoneWorldPosition("pelvis");
+		}
 		mMyMove->SetPivot(pivot);
 	}
 	

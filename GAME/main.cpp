@@ -36,6 +36,9 @@ int main(int argc, char** argv)
 // みたいな関数を作ろうかな...
 // 以下後で消すとき検索用
 // Vector3(0.0f, 0.0f, 50.0f)
+// ->ボーンの位置取得関数をPlayerActorに用意することで一応達成,ただActorをPlayerActorにstatic_cast
+// していて逐一条件分岐するのが気になる...
+// SkeletonActor,StaticActorのように分ける？ただ親子関係が複雑化するのも嫌で悩ましい
 
 /* ---------- 余裕があればタスク ---------- */
 

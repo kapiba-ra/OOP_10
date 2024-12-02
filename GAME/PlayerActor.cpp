@@ -62,7 +62,7 @@ PlayerActor::PlayerActor(Game* game)
 	//mBoxComp->SetObjectBox(myBox);
 	//mBoxComp->SetShouldRotate(false);
 	
-	// 初期武器設定,名前をここで指定する(武器名全ての名前はSkillSystemのInitialize()で知れる)
+	// 初期武器設定,名前をここで指定する(武器全ての名前はSkillSystemのInitialize()で知れる)
 	game->GetSkillSystem()->SetInitialWeapon("Gun", this);
 
 	mAudioComp = new AudioComponent(this);
@@ -138,6 +138,10 @@ void PlayerActor::UpdateActor(float deltaTime)
 	Actor::UpdateActor(deltaTime);
 
 	FixCollisions();
+
+	Vector3 bonePosition = mMeshComp->GetBonePosition("pelvis");
+	Matrix4 worldTransform = GetWorldTransform();
+	Vector3::Transform(bonePosition, worldTransform);
 
 	if (mHpComp->IsKilled())
 	{
@@ -309,6 +313,16 @@ void PlayerActor::ApplyWeaponFactors()
 		weapon.second->SetSizeFactor(mParams.WeaponSizeFactor);
 		weapon.second->SetSpeedFactor(mParams.WeaponSpeedFactor);
 	}
+}
+
+Vector3 PlayerActor::GetBoneWorldPosition(std::string boneName)
+{
+	Vector3 retVec(Vector3::Zero);
+	Vector3 bonePosition = mMeshComp->GetBonePosition(boneName);
+	Matrix4 worldTransform = GetWorldTransform();
+	// ワールドへ変換する
+	retVec = Vector3::Transform(bonePosition, worldTransform);
+	return retVec;
 }
 
 //void PlayerActor::RemoveWeapon(WeaponComponent* weapon)

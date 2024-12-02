@@ -9,6 +9,7 @@
 class Animation
 {
 public:
+	// アニメーションデータをJSONファイルから読み込む関数
 	bool Load(const std::string& fileName);
 
 	size_t GetNumBones() const { return mNumBones; }
@@ -29,7 +30,9 @@ private:
 	float mDuration;		// アニメーションの長さ(秒単位)
 	float mFrameDuration;	// アニメーションの各フレームの長さ
 	// 各フレームの変換情報をトラックに格納
-	// 外側の配列のインデックスはボーン,内側はフレーム
+	// 外側の配列のインデックスはボーン,内側のインデックスはフレームを指す
 	std::vector<std::vector<BoneTransform>> mTracks;
 };
 
+// グローバルポーズは、ゲームワールドではなく
+// オブジェクト空間での位置や回転の情報のこと

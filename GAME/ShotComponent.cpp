@@ -3,6 +3,7 @@
 #include "Math.h"
 
 #include "BallActor.h"
+#include "PlayerActor.h"
 
 ShotComponent::ShotComponent(Actor* owner)
 	: WeaponComponent(owner)
@@ -18,8 +19,14 @@ void ShotComponent::Update(float deltaTime)
 	{
 		mLastShot -= mShotInterval * mIntervalFactor;
 		/* 弾の位置、方向を決める */
-		Vector3 start = mOwner->GetPosition() + Vector3(0.0f, 0.0f, 50.0f);
-		Vector3 dir = mOwner->GetForward();
+		Vector3 start = mOwner->GetPosition();	// 弾の発射地点
+		// Playerの場合は(後々Enemyの場合も追加するかも),腰の位置から打つ
+		if (mOwner->GetType() == Actor::Eplayer)
+		{
+			// 腰の位置
+			start = static_cast<PlayerActor*>(mOwner)->GetBoneWorldPosition("pelvis");
+		}
+		Vector3 dir = mOwner->GetForward();	// 弾の方向
 		float shotAngle = Math::Pi / 6;
 		dir = Vector3::Transform(dir, Quaternion(Vector3::UnitZ, -shotAngle * (mShotNum - 1) / 2));
 		for (int i = 0; i < mShotNum; ++i)

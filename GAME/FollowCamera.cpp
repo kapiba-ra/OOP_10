@@ -8,11 +8,12 @@
 FollowCamera::FollowCamera(Actor* owner)
 	: CameraComponent(owner)
 	, mCameraState(CameraState::EBack)
-	, mHorzDist(350.0f)
-	, mVertDist(150.0f)
+	//, mCameraState(CameraState::EAbove)
 	, mTargetDist(100.0f)
 	, mSpringConstant(64.0f)
 {
+	// コメントアウトした方の状態になる(ややこしい)
+	SwitchCameraPos();
 }
 
 void FollowCamera::Update(float deltaTime)

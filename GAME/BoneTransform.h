@@ -2,7 +2,7 @@
 #include "Math.h"
 
 /// <summary>
-/// ボーンの位置と回転を保存
+/// ローカルボーンの位置と回転を保存(親ボーンからの相対的な座標,回転)
 /// </summary>
 class BoneTransform
 {

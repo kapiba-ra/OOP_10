@@ -12,6 +12,9 @@
 SkeletalMeshComponent::SkeletalMeshComponent(Actor* owner)
 	: MeshComponent(owner, true)
 	, mSkeleton(nullptr)
+	, mAnimPlayRate(1.0f)
+	, mAnimTime(0.0f)
+	, mAnimation(nullptr)
 {
 }
 
@@ -71,15 +74,36 @@ float SkeletalMeshComponent::PlayAnimation(const Animation* anim, float playRate
 	return mAnimation->GetDuration();
 }
 
+Vector3 SkeletalMeshComponent::GetBonePosition(std::string boneName)
+{
+	Vector3 retVec(Vector3::Zero);
+	// ボーンの名前からインデックスを取得
+	int boneIndex = -1;
+	const auto& bones = mSkeleton->GetBones();
+	for (size_t i = 0; i < bones.size(); ++i)
+	{
+		if (bones[i].mName == boneName)
+		{
+			boneIndex = static_cast<int>(i);
+			break;
+		}
+	}
+	if (boneIndex >= 0 && boneIndex < static_cast<int>(mCurrentPoses.size()))
+	{
+		retVec = mCurrentPoses[boneIndex].GetTranslation();
+	}
+	return retVec;
+}
+
 void SkeletalMeshComponent::ComputeMatrixPalette()
 {
 	const std::vector<Matrix4>& globalInvBindPoses = mSkeleton->GetGlobalInvBindPoses();
-	std::vector<Matrix4> currentPoses;
-	mAnimation->GetGlobalPoseAtTime(currentPoses, mSkeleton, mAnimTime);
+	//std::vector<Matrix4> currentPoses;
+	mAnimation->GetGlobalPoseAtTime(mCurrentPoses, mSkeleton, mAnimTime);
 
 	// 各ボーンのパレットを設定する
 	for (size_t i = 0; i < mSkeleton->GetNumBones(); ++i)
 	{
-		mPalette.mEntry[i] = globalInvBindPoses[i] * currentPoses[i];
+		mPalette.mEntry[i] = globalInvBindPoses[i] * mCurrentPoses[i];
 	}
 }

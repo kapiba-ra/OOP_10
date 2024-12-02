@@ -3,6 +3,7 @@
 #include "Math.h"
 
 #include "SwordActor.h"
+#include "PlayerActor.h"
 
 SwordComponent::SwordComponent(Actor* owner)
 	: WeaponComponent(owner)
@@ -18,7 +19,12 @@ void SwordComponent::Update(float deltaTime)
 	if (mLastShot > mInterval * mIntervalFactor)
 	{
 		mLastShot -= mInterval * mIntervalFactor;
-		Vector3 start = mOwner->GetPosition() + Vector3(0.0f, 0.0f, 50.0f);
+		// 出現位置の設定はshotComponentと同様,腰のところ
+		Vector3 start = mOwner->GetPosition();	// 弾の発射地点
+		if (mOwner->GetType() == Actor::Eplayer)
+		{
+			start = static_cast<PlayerActor*>(mOwner)->GetBoneWorldPosition("pelvis");
+		}
 		Vector3 dir = mOwner->GetForward();
 		float shotAngle = Math::Pi / 6;
 		//dir = Vector3::Transform(dir, Quaternion(Vector3::UnitY, -shotAngle * (mNum - 1) / 2));
@@ -32,7 +38,7 @@ void SwordComponent::Update(float deltaTime)
 			sword->SetPivotAndRadius(mOwner, SwordOffset);
 			sword->SetRotationSpeed(Math::PiOver2 / 6 * mSpeedFactor);
 
-			/* 剣の向きを決定している...剣のモデルはZ軸が上でX軸に刃という状態 */ 
+			/* 剣の向きを決定している...剣のモデルはZ軸+が剣先でX軸+に刃が向いてる状態 */ 
 			// 1:剣を寝かす回転
 			Quaternion first = Quaternion(Vector3::UnitY, Math::PiOver2);
 			// 2:剣をOwnerの正面方向へ向ける回転

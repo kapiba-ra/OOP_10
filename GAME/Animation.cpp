@@ -7,13 +7,16 @@
 
 bool Animation::Load(const std::string& fileName)
 {
+	// ここはコピペ
+
 	std::ifstream file(fileName);
+	// ステップ1 : 指定された名前のファイルを読み込む
 	if (!file.is_open())
 	{
 		SDL_Log("File not found: Animation %s", fileName.c_str());
 		return false;
 	}
-
+	// rapidjsonで解析する為の準備
 	std::stringstream fileStream;
 	fileStream << file.rdbuf();
 	std::string contents = fileStream.str();
@@ -21,6 +24,7 @@ bool Animation::Load(const std::string& fileName)
 	rapidjson::Document doc;
 	doc.ParseStream(jsonStr);
 
+	// JSONにおいて{}でくくられたものをオブジェクトという
 	if (!doc.IsObject())
 	{
 		SDL_Log("Animation %s is not valid json", fileName.c_str());
@@ -28,7 +32,6 @@ bool Animation::Load(const std::string& fileName)
 	}
 
 	int ver = doc["version"].GetInt();
-
 	// Check the metadata
 	if (ver != 1)
 	{
@@ -36,6 +39,7 @@ bool Animation::Load(const std::string& fileName)
 		return false;
 	}
 
+	// ステップ1 : 連続したアニメーションのデータをゲットしていく
 	const rapidjson::Value& sequence = doc["sequence"];
 	if (!sequence.IsObject())
 	{
@@ -53,10 +57,11 @@ bool Animation::Load(const std::string& fileName)
 		return false;
 	}
 
+	// ステップ3 : アニメーションの基本情報を記録
 	mNumFrames = frames.GetUint();
 	mDuration = length.GetFloat();
 	mNumBones = bonecount.GetUint();
-	mFrameDuration = mDuration / (mNumFrames - 1);
+	mFrameDuration = mDuration / (mNumFrames - 1);	// -1するのは,ラストのフレームが最初のフレームと同じだから
 
 	mTracks.resize(mNumBones);
 
@@ -68,6 +73,8 @@ bool Animation::Load(const std::string& fileName)
 		return false;
 	}
 
+	// ステップ4 : 各ボーンの,アニメーションの各フレームにおけるTransformを記録していく
+	// ボーンの数だけループ
 	for (rapidjson::SizeType i = 0; i < tracks.Size(); i++)
 	{
 		if (!tracks[i].IsObject())
@@ -75,7 +82,7 @@ bool Animation::Load(const std::string& fileName)
 			SDL_Log("Animation %s: Track element %d is invalid.", fileName.c_str(), i);
 			return false;
 		}
-
+		// "bone" : ボーンのインデックス　みたいに記録されているのでそこからとってくる
 		size_t boneIndex = tracks[i]["bone"].GetUint();
 
 		const rapidjson::Value& transforms = tracks[i]["transforms"];
@@ -103,12 +110,12 @@ bool Animation::Load(const std::string& fileName)
 				SDL_Log("Skeleton %s: Bone %d is invalid.", fileName.c_str(), i);
 				return false;
 			}
-
+			// 回転
 			temp.mRotation.x = rot[0].GetFloat();
 			temp.mRotation.y = rot[1].GetFloat();
 			temp.mRotation.z = rot[2].GetFloat();
 			temp.mRotation.w = rot[3].GetFloat();
-
+			// 位置
 			temp.mTranslation.x = trans[0].GetFloat();
 			temp.mTranslation.y = trans[1].GetFloat();
 			temp.mTranslation.z = trans[2].GetFloat();

@@ -64,13 +64,14 @@ public:
 	class Skeleton* GetSkeleton(const std::string& fileName);
 	class Animation* GetAnimation(const std::string& fileName);
 
-	// 一時的にpublicにしている
-	void LoadData();
-	void UnloadData();
-	// めっちゃ名前は適当
+	// MeinMenuに戻るときの処理
+	// GamePlay->Restart時と一回MainMenuに戻る->GamePlayで
+	// 処理が変わるため用意。あんまりよくなさそう
 	void OnReturnToMainMenu();
 
 private:
+	void LoadData();
+	void UnloadData();
 	// processes in RunLoop()
 	void ProcessInput();
 	void UpdateGame();
