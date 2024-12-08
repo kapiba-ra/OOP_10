@@ -1,6 +1,7 @@
 #include "FollowCamera.h"
-#include "Actor.h"
 #include "PlaneActor.h"
+#include "PlayerActor.h"
+
 #include "Collision.h"
 #include "Game.h"
 #include "BoxComponent.h"
@@ -87,6 +88,15 @@ Vector3 FollowCamera::ComputeCameraPos() const
 
 void FollowCamera::CheckObstacles()
 {
+	Vector3 start;	// ƒJƒƒ‰‚ÌŒü‚©‚¤æ
+	if (mOwner->GetType() == Actor::Eplayer)
+	{
+		static_cast<PlayerActor*>(mOwner)->GetBoneWorldPosition("head");
+	}
+	else
+	{
+		start = mOwner->GetPosition();
+	}
 	LineSegment line(mActualPos, mOwner->GetPosition() + Vector3(0.0f, 0.0f, 50.0f));
 	auto& planes = mOwner->GetGame()->GetPlanes();
 	for (auto pa : planes)

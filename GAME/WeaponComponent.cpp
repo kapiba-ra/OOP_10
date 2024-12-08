@@ -1,5 +1,6 @@
 #include "WeaponComponent.h"
 #include "PlayerActor.h"
+#include "WeaponActor.h"
 #include "SkillSystem.h"
 
 WeaponComponent::WeaponComponent(Actor* owner)

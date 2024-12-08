@@ -113,5 +113,10 @@ private:
 	struct WeightedGraph* mGraph;
 
 	float mLastEnemyGen;
+
+	// ステージ作成
+	void CreateStage();
+		void CreateNodes2();	// テスト実装,z軸方向にもノードを追加する
+		void CreateScaffold(size_t index);
 };
 

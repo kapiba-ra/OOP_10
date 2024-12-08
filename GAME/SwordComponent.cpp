@@ -31,6 +31,7 @@ void SwordComponent::Update(float deltaTime)
 		 //Quaternion::Concatenate(Quaternion(Vector3::UnitX, -Math::PiOver2), )
 		for (int i = 0; i < mNum; ++i)
 		{
+			// Œ•‚ðoŒ»‚³‚¹‚é
 			SwordActor* sword = new SwordActor(mOwner->GetGame());
 			sword->SetScale(mScale * mSizeFactor);
 			Vector3 SwordOffset = dir * 100.0f;

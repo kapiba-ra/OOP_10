@@ -23,8 +23,9 @@ void BallMove::Update(float deltaTime)
 	PhysWorld::CollisionInfo info;
 	// Player,Weapon‚Æ‚ÍÕ“Ë‚µ‚È‚¢‚æ‚¤‚É‚µ‚Ä‚¢‚é
 	if (phys->SegmentCast(ls, info) && 
-		info.mActor->GetType() != Actor::Eplayer &&
-		info.mActor->GetType() != Actor::Eweapon)
+		(info.mActor->GetType() == Actor::Eenemy ||
+		info.mActor->GetType() == Actor::Eplane) 
+		)
 	{
 		// Õ“Ë‚µ‚½‚ç–@ü‚ÌŒü‚«‚Å•ûŒü‚ğ”½Ë‚³‚¹‚é
 		dir = Vector3::Reflect(dir, info.mNormal);

@@ -22,18 +22,18 @@ public:
     void TurnTo(const class Vector3& pos);
 
 private:
-
-    void CheckPath(float deltaTime);
+    // 自分と目標の間にある障害物を調べる
+    void CheckObstacle(float deltaTime);
     void OnEnter();
 
     ChaseState mChaseState;
-    float mInterval;
+    float mInterval;        // 経路再計算までの時間
 
     // 追跡対象をPlayerActorにしている,Actorにしてキャストするようにしたら拡張性はあるが
     // 当面は敵からPlayerへの追跡しかないだろうという事で
     class PlayerActor* mPlayer;
 
-    std::vector<Vector3> mPath;
-    class Vector3 mNextPoint; // Searchingの時に次に向かう点
+    std::vector<Vector3> mPath; // 経路探索による移動をするときに,Playerまでの経路を保存する
+    class Vector3 mNextPoint;   // Searchingの時に次に向かう点
 };
 

@@ -5,18 +5,21 @@
 #include "MeshComponent.h"
 #include "BoxComponent.h"
 
-PlaneActor::PlaneActor(Game* game)
+/* Base */
+PlaneActor::PlaneActor(Game* game, Category category)
 	: Actor(game, Type::Eplane)
+	, mCategory(category)
 {
-	SetScale(10.0f); // c‰¡1000‚Ì’·‚³‚É‚È‚Á‚Ä‚é‚Í‚¸
-	
+	SetScale(5.0f); // c‰¡500‚Ì’·‚³‚É‚È‚Á‚Ä‚é‚Í‚¸
+
 	/* MeshComponent */
-	MeshComponent* mc = new MeshComponent(this);
+	mMeshComp = new MeshComponent(this);
 	Mesh* mesh = GetGame()->GetRenderer()->GetMesh("Assets/Plane.gpmesh");
-	mc->SetMesh(mesh);
+	mMeshComp->SetMesh(mesh);
+
 	/* BoxComponent */
-	mBox = new BoxComponent(this);
-	mBox->SetObjectBox(mesh->GetBox());
+	mBoxComp = new BoxComponent(this);
+	mBoxComp->SetObjectBox(mesh->GetBox());
 
 	game->AddPlane(this);
 }
@@ -24,4 +27,24 @@ PlaneActor::PlaneActor(Game* game)
 PlaneActor::~PlaneActor()
 {
 	GetGame()->RemovePlane(this);
+}
+
+/* Floor */
+FloorActor::FloorActor(Game* game)
+	: PlaneActor(game, Category::EFloor)
+{
+	mMeshComp->SetTextureIndex(0);
+}
+
+WallActor::WallActor(Game* game)
+	: PlaneActor(game, Category::EWall)
+{
+	SetScale(10.0f);
+	mMeshComp->SetTextureIndex(1);
+}
+
+ScaffoldActor::ScaffoldActor(Game* game)
+	: PlaneActor(game, Category::EScaffold)
+{
+	mMeshComp->SetTextureIndex(2);
 }

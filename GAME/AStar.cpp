@@ -85,7 +85,7 @@ bool AStarSearch(const WeightedGraph& g, const WeightedGraphNode* start,
 	return (current == goal) ? true : false;
 }
 
-WeightedGraphNode* FindClosestNode(const WeightedGraph& graph, Vector3& pos)
+WeightedGraphNode* FindClosestNode(const WeightedGraph& graph, const Vector3& pos)
 {
 	WeightedGraphNode* closestNode = nullptr; // graph.mNodes[0]とかの方が安全かも
 	float closestDist = std::numeric_limits<float>::max(); // floatの最大値
@@ -93,8 +93,8 @@ WeightedGraphNode* FindClosestNode(const WeightedGraph& graph, Vector3& pos)
 
 	for (WeightedGraphNode* node : graph.mNodes)
 	{
-		//float nodeX = node->x;
-		//float nodeY = node->y;
+		// Active なノードのみを対象にする
+		if (!node->Active) continue;
 
 		Vector3 diff = node->NodePos - pos;
 

@@ -36,6 +36,7 @@ void MeshComponent::Draw(Shader* shader)
 		shader->SetFloatUniform("uSpecPower", mMesh->GetSpecPower());
 		// アクティブテクスチャの設定
 		Texture* t = mMesh->GetTexture(mTextureIndex);
+		// インデックスが有効ならばテクスチャを設定
 		if (t) { t->SetActive(); }
 		// メッシュの頂点配列をアクティブにする
 		// 頂点の情報はシェーダーに渡すので必ず必要

@@ -28,16 +28,18 @@ public:
 	const Bone& GetBone(size_t idx) const { return mBones[idx]; }
 	// 全ボーンのconst参照を返す
 	const std::vector<Bone>& GetBones() const { return mBones; }
+	// 逆バインドポーズ行列(Tの字ポーズにおける各ボーンのローカル空間(親からの相対位置・回転)
+	// から、Tの字ポーズにおけるオブジェクト空間での位置・回転に戻すための行列)を返す
 	const std::vector<Matrix4>& GetGlobalInvBindPoses() const { return mGlobalInvBindPoses; }
 	
 protected:
-	// 全てのボーンのグローバルな逆バインドポーズ行列を計算する
+	// 全てのボーンの(グローバルな)逆バインドポーズ行列を計算する
 	// ボーンをロードし終わった後、スケルトンロード時に呼び出される
 	void ComputeGlobalInvBindPose();
 private:
-	// 全てのボーンの配列
+	// 全てのボーンの配列,順番大事なので入れ替えちゃいけない
 	std::vector<Bone> mBones;
-	// 各ボーンのグローバルな逆バインドポーズ行列を格納する配列
+	// 各ボーンの(グローバルな)逆バインドポーズ行列を格納する配列
 	std::vector<Matrix4> mGlobalInvBindPoses;
 };
 

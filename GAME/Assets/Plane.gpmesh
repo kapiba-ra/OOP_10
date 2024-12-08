@@ -3,7 +3,9 @@
 	"vertexformat":"PosNormTex",
 	"shader":"BasicMesh",
 	"textures":[
-		"Assets/Plane.png"
+		"Assets/Floor.png",
+		"Assets/Wall.png",
+		"Assets/Scaffold.png"
 	],
 	"specularPower":100.0,
 	"vertices":[

@@ -20,11 +20,10 @@ public:
 	};
 	enum Type
 	{
-		Enone,
+		Enone,	// ƒfƒtƒH
 		Eplane,
 		Eplayer,
 		Eenemy,
-		Etarget,
 		Eitem,
 		Eweapon
 	};

@@ -4,6 +4,9 @@
 #include "DialogBox.h"
 #include <SDL/SDL.h>
 
+/// <summary>
+/// メインメニュー(スタート画面)のUI
+/// </summary>
 MainMenu::MainMenu(Game* game)
 	: UIScreen(game)
 {

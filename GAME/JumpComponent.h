@@ -13,7 +13,9 @@ public:
     JumpComponent(class Actor* owner, int updateOrder = 10);
     void Update(float deltaTime) override;
 
+    // ジャンプの踏切りで呼び出す
     void Liftoff(float speed);
+    // 着地するときに呼び出す
     void Land();
     bool IsJumping() const { return mIsJumping; }
     

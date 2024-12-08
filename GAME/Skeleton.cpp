@@ -69,7 +69,7 @@ bool Skeleton::Load(const std::string& fileName)
 	}
 
 	Bone temp;
-
+	// ボーンの数だけループ
 	for (rapidjson::SizeType i = 0; i < count; i++)
 	{
 		if (!bones[i].IsObject())
@@ -77,10 +77,10 @@ bool Skeleton::Load(const std::string& fileName)
 			SDL_Log("Skeleton %s: Bone %d is invalid.", fileName.c_str(), i);
 			return false;
 		}
-
+		// ボーン名を得る
 		const rapidjson::Value& name = bones[i]["name"];
 		temp.mName = name.GetString();
-
+		// 親ボーンのインデックスを得る
 		const rapidjson::Value& parent = bones[i]["parent"];
 		temp.mParent = parent.GetInt();
 
@@ -90,7 +90,7 @@ bool Skeleton::Load(const std::string& fileName)
 			SDL_Log("Skeleton %s: Bone %d is invalid.", fileName.c_str(), i);
 			return false;
 		}
-
+		// これらの情報はローカル座標系(親ボーンからの相対)
 		const rapidjson::Value& rot = bindpose["rot"];
 		const rapidjson::Value& trans = bindpose["trans"];
 
@@ -99,16 +99,16 @@ bool Skeleton::Load(const std::string& fileName)
 			SDL_Log("Skeleton %s: Bone %d is invalid.", fileName.c_str(), i);
 			return false;
 		}
-
+		// 回転
 		temp.mLocalBindPose.mRotation.x = rot[0].GetFloat();
 		temp.mLocalBindPose.mRotation.y = rot[1].GetFloat();
 		temp.mLocalBindPose.mRotation.z = rot[2].GetFloat();
 		temp.mLocalBindPose.mRotation.w = rot[3].GetFloat();
-
+		// 位置
 		temp.mLocalBindPose.mTranslation.x = trans[0].GetFloat();
 		temp.mLocalBindPose.mTranslation.y = trans[1].GetFloat();
 		temp.mLocalBindPose.mTranslation.z = trans[2].GetFloat();
-
+		// mBonesに順番に追加していくことで、インデックスを用いたアクセスが可能になる
 		mBones.emplace_back(temp);
 	}
 
@@ -123,6 +123,7 @@ void Skeleton::ComputeGlobalInvBindPose()
 {
 	// ボーンの数で配列の要素数を変更する
 	mGlobalInvBindPoses.resize(GetNumBones());
+	// グローバルバインドポーズ...オブジェクト空間における位置・回転への変換の事
 
 	/* ステップ1: 各ボーンのグローバルバインドポーズを計算する。*/ 
 	// ルートのグローバルバインドポーズだけはローカルバインドポーズと同じ

@@ -3,6 +3,7 @@
 #include "Actor.h"
 #include "Game.h"
 #include "Collision.h"
+#include "PhysWorld.h"
 #include "AStar.h"
 
 #include "PlayerActor.h"
@@ -26,7 +27,7 @@ void ChaseMove::Update(float deltaTime)
 	mInterval += deltaTime;
 
 	// mChaseStateを変更すべきかどうか判断する
-	CheckPath(deltaTime);
+	CheckObstacle(deltaTime);
 
 	if (mChaseState == ETargeting)
 	{
@@ -62,9 +63,9 @@ void ChaseMove::Update(float deltaTime)
 		// 到達したら、次のポイントへ向けて向きを変える...を繰り返す
 		Vector2 nextPoint2D(mNextPoint.x, mNextPoint.y);
 		Vector2 myPos2D(myPos.x, myPos.y);
-		//Vector3 diff = mNextPoint - myPos;
-		Vector2 diff = nextPoint2D - myPos2D;
-		if (diff.LengthSq() < 400.0f)
+		Vector3 diff3D = mNextPoint - myPos;
+		Vector2 diff2D = nextPoint2D - myPos2D;
+		if (diff3D.LengthSq() < 10000.0f)
 		{
 			if (!mPath.empty())
 			{
@@ -75,8 +76,10 @@ void ChaseMove::Update(float deltaTime)
 				mNextPoint = mPath.back();
 			}
 		}
+		// 次のポイントを向く
 		TurnTo(mNextPoint);
 	}
+
 	MoveComponent::Update(deltaTime);
 }
 
@@ -84,7 +87,7 @@ void ChaseMove::TurnTo(const Vector3& pos)
 {
 	// 親クラスのメンバ変数であるmAngularSpeedの制御を行う
 	Vector3 dir = Vector3(pos - mOwner->GetPosition());
-	dir.z = 0.0f;	// z成分は考えない
+	//dir.z = 0.0f;	// z成分は考えない
 	dir.Normalize();
 	Vector3 forward = mOwner->GetForward();
 	float dot = Vector3::Dot(forward, dir);
@@ -105,9 +108,9 @@ void ChaseMove::TurnTo(const Vector3& pos)
 	}
 }
 
-void ChaseMove::CheckPath(float deltaTime)
+void ChaseMove::CheckObstacle(float deltaTime)
 {
-	ChaseState beforeCheck = mChaseState;
+	ChaseState stateBeforeCheck = mChaseState;
 	// playerまでの間の線分を作る
 	Vector3 pos = mOwner->GetPosition();
 	LineSegment line(pos, mPlayer->GetPosition());
@@ -120,19 +123,29 @@ void ChaseMove::CheckPath(float deltaTime)
 		Vector3 norm(Vector3::Zero);
 		const AABB& planeBox = pa->GetBox()->GetWorldBox();
 
-		// もしもplayerとの間に床か壁があったら,Searching状態へ
-		if (Intersect(line, planeBox, t, norm))
+		// もしもplayerとの間に壁か足場があったら,Searching状態へ
+		if ((Intersect(line, planeBox, t, norm)) &&
+			(pa->GetCategory() != (PlaneActor::Category::EFloor)))
 		{
 			mChaseState = ESearching;
-			//if (mChaseState == ETargeting)
-			if(beforeCheck == ETargeting)
+			if(stateBeforeCheck == ETargeting)
 			{
 				OnEnter();
 			}
-			// 何かにぶつかっていたら終わる
+			// 何かにぶつかっていたら処理が終わる
 			return;
 		}
+		//PhysWorld* phys = mOwner->GetGame()->GetPhysWorld();
+		//PhysWorld::CollisionInfo info;
+		//phys->TestSweepAndPrune([](Actor* a, Actor* b) {
+		//	// タグで条件分岐
+		//	if (a->GetType() == Actor::Type::Eplane)
+		//	{
+		//		static_cast<PlaneActor*>(a);
+		//	}
+		//});
 	}
+
 
 	// 何事もなかったらETargetingへ
 	mChaseState = ETargeting;

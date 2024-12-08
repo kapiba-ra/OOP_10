@@ -24,6 +24,7 @@ struct WeightedGraphNode
 	std::vector<WeightedEdge*> mEdges;
 	Vector3 NodePos = Vector3::Zero;	// 3次元位置座標を持たせる
 	NodeType type = NodeType::EFloor;
+	bool Active = false;
 };
 
 struct WeightedGraph
@@ -51,7 +52,7 @@ bool AStarSearch(const WeightedGraph& g, const WeightedGraphNode* start,
 
 // 与えられた座標に最も近いノードを取得できる
 // もっと効率化できそう
-WeightedGraphNode* FindClosestNode(const WeightedGraph& graph, Vector3& pos);
+WeightedGraphNode* FindClosestNode(const WeightedGraph& graph, const Vector3& pos);
 
 std::vector<const WeightedGraphNode*> ReconstructPath(const WeightedGraphNode* start,
 	const WeightedGraphNode* goal, const AStarMap& outMap);

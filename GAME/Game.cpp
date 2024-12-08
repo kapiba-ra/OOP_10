@@ -100,10 +100,10 @@ bool Game::Initialize()
 		SDL_Log("Failed to initialize SDL_ttf");
 		return false;
 	}
-
+	// 言語設定
 	LoadText("Assets/English.gptext");
 
-
+	// MainMenuから始まる
 	new MainMenu(this);
 
 	mTicksCount = SDL_GetTicks();
@@ -113,64 +113,7 @@ bool Game::Initialize()
 void Game::LoadData()
 {
 	// 以下で作成するステージが前提になっている
-	CreateNodes();
-
-	Actor* actor = nullptr;
-	Quaternion q;
-	
-	/* ----- Create actors ----- */
-	// 床(5000×5000)
-	const float start = -2000.0f;
-	const float size = 1000.0f;
-	for (int i = 0; i < 5; i++)
-	{
-		for (int j = 0; j < 5; j++)
-		{
-			actor = new PlaneActor(this);
-			actor->SetPosition(Vector3(start + i * size, start + j * size, -100.0f));
-		}
-	}
-
-	// 壁
-	q = Quaternion(Vector3::UnitX, Math::PiOver2); // X軸は前方であることに注意
-	for (int i = 0; i < 5; i++)
-	{
-		// 左
-		actor = new PlaneActor(this);
-		actor->SetPosition(Vector3(start + i * size, 2500.0f, 0.0f));
-		actor->SetRotation(q);
-		// 右
-		actor = new PlaneActor(this);
-		actor->SetPosition(Vector3(start + i * size, -2500.0f, 0.0f));
-		actor->SetRotation(q);
-	}
-	// ステージ上の通れないところ(壁)
-	// TODO: 壁四枚でなくオブジェクト１個にしたい、かも
-	actor = new PlaneActor(this);
-	actor->SetPosition(Vector3(1500.0f, 0.0f, 0.0f));
-	actor->SetRotation(q);
-	actor = new PlaneActor(this);
-	actor->SetPosition(Vector3(1500.0f, 1000.0f, 0.0f));
-	actor->SetRotation(q);
-
-	q = Quaternion::Concatenate(q, Quaternion(Vector3::UnitZ, Math::PiOver2));
-	for (int i = 0; i < 5; i++)
-	{
-		// 後
-		actor = new PlaneActor(this);
-		actor->SetPosition(Vector3(-2500.0f, start + i * size, 0.0f));
-		actor->SetRotation(q);
-		// 前
-		actor = new PlaneActor(this);
-		actor->SetPosition(Vector3(2500.0f, start + i * size, 0.0f));
-		actor->SetRotation(q);
-	}
-	actor = new PlaneActor(this);
-	actor->SetPosition(Vector3(1000.0f, 500.0f, 0.0f));
-	actor->SetRotation(q);
-	actor = new PlaneActor(this);
-	actor->SetPosition(Vector3(2000.0f, 500.0f, 0.0f));
-	actor->SetRotation(q);
+	CreateStage();
 
 	// Setup lights
 	mRenderer->SetAmbientLight(Vector3(0.7f, 0.7f, 0.7f));
@@ -751,6 +694,8 @@ void Game::CreateNodes()
 	mGraph = new WeightedGraph;
 
 	// まずはグラフにノードを追加して、x,y座標を設定する。
+	// 10×10で100回
+	// ノードの設定順番に今後の処理は依存している
 	for (int i = 0; i < 10; ++i)
 	{
 		for (int j = 0; j < 10; ++j)
@@ -784,10 +729,11 @@ void Game::CreateNodes()
 		WeightedGraphNode* node = mGraph->mNodes[i];
 		
 		// ワールドでx座標は正面,y座標は右側に伸びてることに注意
-		int curNodeX = i / 10;
-		int curNodeY = i % 10;
+		int curNodeX = i / 10;	// 行インデックス
+		int curNodeY = i % 10;	// 列インデックス
 		
 		// 前後左右のノードをつなぐのに便利
+		// 各ノードはこの四方向の先にノードがあるかどうかを調べることになる
 		std::vector<std::pair<int, int>> directions = {
 			{1, 0},  // 前
 			{-1, 0}, // 後
@@ -797,14 +743,138 @@ void Game::CreateNodes()
 
 		for (const auto& dir : directions)
 		{
-			int neighborX = curNodeX + dir.first;
-			int neighborY = curNodeY + dir.second;
-			
+			int neighborX = curNodeX + dir.first;	// 隣のノードの行インデックス
+			int neighborY = curNodeY + dir.second;	// 隣のノードの列インデックス
+			// インデックスが有効な値であることを確認
 			if (0 <= neighborX && neighborX < 10 && 0 <= neighborY && neighborY < 10)
 			{
+				// 一次元に直して
 				int neighborIndex = neighborX * 10 + neighborY;
+				// ノードをとってくる
 				WeightedGraphNode* neighborNode = mGraph->mNodes[neighborIndex];
+				// アクセス不可能でないならば
 				if (neighborNode->type != NodeType::ENoAccess)
+				{
+					// エッジを追加する
+					WeightedEdge* edge = new WeightedEdge{ node, neighborNode };
+					node->mEdges.push_back(edge);
+				}
+			}
+		}
+	}
+}
+
+void Game::CreateNodes2()
+{
+	mGraph = new WeightedGraph;
+
+	/* 10×10×2グリッドのノードをゲームワールドに作る。 */ 
+	const int gridZ = 3;
+	const int gridX = 10;
+	const int gridY = 10;
+	const float gridSpacingXY = 500.0f;	// 床アクターのサイズでもある
+	const float gridSpacingZ = 100.0f;	// gridのz軸方向の高さ,要調節
+	const int gridNum = gridX * gridY * gridZ;
+
+	/* まずはグリッド上にノードを作る。*/
+	for (int i = 0; i < gridZ; ++i)
+	{
+		for (int j = 0; j < gridX; ++j)
+		{
+			for (int k = 0; k < gridY; ++k)
+			{
+				// -2500.0fはステージの正方形(5000×5000)の半分
+				// その-2500.0fに床アクターの半分のサイズ(250)を足して-2250が出てくる
+				// 3D空間の後ろ側から、左から右へノードを追加していく
+				float centerZ = -100.0f + (i * gridSpacingZ);
+				float centerX = -2250.0f + (j * gridSpacingXY);
+				float centerY = -2250.0f + (k * gridSpacingXY);
+
+				WeightedGraphNode* node = new WeightedGraphNode();
+				// ポジションを設定
+				node->NodePos = Vector3(centerX, centerY, centerZ);
+				// 追加(gridのX*Y*Zの数だけpush_backされる)
+				mGraph->mNodes.push_back(node);
+			}
+		}
+	}
+
+	/* 床アクターの作成(敷き詰める) */
+	for (int i = 0; i < gridX; ++i)
+	{
+		for (int j = 0; j < gridY; ++j)
+		{
+			int index = (j * gridX) + i; // 3次元インデックス計算(床だけなので0-99まで)
+			WeightedGraphNode* node = mGraph->mNodes[index];
+			if (!node->Active)
+			{
+				node->Active = true;
+
+				Actor* floor = new FloorActor(this);
+				// ノードの情報->Actorの床,床の位置がノードの場所に依存する
+				floor->SetPosition(node->NodePos);
+			}
+		}
+	}
+	
+	/* 空中に足場Actorを設置してみる */
+	CreateScaffold(111);
+	CreateScaffold(112);
+
+	/* エッジを繋ぐ */
+	// 準備として、ノードをつなぐのに便利なtupleを用意する
+	// 各ノードはこの6方向の先にアクティブなノードがあるかどうかを調べることになる
+	std::vector<std::tuple<int, int, int>> directions = {
+		{1, 0, 0},		// x+1 前
+		{-1, 0, 0},		// x-1 後
+		{0, -1, 0},		// y-1 左
+		{0, 1, 0},		// y+1 右
+		{1, 1, 0},		// x+1,y+1 (右前)
+		{1, -1, 0},		// x+1,y-1 (左前)
+		{-1, 1, 0},		// x-1,y+1 (右後)
+		{-1, -1, 0},	// x-1,y-1 (左後)
+		{0,0,1},
+		{0,0,-1}
+		//{1, 0, 1},		// x+1,z+1 (前上)
+		//{1, 0, -1},		// x+1,z-1 (前下)
+		//{-1, 0, 1},		// x-1,z+1 (後上)
+		//{-1, 0, -1},	// x-1,z-1 (後下)
+		//{0, 1, 1},		// y+1,z+1 (右上)
+		//{0, 1, -1},		// y+1,z-1 (右下)
+		//{0, -1, 1},		// y-1,z+1 (左上)
+		//{0, -1, -1},	// y-1,z-1 (左下)
+	};
+	// エッジ繋ぎ,全ノード分ループ
+	for (size_t i = 0; i < mGraph->mNodes.size(); ++i)
+	{
+		WeightedGraphNode* node = mGraph->mNodes[i];
+
+		// 最初にActiveかどうかをチェック
+		if (!node->Active) continue;
+		// ワールドでx座標は正面,y座標は右側に伸びてることに注意
+		int curNodeX = (i % (gridX * gridY)) / gridY;	// X軸方向インデックス
+		int curNodeY = (i % (gridX * gridY)) % gridY;	// Y軸方向インデックス
+		int curNodeZ = i / (gridX * gridY);				// Z軸方向インデックス
+
+		// すべての方向を調べる
+		for (const auto& dir : directions)
+		{
+			// directionのtupleより,隣接ノード候補のindexを得る
+			int idxX = curNodeX + std::get<0>(dir);
+			int idxY = curNodeY + std::get<1>(dir);
+			int idxZ = curNodeZ + std::get<2>(dir);
+
+			// 隣接ノードがグリッド内に収まるか確認
+			if (0 <= idxX && idxX < gridX &&
+				0 <= idxY && idxY < gridY &&
+				0 <= idxZ && idxZ < gridZ)
+			{
+				// 隣接ノードのインデックスは,こう計算される
+				int neighborIndex = (idxZ * gridX * gridY) + (idxY * gridX) + idxX;
+				WeightedGraphNode* neighborNode = mGraph->mNodes[neighborIndex];
+
+				// 隣接ノードがActiveならエッジを追加
+				if (neighborNode->Active)
 				{
 					WeightedEdge* edge = new WeightedEdge{ node, neighborNode };
 					node->mEdges.push_back(edge);
@@ -812,4 +882,111 @@ void Game::CreateNodes()
 			}
 		}
 	}
+}
+
+void Game::CreateScaffold(size_t index)
+{
+	/* 空中に足場Actorを設置してみる */
+	// ここはインデックスを指定するだけみたいな状態にしたいかも
+
+	if (index < mGraph->mNodes.size())
+	{
+		// 足場が置かれる場所に対応するノードをactiveにする
+		mGraph->mNodes[index]->Active = true;
+		// さらに、その周辺のノードをActiveにする(以下は全部その処理)
+		// (侵入不可能地域を作る際はこの関数を呼び出した後である必要があると思う)
+		std::vector<std::tuple<int, int, int>> directions = {
+			{1, 0, 0},		// x+1 前
+			{-1, 0, 0},		// x-1 後
+			{0, -1, 0},		// y-1 左
+			{0, 1, 0},		// y+1 右
+			{1, 1, 0},		// x+1,y+1 (右前)
+			{1, -1, 0},		// x+1,y-1 (左前)
+			{-1, 1, 0},		// x-1,y+1 (右後)
+			{-1, -1, 0},	// x-1,y-1 (左後)
+		};
+		int curNodeX = (index % (10 * 10)) / 10;
+		int curNodeY = (index % (10 * 10)) % 10;
+		int curNodeZ = index / (10 * 10);
+		for (const auto& dir : directions)
+		{
+			// directionのtupleより,隣接ノード候補のindexを得る
+			int idxX = curNodeX + std::get<0>(dir);
+			int idxY = curNodeY + std::get<1>(dir);
+			int idxZ = curNodeZ + std::get<2>(dir);
+
+			// 隣接ノードがグリッド内に収まるか確認
+			if (0 <= idxX && idxX < 10 &&
+				0 <= idxY && idxY < 10 &&
+				0 <= idxZ && idxZ < 3)
+			{
+				// 隣接ノードのインデックスは,こう計算される
+				int neighborIndex = (idxZ * 10 * 10) + (idxY * 10) + idxX;
+				WeightedGraphNode* neighborNode = mGraph->mNodes[neighborIndex];
+				mGraph->mNodes[neighborIndex]->Active = true;
+			}
+		}
+		// Actor作成
+		Actor* scaffold = new ScaffoldActor(this);
+		scaffold->SetPosition(mGraph->mNodes[index]->NodePos);
+	}
+}
+
+void Game::CreateStage()
+{
+	CreateNodes2();
+
+	Actor* actor = nullptr;
+	Quaternion q;
+
+	// Stageの形状を作る部分であり,ハードコーディングになっている,バイナリデータで
+	// 作れるようになれば少しの変化の際に再コンパイルが発生しないので楽(参考書14章)
+
+	const float start = -2000.0f;	// 最初のアクターは(-2000,-2000,-100)の位置に作る
+	const float size = 500.0f;		// 床Actorは縦横500である
+
+	/* 壁, 同じ回転のものを一気に作っている */
+	// X軸(前方)で90度回転
+	q = Quaternion(Vector3::UnitX, Math::PiOver2);
+	for (int i = 0; i < 10; i++)
+	{
+		// 左
+		actor = new WallActor(this);
+		actor->SetPosition(Vector3(start + i * size, 2500.0f, 0.0f));
+		actor->SetRotation(q);
+		// 右
+		actor = new WallActor(this);
+		actor->SetPosition(Vector3(start + i * size, -2500.0f, 0.0f));
+		actor->SetRotation(q);
+	}
+	// ステージ上の通れないところ(壁)
+	//actor = new WallActor(this);
+	//actor->SetPosition(Vector3(1500.0f, 0.0f, 0.0f));
+	//actor->SetRotation(q);
+	//actor = new WallActor(this);
+	//actor->SetPosition(Vector3(1500.0f, 1000.0f, 0.0f));
+	//actor->SetRotation(q);
+
+	// X軸で90度回転させたものを更にZ軸(上方向)で90度回転
+	q = Quaternion::Concatenate(q, Quaternion(Vector3::UnitZ, Math::PiOver2)); 
+	for (int i = 0; i < 10; i++)
+	{
+		// 後
+		actor = new WallActor(this);
+		actor->SetPosition(Vector3(-2500.0f, start + i * size, 0.0f));
+		actor->SetRotation(q);
+		// 前
+		actor = new WallActor(this);
+		actor->SetPosition(Vector3(2500.0f, start + i * size, 0.0f));
+		actor->SetRotation(q);
+	}
+	// ステージ上の通れないところ(壁)
+	//actor = new PlaneActor(this);
+	//actor->SetPosition(Vector3(1000.0f, 500.0f, 0.0f));
+	//actor->SetRotation(q);
+	//actor = new PlaneActor(this);
+	//actor->SetPosition(Vector3(2000.0f, 500.0f, 0.0f));
+	//actor->SetRotation(q);
+
+	// ステージの障害物部分を作る役割をもたせられるかもしれない
 }
