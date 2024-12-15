@@ -39,7 +39,6 @@ FloorActor::FloorActor(Game* game)
 WallActor::WallActor(Game* game)
 	: PlaneActor(game, Category::EWall)
 {
-	SetScale(10.0f);
 	mMeshComp->SetTextureIndex(1);
 }
 

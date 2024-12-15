@@ -8,7 +8,7 @@ class ChaseMove :
     public MoveComponent
 {
 public:
-    ChaseMove(class Actor* owner);
+    ChaseMove(class Actor* owner, class Actor* target);
 
     void Update(float deltaTime) override;
 
@@ -29,9 +29,7 @@ private:
     ChaseState mChaseState;
     float mInterval;        // 経路再計算までの時間
 
-    // 追跡対象をPlayerActorにしている,Actorにしてキャストするようにしたら拡張性はあるが
-    // 当面は敵からPlayerへの追跡しかないだろうという事で
-    class PlayerActor* mPlayer;
+    class Actor* mTarget;
 
     std::vector<Vector3> mPath; // 経路探索による移動をするときに,Playerまでの経路を保存する
     class Vector3 mNextPoint;   // Searchingの時に次に向かう点

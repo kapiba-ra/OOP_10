@@ -57,7 +57,7 @@ public:
 	struct Parameters
 	{
 		float maxForwardSpeed = 400.0f;
-		float maxJumpSpeed = 500.0f;
+		float maxJumpSpeed = 700.0f;
 		float WeaponSizeFactor = 1.0f;
 		float WeaponIntervalFactor= 1.0f;
 		float WeaponSpeedFactor = 1.0f;

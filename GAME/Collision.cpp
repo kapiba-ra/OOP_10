@@ -222,6 +222,7 @@ void AABB::Rotate(const Quaternion& q)
 
 bool AABB::Contains(const Vector3& point) const
 {
+	// ‚Ç‚ê‚©‚ª^‚È‚çoutside‚Ítrue
 	bool outside = point.x < mMin.x ||
 		point.y < mMin.y ||
 		point.z < mMin.z ||
@@ -396,14 +397,14 @@ bool Intersect(const LineSegment& l, const Plane& p, float& outT)
 bool TestSidePlane(float start, float end, float negd, const Vector3& norm,
 	std::vector<std::pair<float, Vector3>>& out)
 {
-	float denom = end - start;
+	float denom = end - start;	// •ª•ê
 	if (Math::NearZero(denom))
 	{
 		return false;
 	}
 	else
 	{
-		float numer = -start + negd;
+		float numer = -start + negd;  // •ªq
 		float t = numer / denom;
 		// Test that t is within bounds
 		if (t >= 0.0f && t <= 1.0f)
@@ -447,6 +448,8 @@ bool Intersect(const LineSegment& l, const AABB& b, float& outT,
 		});
 	// Test if the box contains any of these points of intersection
 	Vector3 point;
+	bool retVal = false;
+
 	for (auto& t : tValues)
 	{
 		point = l.PointOnSegment(t.first);
@@ -454,12 +457,12 @@ bool Intersect(const LineSegment& l, const AABB& b, float& outT,
 		{
 			outT = t.first;
 			outNorm = t.second;
-			return true;
+			retVal = true;
 		}
 	}
 
 	//None of the intersections are within bounds of box
-	return false;
+	return retVal;
 }
 
 bool SweptSphere(const Sphere& P0, const Sphere& P1,

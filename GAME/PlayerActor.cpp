@@ -182,10 +182,11 @@ void PlayerActor::FixCollisions()
 
 	const AABB& playerBox = mBoxComp->GetWorldBox();
 	Vector3 pos = GetPosition();
+	Vector3 offset(0, 0, 50.0f);
 	// 地上から落下への遷移で使う
-	LineSegment line(pos, pos + Vector3::UnitZ * -100.0f);
+	// Playerのポジションが足元なので,胴体付近からにするためにoffsetを追加
+	LineSegment line((pos+offset), pos + Vector3::UnitZ * -100.0f);
 	bool inAir(true); // 空中にいるか
-	
 	float t = 0.0f;				 // 引数設定用に便宜上必要,使わない
 	Vector3 norm(Vector3::Zero); // 同上
 

@@ -19,12 +19,13 @@ void SwordComponent::Update(float deltaTime)
 	if (mLastShot > mInterval * mIntervalFactor)
 	{
 		mLastShot -= mInterval * mIntervalFactor;
-		// 出現位置の設定はshotComponentと同様,腰のところ
-		Vector3 start = mOwner->GetPosition();	// 弾の発射地点
-		if (mOwner->GetType() == Actor::Eplayer)
-		{
-			start = static_cast<PlayerActor*>(mOwner)->GetBoneWorldPosition("pelvis");
-		}
+		// 弾の発射地点は、OwnerのPositionからz軸方向に50上の所からとする
+		Vector3 start = mOwner->GetPosition() + Vector3(0.0f, 0.0f, 100.0f);
+		// 以下の様に正確に腰の位置を得ることができるが,少しコストがかかりそう
+		//if (mOwner->GetType() == Actor::Eplayer)
+		//{
+		//	start = static_cast<PlayerActor*>(mOwner)->GetBoneWorldPosition("pelvis");
+		//}
 		Vector3 dir = mOwner->GetForward();
 		float shotAngle = Math::Pi / 6;
 		//dir = Vector3::Transform(dir, Quaternion(Vector3::UnitY, -shotAngle * (mNum - 1) / 2));

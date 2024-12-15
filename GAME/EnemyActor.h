@@ -27,7 +27,9 @@ private:
     float mInvincibilityTimer;  // 無敵時間用のタイマー
 
     class ChaseMove* mMyMove;
-    class MeshComponent* mMeshComp;
+    class JumpComponent* mJumpComp;
+    float mMaxJumpSpeed;
+    class SkeletalMeshComponent* mMeshComp;
     class BoxComponent* mBoxComp;
     class DamageComponent* mDamageComp;
     class HpComponent* mHpComp;

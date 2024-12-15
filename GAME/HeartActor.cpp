@@ -25,7 +25,7 @@ HeartActor::HeartActor(Game* game)
 	mMoveComp->SetAngularSpeed(Math::Pi);
 
 	mBoxComp = new BoxComponent(this);
-	mBoxComp->SetObjectBox(mesh->GetBox());
+	//mBoxComp->SetObjectBox(mesh->GetBox());
 	mBoxComp->SetShouldRotate(false);
 }
 

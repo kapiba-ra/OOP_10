@@ -11,15 +11,13 @@
 
 #include "BoxComponent.h" // for planes box
 
-ChaseMove::ChaseMove(Actor* owner)
+ChaseMove::ChaseMove(Actor* owner, Actor* target)
 	: MoveComponent(owner)
 	, mChaseState(ETargeting)
 	, mInterval(0.0f)
 	, mNextPoint(Vector3::Zero)
+	, mTarget(target)
 {
-	// このコンポーネントをアタッチするActorよりも先に
-	// Playerは生成済みでなくてはならない
-	mPlayer = mOwner->GetGame()->GetPlayer();
 }
 
 void ChaseMove::Update(float deltaTime)
@@ -29,10 +27,10 @@ void ChaseMove::Update(float deltaTime)
 	// mChaseStateを変更すべきかどうか判断する
 	CheckObstacle(deltaTime);
 
+	Vector3 targetPos = mTarget->GetPosition();
 	if (mChaseState == ETargeting)
 	{
-		Vector3 playerPos = mPlayer->GetPosition();
-		TurnTo(playerPos);
+		TurnTo(targetPos);
 	}
 	else if (mChaseState == ESearching)
 	{
@@ -47,13 +45,12 @@ void ChaseMove::Update(float deltaTime)
 
 			AStarMap map;
 			WeightedGraph* g = mOwner->GetGame()->GetGraph();
-			Vector3 playerPos = mPlayer->GetPosition();
-			// それぞれplayer,ownerに最も近いノードを取得する
+			// それぞれtarget,ownerに最も近いノードを取得する
 			WeightedGraphNode* myNode = FindClosestNode(*g, myPos);
-			WeightedGraphNode* playerNode = FindClosestNode(*g, playerPos);
-			bool found = AStarSearch(*g, myNode, playerNode, map);
+			WeightedGraphNode* targetNode = FindClosestNode(*g, targetPos);
+			bool found = AStarSearch(*g, myNode, targetNode, map);
 			// startからgoalまでの順番に格納されている
-			mPath = ReconstructPathCoords(myNode, playerNode, map);
+			mPath = ReconstructPathCoords(myNode, targetNode, map);
 			if (!mPath.empty())  // 空でないことを確認
 			{
 				mNextPoint = mPath.back();
@@ -65,7 +62,7 @@ void ChaseMove::Update(float deltaTime)
 		Vector2 myPos2D(myPos.x, myPos.y);
 		Vector3 diff3D = mNextPoint - myPos;
 		Vector2 diff2D = nextPoint2D - myPos2D;
-		if (diff3D.LengthSq() < 10000.0f)
+		if (diff2D.LengthSq() < 10000.0f)
 		{
 			if (!mPath.empty())
 			{
@@ -87,7 +84,7 @@ void ChaseMove::TurnTo(const Vector3& pos)
 {
 	// 親クラスのメンバ変数であるmAngularSpeedの制御を行う
 	Vector3 dir = Vector3(pos - mOwner->GetPosition());
-	//dir.z = 0.0f;	// z成分は考えない
+	dir.z = 0.0f;	// z成分は考えない
 	dir.Normalize();
 	Vector3 forward = mOwner->GetForward();
 	float dot = Vector3::Dot(forward, dir);
@@ -112,8 +109,12 @@ void ChaseMove::CheckObstacle(float deltaTime)
 {
 	ChaseState stateBeforeCheck = mChaseState;
 	// playerまでの間の線分を作る
+	//Vector3 pos = mOwner->GetPosition() + Vector3(0.0f, 0.0f, 50.0f);
+	//Vector3 targetPos = mTarget->GetPosition() + Vector3(0.0f, 0.0f, 100.0f);
 	Vector3 pos = mOwner->GetPosition();
-	LineSegment line(pos, mPlayer->GetPosition());
+	Vector3 targetPos = mTarget->GetPosition();
+	// targetPosは大体足元で、胴体付近の方が都合がいいのでz方向に+100.0fしている
+	LineSegment line(pos, targetPos);
 
 	// 床と壁ひっくるめて(今は床の分が無駄だが,いずれ2階建てにも対応できるかも)
 	auto& planes = mOwner->GetGame()->GetPlanes();
@@ -124,8 +125,9 @@ void ChaseMove::CheckObstacle(float deltaTime)
 		const AABB& planeBox = pa->GetBox()->GetWorldBox();
 
 		// もしもplayerとの間に壁か足場があったら,Searching状態へ
-		if ((Intersect(line, planeBox, t, norm)) &&
-			(pa->GetCategory() != (PlaneActor::Category::EFloor)))
+		if ((Intersect(line, planeBox, t, norm))) //&&
+		//	(pa->GetCategory() != (PlaneActor::Category::EFloor)))
+		//if(phys->SegmentCast(line, info) && (info.mActor->GetType() == Actor::Eplane))
 		{
 			mChaseState = ESearching;
 			if(stateBeforeCheck == ETargeting)

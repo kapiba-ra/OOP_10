@@ -105,8 +105,10 @@ bool Intersect(const Sphere& s, const AABB& box);	// 球とAABB
 // 線分と他の境界立体
 bool Intersect(const LineSegment& l, const Sphere& s, float& outT);
 bool Intersect(const LineSegment& l, const Plane& p, float& outT);
-bool Intersect(const LineSegment& l, const AABB& b, float& outT,
-	Vector3& outNorm);
+bool Intersect(const LineSegment& l, const AABB& b, float& outT, Vector3& outNorm);
+// 線分とAABBは、線分が斜め && AABBが平面 の時にバグる(t値の計算過程の誤差のせいで)
+// 上記の状況のために作成(他の方法も試したが手っ取り早そうなので)
+bool Intersect(const LineSegment& l, const AABB& b, float& outT, Vector3& outNorm);
 
 bool SweptSphere(const Sphere& P0, const Sphere& P1,
 	const Sphere& Q0, const Sphere& Q1, float& t);

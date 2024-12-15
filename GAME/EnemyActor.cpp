@@ -3,14 +3,18 @@
 #include "Game.h"
 #include "Renderer.h"
 #include "Mesh.h"
+#include "Skeleton.h"
+#include "Animation.h"
 #include "InputSystem.h"
 
 #include "ChaseMove.h"
-#include "MeshComponent.h"
+//#include "MeshComponent.h"
+#include "SkeletalMeshComponent.h"
 #include "BoxComponent.h"
 #include "TargetComponent.h"
 #include "HpComponent.h"
 #include "DamageComponent.h"
+#include "JumpComponent.h"
 
 #include "PlayerActor.h"
 #include "PlaneActor.h"
@@ -21,10 +25,19 @@ EnemyActor::EnemyActor(Game* game)
 	, mMyState(MyState::EAlive)
 	, mInvincibleDuration(0.5f)	// 無敵時間,初期設定は0.5秒
 	, mInvincibilityTimer(0.0f)
+	, mMaxJumpSpeed(500.0f)
 {
-	mMeshComp = new MeshComponent(this);
-	Mesh* mesh = game->GetRenderer()->GetMesh("Assets/Human.gpmesh");
+	mMeshComp = new SkeletalMeshComponent(this);
+	// 人型
+	Mesh* mesh = game->GetRenderer()->GetMesh("Assets/GP_Human.gpmesh");
 	mMeshComp->SetMesh(mesh);
+	mMeshComp->SetSkeleton(game->GetSkeleton("Assets/GP_Human.gpskel"));
+	mMeshComp->PlayAnimation(game->GetAnimation("Assets/GP_HumanWalk.gpanim"));
+	// コーギーテスト用
+	//Mesh* mesh = game->GetRenderer()->GetMesh("Assets/Corgi_backup.gpmesh");
+	//mMeshComp->SetMesh(mesh);
+	//mMeshComp->SetSkeleton(game->GetSkeleton("Assets/Corgi_backup.gpskel"));
+	//mMeshComp->PlayAnimation(game->GetAnimation("Assets/Corgi_walk.gpanim"));
 
 	WeightedGraph* g = game->GetGraph();
 	size_t size = g->mNodes.size();
@@ -39,11 +52,16 @@ EnemyActor::EnemyActor(Game* game)
 	}
 	
 	// メッシュによる
-	SetScale(40.0f);
+	// 人型
+	SetScale(10.0f);
+	// コーギー
+	SetScale(50.0f);
 
-	mMyMove = new ChaseMove(this);
+	mMyMove = new ChaseMove(this, game->GetPlayer());
 	// 常に進み続ける
 	mMyMove->SetForwardSpeed(150.0f);
+
+	mJumpComp = new JumpComponent(this);
 
 	mBoxComp = new BoxComponent(this);
 	mBoxComp->SetObjectBox(mesh->GetBox());
@@ -98,6 +116,11 @@ void EnemyActor::FixCollisions()
 
 	const AABB& enemyBox = mBoxComp->GetWorldBox();
 	Vector3 pos = GetPosition();
+	Vector3 offset(0, 0, 50.0f);
+	LineSegment line((pos + offset), pos + Vector3::UnitZ * -100.0f);
+	bool inAir(true); // 空中にいるか
+	float t = 0.0f;				 // 引数設定用に便宜上必要,使わない
+	Vector3 norm(Vector3::Zero); // 同上
 
 	auto player = GetGame()->GetPlayer();
 	const AABB& playerBox = player->GetBox()->GetWorldBox();
@@ -107,7 +130,6 @@ void EnemyActor::FixCollisions()
 		// 敵の位置をプレイヤーから少し離す
 		
 		// プレイヤーのHPをへらす
-		//player->TakeDamage(1.0f);
 		player->GetHpComp()->TakeDamage(1.0f);
 	}
 
@@ -140,10 +162,39 @@ void EnemyActor::FixCollisions()
 			else
 			{
 				pos.z += dz;
+				if (dz == dz1)
+				{
+					if (mJumpComp->IsJumping())
+					{
+						mJumpComp->Land();
+					}
+				}
 			}
 			SetPosition(pos);
 			mBoxComp->OnUpdateWorldTransform();
+			// もし足場との衝突で,自分の足元が足場よりも少し下にある場合にジャンプ
+			if ((pa->GetCategory() == PlaneActor::Category::EScaffold) &&
+				(dz1>5.0f))
+			{
+				if (!mJumpComp->IsJumping())
+				{
+					mJumpComp->Liftoff(mMaxJumpSpeed);
+				}
+			}
+			if (!mJumpComp->IsJumping())
+			{
+				if (Intersect(line, planeBox, t, norm))
+				{
+					inAir = false;
+				}
+			}
 		}
+	}
+
+	if (inAir && !mJumpComp->IsJumping())
+	{
+		// 踏切速度0でジャンプさせる(自由落下)
+		mJumpComp->Liftoff(0.0f);
 	}
 }
 

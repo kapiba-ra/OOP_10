@@ -126,7 +126,7 @@ void Game::LoadData()
 	mHUD = new HUD(this);
 
 	// Musicスタート
-	//mMusicEvent = mAudioSystem->PlayEvent("event:/Music");
+	mMusicEvent = mAudioSystem->PlayEvent("event:/Music");
 
 	// 相対位置マウスモードを有効に
 	SDL_SetRelativeMouseMode(SDL_TRUE);
@@ -768,11 +768,11 @@ void Game::CreateNodes2()
 {
 	mGraph = new WeightedGraph;
 
-	/* 10×10×2グリッドのノードをゲームワールドに作る。 */ 
+	/* 10×10×3グリッドのノードをゲームワールドに作る。 */ 
 	const int gridZ = 3;
 	const int gridX = 10;
 	const int gridY = 10;
-	const float gridSpacingXY = 500.0f;	// 床アクターのサイズでもある
+	const float gridSpacingXY = 500.0f;	// gridの間隔。床アクターのサイズでもある
 	const float gridSpacingZ = 100.0f;	// gridのz軸方向の高さ,要調節
 	const int gridNum = gridX * gridY * gridZ;
 
@@ -820,6 +820,9 @@ void Game::CreateNodes2()
 	/* 空中に足場Actorを設置してみる */
 	CreateScaffold(111);
 	CreateScaffold(112);
+	CreateScaffold(213);
+	CreateScaffold(118);
+	CreateScaffold(134);
 
 	/* エッジを繋ぐ */
 	// 準備として、ノードをつなぐのに便利なtupleを用意する
@@ -833,24 +836,25 @@ void Game::CreateNodes2()
 		{1, -1, 0},		// x+1,y-1 (左前)
 		{-1, 1, 0},		// x-1,y+1 (右後)
 		{-1, -1, 0},	// x-1,y-1 (左後)
-		{0,0,1},
-		{0,0,-1}
-		//{1, 0, 1},		// x+1,z+1 (前上)
-		//{1, 0, -1},		// x+1,z-1 (前下)
-		//{-1, 0, 1},		// x-1,z+1 (後上)
-		//{-1, 0, -1},	// x-1,z-1 (後下)
-		//{0, 1, 1},		// y+1,z+1 (右上)
-		//{0, 1, -1},		// y+1,z-1 (右下)
-		//{0, -1, 1},		// y-1,z+1 (左上)
-		//{0, -1, -1},	// y-1,z-1 (左下)
+		//{0,0,1},
+		//{0,0,-1}
+		{1, 0, 1},		// x+1,z+1 (前上)
+		{1, 0, -1},		// x+1,z-1 (前下)
+		{-1, 0, 1},		// x-1,z+1 (後上)
+		{-1, 0, -1},	// x-1,z-1 (後下)
+		{0, 1, 1},		// y+1,z+1 (右上)
+		{0, 1, -1},		// y+1,z-1 (右下)
+		{0, -1, 1},		// y-1,z+1 (左上)
+		{0, -1, -1},	// y-1,z-1 (左下)
 	};
 	// エッジ繋ぎ,全ノード分ループ
 	for (size_t i = 0; i < mGraph->mNodes.size(); ++i)
 	{
 		WeightedGraphNode* node = mGraph->mNodes[i];
 
-		// 最初にActiveかどうかをチェック
+		// Activeなノードだけを調べる
 		if (!node->Active) continue;
+
 		// ワールドでx座標は正面,y座標は右側に伸びてることに注意
 		int curNodeX = (i % (gridX * gridY)) / gridY;	// X軸方向インデックス
 		int curNodeY = (i % (gridX * gridY)) % gridY;	// Y軸方向インデックス
@@ -870,10 +874,33 @@ void Game::CreateNodes2()
 				0 <= idxZ && idxZ < gridZ)
 			{
 				// 隣接ノードのインデックスは,こう計算される
-				int neighborIndex = (idxZ * gridX * gridY) + (idxY * gridX) + idxX;
+				int neighborIndex = (idxZ * gridX * gridY) + (idxX * gridX) + idxY;
 				WeightedGraphNode* neighborNode = mGraph->mNodes[neighborIndex];
 
-				// 隣接ノードがActiveならエッジを追加
+				// 1.天井に足場があって通れない状況ができてしまうので、その対策の処理
+				int checkIndex = 0;
+				if (idxZ > curNodeZ)
+				{
+					// 隣接が上なら、自分の2つ上のノードがActiveなら、エッジを繋がない
+					checkIndex = i + 2 * gridX * gridY;
+					// 有効なIndexで、かつActiveならば
+					if ((checkIndex < gridNum) && (mGraph->mNodes[checkIndex]->Active))
+					{
+						continue;	// エッジを繋がない
+					}
+				}
+				else if (idxZ < curNodeZ)
+				{
+					// 隣接が下なら、隣接の2つ上がActiveなら、下とのエッジを繋がない
+					checkIndex = neighborIndex - 2 * gridX * gridY;
+					// 有効なIndexで、かつActiveならば
+					if ((checkIndex >= 0) && (mGraph->mNodes[checkIndex]->Active))
+					{
+						continue;	// エッジを繋がない
+					}
+				}
+
+				// 2.隣接ノードがActiveならエッジを追加
 				if (neighborNode->Active)
 				{
 					WeightedEdge* edge = new WeightedEdge{ node, neighborNode };
@@ -895,37 +922,45 @@ void Game::CreateScaffold(size_t index)
 		mGraph->mNodes[index]->Active = true;
 		// さらに、その周辺のノードをActiveにする(以下は全部その処理)
 		// (侵入不可能地域を作る際はこの関数を呼び出した後である必要があると思う)
-		std::vector<std::tuple<int, int, int>> directions = {
-			{1, 0, 0},		// x+1 前
-			{-1, 0, 0},		// x-1 後
-			{0, -1, 0},		// y-1 左
-			{0, 1, 0},		// y+1 右
-			{1, 1, 0},		// x+1,y+1 (右前)
-			{1, -1, 0},		// x+1,y-1 (左前)
-			{-1, 1, 0},		// x-1,y+1 (右後)
-			{-1, -1, 0},	// x-1,y-1 (左後)
-		};
-		int curNodeX = (index % (10 * 10)) / 10;
-		int curNodeY = (index % (10 * 10)) % 10;
-		int curNodeZ = index / (10 * 10);
-		for (const auto& dir : directions)
-		{
-			// directionのtupleより,隣接ノード候補のindexを得る
-			int idxX = curNodeX + std::get<0>(dir);
-			int idxY = curNodeY + std::get<1>(dir);
-			int idxZ = curNodeZ + std::get<2>(dir);
+		//std::vector<std::tuple<int, int, int>> directions = {
+		//	{1, 0, 0},		// x+1 前
+		//	{-1, 0, 0},		// x-1 後
+		//	{0, -1, 0},		// y-1 左
+		//	{0, 1, 0},		// y+1 右
+		//	{1, 1, 0},		// x+1,y+1 (右前)
+		//	{1, -1, 0},		// x+1,y-1 (左前)
+		//	{-1, 1, 0},		// x-1,y+1 (右後)
+		//	{-1, -1, 0},	// x-1,y-1 (左後)
+		//};
+		//int curNodeX = (index % (10 * 10)) / 10;
+		//int curNodeY = (index % (10 * 10)) % 10;
+		//int curNodeZ = index / (10 * 10);
+		//for (const auto& dir : directions)
+		//{
+		//	// directionのtupleより,隣接ノード候補のindexを得る
+		//	int idxX = curNodeX + std::get<0>(dir);
+		//	int idxY = curNodeY + std::get<1>(dir);
+		//	int idxZ = curNodeZ + std::get<2>(dir);
 
-			// 隣接ノードがグリッド内に収まるか確認
-			if (0 <= idxX && idxX < 10 &&
-				0 <= idxY && idxY < 10 &&
-				0 <= idxZ && idxZ < 3)
-			{
-				// 隣接ノードのインデックスは,こう計算される
-				int neighborIndex = (idxZ * 10 * 10) + (idxY * 10) + idxX;
-				WeightedGraphNode* neighborNode = mGraph->mNodes[neighborIndex];
-				mGraph->mNodes[neighborIndex]->Active = true;
-			}
+		//	// 隣接ノードがグリッド内に収まるか確認
+		//	if (0 <= idxX && idxX < 10 &&
+		//		0 <= idxY && idxY < 10 &&
+		//		0 <= idxZ && idxZ < 3)
+		//	{
+		//		// 隣接ノードのインデックスは,こう計算される
+		//		int neighborIndex = (idxZ * 10 * 10) + (idxY * 10) + idxX;
+		//		WeightedGraphNode* neighborNode = mGraph->mNodes[neighborIndex];
+		//		mGraph->mNodes[neighborIndex]->Active = true;
+		//	}
+		//}
+		
+		// 1.いかなる場合でも,足場の真下を非アクティブなノードにする
+		int nodeU1idx = index - 100;	// 1つ下のノード
+		if (nodeU1idx > 0)
+		{
+			mGraph->mNodes[nodeU1idx]->Active = false;
 		}
+
 		// Actor作成
 		Actor* scaffold = new ScaffoldActor(this);
 		scaffold->SetPosition(mGraph->mNodes[index]->NodePos);
@@ -942,51 +977,34 @@ void Game::CreateStage()
 	// Stageの形状を作る部分であり,ハードコーディングになっている,バイナリデータで
 	// 作れるようになれば少しの変化の際に再コンパイルが発生しないので楽(参考書14章)
 
-	const float start = -2000.0f;	// 最初のアクターは(-2000,-2000,-100)の位置に作る
+	const float start = -2250.0f;	// 最初のアクターは(-2000,-2000,-100)の位置に作る
 	const float size = 500.0f;		// 床Actorは縦横500である
 
 	/* 壁, 同じ回転のものを一気に作っている */
-	// X軸(前方)で90度回転
-	q = Quaternion(Vector3::UnitX, Math::PiOver2);
+	// X軸(前方)で-90度回転
+	q = Quaternion(Vector3::UnitX, -Math::PiOver2);
 	for (int i = 0; i < 10; i++)
 	{
 		// 左
 		actor = new WallActor(this);
-		actor->SetPosition(Vector3(start + i * size, 2500.0f, 0.0f));
+		actor->SetPosition(Vector3(start + i * size, 2500.0f, 150.0f));// 150は床の高さ+size/2
 		actor->SetRotation(q);
 		// 右
 		actor = new WallActor(this);
-		actor->SetPosition(Vector3(start + i * size, -2500.0f, 0.0f));
+		actor->SetPosition(Vector3(start + i * size, -2500.0f, 150.0f));
 		actor->SetRotation(q);
 	}
-	// ステージ上の通れないところ(壁)
-	//actor = new WallActor(this);
-	//actor->SetPosition(Vector3(1500.0f, 0.0f, 0.0f));
-	//actor->SetRotation(q);
-	//actor = new WallActor(this);
-	//actor->SetPosition(Vector3(1500.0f, 1000.0f, 0.0f));
-	//actor->SetRotation(q);
-
-	// X軸で90度回転させたものを更にZ軸(上方向)で90度回転
-	q = Quaternion::Concatenate(q, Quaternion(Vector3::UnitZ, Math::PiOver2)); 
+	// X軸で90度回転させたものを更にZ軸(上方向)で-90度回転
+	q = Quaternion::Concatenate(q, Quaternion(Vector3::UnitZ, -Math::PiOver2)); 
 	for (int i = 0; i < 10; i++)
 	{
 		// 後
 		actor = new WallActor(this);
-		actor->SetPosition(Vector3(-2500.0f, start + i * size, 0.0f));
+		actor->SetPosition(Vector3(-2500.0f, start + i * size, 150.0f));
 		actor->SetRotation(q);
 		// 前
 		actor = new WallActor(this);
-		actor->SetPosition(Vector3(2500.0f, start + i * size, 0.0f));
+		actor->SetPosition(Vector3(2500.0f, start + i * size, 150.0f));
 		actor->SetRotation(q);
 	}
-	// ステージ上の通れないところ(壁)
-	//actor = new PlaneActor(this);
-	//actor->SetPosition(Vector3(1000.0f, 500.0f, 0.0f));
-	//actor->SetRotation(q);
-	//actor = new PlaneActor(this);
-	//actor->SetPosition(Vector3(2000.0f, 500.0f, 0.0f));
-	//actor->SetRotation(q);
-
-	// ステージの障害物部分を作る役割をもたせられるかもしれない
 }
