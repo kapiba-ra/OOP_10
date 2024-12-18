@@ -26,13 +26,16 @@ public:
 	class PlayerActor* GetPlayer() { return mPlayerActor; }
 	struct WeightedGraph* GetGraph() { return mGraph; }
 
-	// CollisionSystemみたいなクラスを作ってそっちでまとめて処理した方がすっきりするかも
+	// 特定のActorは配列で管理しておく
 	void AddPlane(class PlaneActor* plane);
 	void RemovePlane(class PlaneActor* plane);
 	std::vector<class PlaneActor*>& GetPlanes() { return mPlanes; }
 	void AddItem(class ItemActor* item);
 	void RemoveItem(class ItemActor* item);
 	std::vector<class ItemActor*>& GetItems() { return mItems; }
+	void AddEnemy(class EnemyActor* enemy);
+	void RemoveEnemy(class EnemyActor* enemy);
+	std::vector<class EnemyActor*>& GetEnemies() { return mEnemies; }
 
 
 
@@ -106,6 +109,7 @@ private:
 	SoundEvent mMusicEvent;
 	std::vector<class PlaneActor*> mPlanes;
 	std::vector<class ItemActor*> mItems;
+	std::vector<class EnemyActor*> mEnemies;
 	class PlayerActor* mPlayerActor;
 
 	// ステージからノードを作りエッジをつなぐ

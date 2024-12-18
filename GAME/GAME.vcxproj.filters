@@ -258,6 +258,12 @@
     <ClCompile Include="Animation.cpp">
       <Filter>manager\animation</Filter>
     </ClCompile>
+    <ClCompile Include="CorgiActor.cpp">
+      <Filter>actor\weapon</Filter>
+    </ClCompile>
+    <ClCompile Include="CorgiComponent.cpp">
+      <Filter>component\weapon</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Math.h">
@@ -436,6 +442,12 @@
     </ClInclude>
     <ClInclude Include="Animation.h">
       <Filter>manager\animation</Filter>
+    </ClInclude>
+    <ClInclude Include="CorgiActor.h">
+      <Filter>actor\weapon</Filter>
+    </ClInclude>
+    <ClInclude Include="CorgiComponent.h">
+      <Filter>component\weapon</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

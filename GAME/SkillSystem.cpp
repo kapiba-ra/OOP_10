@@ -12,6 +12,7 @@
 #include "HpComponent.h"
 #include "ShotComponent.h"
 #include "SwordComponent.h"
+#include "CorgiComponent.h"
 
 SkillSystem::SkillSystem(Game* game)
 	: mGame(game)
@@ -143,6 +144,10 @@ void SkillSystem::Initialize()
 	AddWeaponSkill("Gun", [](PlayerActor* player) {
 		ShotComponent* sc = new ShotComponent(player);
 		player->AddWeapon("Gun", sc);
+	});
+	AddWeaponSkill("Corgi", [](PlayerActor* player) {
+		CorgiComponent* sc = new CorgiComponent(player);
+		player->AddWeapon("Corgi", sc);
 	});
 
 

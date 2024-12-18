@@ -27,7 +27,8 @@ void ChaseMove::Update(float deltaTime)
 	// mChaseState‚ğ•ÏX‚·‚×‚«‚©‚Ç‚¤‚©”»’f‚·‚é
 	CheckObstacle(deltaTime);
 
-	Vector3 targetPos = mTarget->GetPosition();
+	Vector3 targetPos(Vector3::Zero);
+	if(mTarget) targetPos = mTarget->GetPosition();
 	if (mChaseState == ETargeting)
 	{
 		TurnTo(targetPos);
@@ -105,14 +106,20 @@ void ChaseMove::TurnTo(const Vector3& pos)
 	}
 }
 
+void ChaseMove::SetTarget(Actor* target)
+{
+	mTarget = target;
+	mPath.clear();
+	mInterval = 10.0f;
+}
+
 void ChaseMove::CheckObstacle(float deltaTime)
 {
 	ChaseState stateBeforeCheck = mChaseState;
 	// player‚Ü‚Å‚ÌŠÔ‚Ìü•ª‚ğì‚é
-	//Vector3 pos = mOwner->GetPosition() + Vector3(0.0f, 0.0f, 50.0f);
-	//Vector3 targetPos = mTarget->GetPosition() + Vector3(0.0f, 0.0f, 100.0f);
 	Vector3 pos = mOwner->GetPosition();
-	Vector3 targetPos = mTarget->GetPosition();
+	Vector3 targetPos(Vector3::Zero);
+	if(mTarget) targetPos = mTarget->GetPosition();
 	// targetPos‚Í‘å‘Ì‘«Œ³‚ÅA“·‘Ì•t‹ß‚Ì•û‚ª“s‡‚ª‚¢‚¢‚Ì‚Åz•ûŒü‚É+100.0f‚µ‚Ä‚¢‚é
 	LineSegment line(pos, targetPos);
 

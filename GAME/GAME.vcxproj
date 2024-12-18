@@ -173,6 +173,8 @@ xcopy "C:\Program Files (x86)\FMOD SoundSystem\FMOD Studio API Windows\api\studi
     <ClCompile Include="Animation.cpp" />
     <ClCompile Include="AStar.cpp" />
     <ClCompile Include="BoneTransform.cpp" />
+    <ClCompile Include="CorgiActor.cpp" />
+    <ClCompile Include="CorgiComponent.cpp" />
     <ClCompile Include="DamageComponent.cpp" />
     <ClCompile Include="AudioComponent.cpp" />
     <ClCompile Include="AudioSystem.cpp" />
@@ -231,6 +233,8 @@ xcopy "C:\Program Files (x86)\FMOD SoundSystem\FMOD Studio API Windows\api\studi
     <ClCompile Include="UIScreen.cpp" />
     <ClCompile Include="VertexArray.cpp" />
     <ClInclude Include="BoneTransform.h" />
+    <ClInclude Include="CorgiActor.h" />
+    <ClInclude Include="CorgiComponent.h" />
     <ClInclude Include="HpComponent.h" />
     <ClInclude Include="JumpComponent.h" />
     <ClInclude Include="MatrixPalette.h" />

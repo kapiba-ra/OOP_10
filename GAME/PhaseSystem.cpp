@@ -28,7 +28,7 @@ void PhaseSystem::Update(float deltaTime)
 		{
 			mTimer -= mEnemyGenInterval;
 
-			//new EnemyActor(mGame);
+			new EnemyActor(mGame);
 		}
 	}
 	else
@@ -60,12 +60,12 @@ void PhaseSystem::StartPhase()
 		hud->ResetTimer();
 		
 		actor = new EnemyActor(mGame);
-		//actor = new EnemyActor(mGame);
-		//actor->SetPosition(Vector3(-400.0f, 400.0f, 0.0f));
-		//actor = new EnemyActor(mGame);
-		//actor->SetPosition(Vector3(-300.0f, -300.0f, 0.0f));
-		//actor = new EnemyActor(mGame);
-		//actor->SetPosition(Vector3(300.0f, -300.0f, 0.0f));
+		actor = new EnemyActor(mGame);
+		actor->SetPosition(Vector3(-400.0f, 400.0f, 0.0f));
+		actor = new EnemyActor(mGame);
+		actor->SetPosition(Vector3(-300.0f, -300.0f, 0.0f));
+		actor = new EnemyActor(mGame);
+		actor->SetPosition(Vector3(300.0f, -300.0f, 0.0f));
 		actor = new HeartActor(mGame);
 		break;
 	}

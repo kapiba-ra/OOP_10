@@ -554,6 +554,17 @@ void Game::RemoveItem(ItemActor* item)
 	mItems.erase(iter);
 }
 
+void Game::AddEnemy(EnemyActor* enemy)
+{
+	mEnemies.emplace_back(enemy);
+}
+
+void Game::RemoveEnemy(EnemyActor* enemy)
+{
+	auto iter = std::find(mEnemies.begin(), mEnemies.end(), enemy);
+	mEnemies.erase(iter);
+}
+
 void Game::ChangeState(GameState nextState)
 {
 	OnExit(nextState);

@@ -15,6 +15,8 @@ public:
     
     void HitTarget(Actor* target);
 
+    void SetDamageAmt(float damage);
+
 protected:
     class DamageComponent* mDamageComp;
     float mLifeSpan;

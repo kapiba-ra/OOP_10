@@ -21,6 +21,8 @@ public:
     // 引数で指定された点に向くよう方向を変える
     void TurnTo(const class Vector3& pos);
 
+    void SetTarget(class Actor* target);
+
 private:
     // 自分と目標の間にある障害物を調べる
     void CheckObstacle(float deltaTime);
@@ -29,7 +31,7 @@ private:
     ChaseState mChaseState;
     float mInterval;        // 経路再計算までの時間
 
-    class Actor* mTarget;
+    class Actor* mTarget;   // Chase対象
 
     std::vector<Vector3> mPath; // 経路探索による移動をするときに,Playerまでの経路を保存する
     class Vector3 mNextPoint;   // Searchingの時に次に向かう点

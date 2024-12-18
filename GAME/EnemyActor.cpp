@@ -22,7 +22,7 @@
 
 EnemyActor::EnemyActor(Game* game)
 	: Actor(game, Type::Eenemy)
-	, mMyState(MyState::EAlive)
+	, mUniState(UniState::EAlive)
 	, mInvincibleDuration(0.5f)	// 無敵時間,初期設定は0.5秒
 	, mInvincibilityTimer(0.0f)
 	, mMaxJumpSpeed(500.0f)
@@ -53,9 +53,9 @@ EnemyActor::EnemyActor(Game* game)
 	
 	// メッシュによる
 	// 人型
-	SetScale(10.0f);
+	SetScale(100.0f);
 	// コーギー
-	SetScale(50.0f);
+	//SetScale(50.0f);
 
 	mMyMove = new ChaseMove(this, game->GetPlayer());
 	// 常に進み続ける
@@ -69,10 +69,17 @@ EnemyActor::EnemyActor(Game* game)
 
 	// Damage(攻撃力),Hp共にデフォルトの,1
 	mDamageComp = new DamageComponent(this);
-	mHpComp = new HpComponent(this, 2.0f);
+	mHpComp = new HpComponent(this, 1.0f);
 
 	// レーダーへの表示に使う
 	new TargetComponent(this);
+
+	game->AddEnemy(this);
+}
+
+EnemyActor::~EnemyActor()
+{
+	GetGame()->RemoveEnemy(this);
 }
 
 void EnemyActor::UpdateActor(float deltaTime)
@@ -81,7 +88,7 @@ void EnemyActor::UpdateActor(float deltaTime)
 
 	mInvincibilityTimer += deltaTime;	// 無敵時間用のタイマーはここで加算し続ける
 
-	if (mMyState == MyState::EDying)
+	if (mUniState == UniState::EDying)
 	{
 		float scale = GetScale() - 1.0f;
 		SetScale(scale);
@@ -94,9 +101,9 @@ void EnemyActor::UpdateActor(float deltaTime)
 		}
 	}
 	// 倒された瞬間の処理
-	else if (mHpComp->IsKilled() && mMyState == MyState::EAlive)
+	else if (mHpComp->IsKilled() && mUniState == UniState::EAlive)
 	{
-		mMyState = MyState::EDying;
+		mUniState = UniState::EDying;
 		mMyMove->SetForwardSpeed(0.0f);
 	}
 

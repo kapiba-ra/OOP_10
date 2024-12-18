@@ -22,3 +22,8 @@ void WeaponActor::HitTarget(Actor* target)
 {
 	mDamageComp->Damage(target);
 }
+
+void WeaponActor::SetDamageAmt(float damage)
+{
+	mDamageComp->SetAttackDamage(damage);
+}

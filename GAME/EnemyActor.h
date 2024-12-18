@@ -6,15 +6,17 @@ class EnemyActor :
 {
 public:
     EnemyActor(class Game* game);
+    virtual ~EnemyActor();
 
     void UpdateActor(float deltaTime) override;
     void Reset() override;
 
-    enum class MyState
+    enum class UniState // unique state(Actor基底と区別)
     {
         EAlive,
         EDying,
     };
+    UniState GetUniState() const { return mUniState; }
 
     void FixCollisions();
 
@@ -22,7 +24,7 @@ public:
     void SetSpeed(float speed);
 
 private:
-    MyState mMyState;
+    UniState mUniState;
     float mInvincibleDuration;  // 無敵時間
     float mInvincibilityTimer;  // 無敵時間用のタイマー
 

@@ -27,6 +27,7 @@
 		"MaxHp" : "Increase maximum hp",
 		"Recover" : "Recover your hp",
 		"Sword" : "Sword weapon (get or level up)",
-		"Gun" : "Gun weapon (get or level up)"
+		"Gun" : "Gun weapon (get or level up)",
+		"Corgi" : "Corgi (get or level up)"
 	}
 }
