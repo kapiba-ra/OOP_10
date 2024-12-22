@@ -11,7 +11,7 @@ public:
     void UpdateActor(float deltaTime) override;
     void Reset() override;
 
-    enum class UniState // unique state(ActorŠî’ê‚Æ‹æ•Ê)
+    enum class UniState // UniqueState‚Ì—ª(ActorŠî’ê‚Æ‹æ•Ê‚µ‚½)
     {
         EAlive,
         EDying,

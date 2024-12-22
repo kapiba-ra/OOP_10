@@ -355,13 +355,6 @@ void Game::UpdateGame()
 	
 	if (mGameState == EGameplay)
 	{
-		//mLastEnemyGen += deltaTime;
-		//if (mLastEnemyGen >= 2.0f)
-		//{
-		//	mLastEnemyGen -= 2.0f;
-		//	new EnemyActor(this);
-		//}
-		// ”à
 		mPhaseSystem->Update(deltaTime);
 
 		mUpdatingActors = true;

@@ -33,17 +33,13 @@ EnemyActor::EnemyActor(Game* game)
 	mMeshComp->SetMesh(mesh);
 	mMeshComp->SetSkeleton(game->GetSkeleton("Assets/GP_Human.gpskel"));
 	mMeshComp->PlayAnimation(game->GetAnimation("Assets/GP_HumanWalk.gpanim"));
-	// コーギーテスト用
-	//Mesh* mesh = game->GetRenderer()->GetMesh("Assets/Corgi_backup.gpmesh");
-	//mMeshComp->SetMesh(mesh);
-	//mMeshComp->SetSkeleton(game->GetSkeleton("Assets/Corgi_backup.gpskel"));
-	//mMeshComp->PlayAnimation(game->GetAnimation("Assets/Corgi_walk.gpanim"));
 
+	// 出現位置はランダムなノードから
 	WeightedGraph* g = game->GetGraph();
 	size_t size = g->mNodes.size();
 	std::random_device rd;    // シードを生成
 	std::mt19937 gen(rd());   // メルセンヌ・ツイスタ乱数生成器
-	std::uniform_int_distribution<> dist(0, size - 1);  // 0から99の範囲で乱数を生成
+	std::uniform_int_distribution<> dist(0, size - 1);  // グラフノード数の範囲で乱数を生成
 	int randomIndex = dist(gen);
 	WeightedGraphNode* node = g->mNodes[randomIndex];
 	if (node->type != NodeType::ENoAccess)
@@ -52,10 +48,7 @@ EnemyActor::EnemyActor(Game* game)
 	}
 	
 	// メッシュによる
-	// 人型
 	SetScale(100.0f);
-	// コーギー
-	//SetScale(50.0f);
 
 	mMyMove = new ChaseMove(this, game->GetPlayer());
 	// 常に進み続ける
@@ -105,6 +98,7 @@ void EnemyActor::UpdateActor(float deltaTime)
 	{
 		mUniState = UniState::EDying;
 		mMyMove->SetForwardSpeed(0.0f);
+		mMeshComp->PlayAnimation(GetGame()->GetAnimation("Assets/GP_HumanDying.gpanim"));
 	}
 
 	FixCollisions();
@@ -131,8 +125,10 @@ void EnemyActor::FixCollisions()
 
 	auto player = GetGame()->GetPlayer();
 	const AABB& playerBox = player->GetBox()->GetWorldBox();
-	// playerがactiveだったらという条件を追加、もっと良い感じにはできそう
-	if (Intersect(enemyBox, playerBox) && player->GetState() == EActive)
+	// Enemyがやられているときは当たり判定を発生させない(遊んでもらってアドバイス)
+	if (Intersect(enemyBox, playerBox) &&
+		//player->GetState() == EActive &&
+		mUniState != UniState::EDying)
 	{
 		// 敵の位置をプレイヤーから少し離す
 		
@@ -178,6 +174,7 @@ void EnemyActor::FixCollisions()
 				}
 			}
 			SetPosition(pos);
+			// わずかに位置をずらすので一応変えておく
 			mBoxComp->OnUpdateWorldTransform();
 			// もし足場との衝突で,自分の足元が足場よりも少し下にある場合にジャンプ
 			if ((pa->GetCategory() == PlaneActor::Category::EScaffold) &&

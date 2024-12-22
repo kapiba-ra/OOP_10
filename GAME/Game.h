@@ -120,7 +120,8 @@ private:
 
 	// ステージ作成
 	void CreateStage();
-		void CreateNodes2();	// テスト実装,z軸方向にもノードを追加する
-		void CreateScaffold(size_t index);
+	// 以下はCreateStage内のヘルパー
+	void CreateNodes2();				// z軸方向にもノードを追加する
+	void CreateScaffold(size_t index);	// ステージ上に足場を作る(引数はステージノードのindex)
 };
 
