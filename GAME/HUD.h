@@ -27,8 +27,9 @@ protected:
     void UpdateTimer(float deltaTime);
 
     /* HP */
-    class Texture* mHPbar;      // —Î‚Ì•”•ª
-    class Texture* mHPbarBG;    // ”wŒi
+    class Texture* mHPbarGreen; // —Î‚ÌHPbar
+    class Texture* mHPbarRed;   // Ô‚ÌHPbar
+    class Texture* mHPbarBG;    // HPbar‚Ì”wŒi
     float mHPdiscardRange;      // Hpbar‚Ì•`‰æ”ÍˆÍ‚ğŒˆ’è(0-1)
     /* ƒŒ[ƒ_[ */
     class Texture* mRader;          // ƒŒ[ƒ_[Display‚ÌŠÛ‚¢‰~

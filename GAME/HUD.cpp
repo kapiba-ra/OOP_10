@@ -33,7 +33,8 @@ HUD::HUD(Game* game)
 	mRader = r->GetTexture("Assets/Radar.png");
 	mBlipTex = r->GetTexture("Assets/Blip.png");
 	mHPbarBG = r->GetTexture("Assets/HPBarBG.png");
-	mHPbar = r->GetTexture("Assets/HPBar.png");
+	mHPbarGreen = r->GetTexture("Assets/HPBarGreen.png");
+	mHPbarRed = r->GetTexture("Assets/HPBarRed.png");
 	mIconFrame = r->GetTexture("Assets/Icon/Frame.png");
 	mLevel = mFont->RenderText("LevelText");
 	mPhase = mFont->RenderText("PhaseText");
@@ -68,9 +69,13 @@ void HUD::Draw(Shader* shader)
 	// HPƒo[‚Ì•`‰æ
 	DrawTexture(shader, mHPbarBG, mHpbarPos);
 	mHPdiscardRange = player->GetHpComp()->GetHpPercentage();
-	if (mHPdiscardRange >= 0.0f)
+	if (mHPdiscardRange >= 0.2f)
 	{
-		DrawTexture(shader, mHPbar, mHpbarPos, 1.0f, mHPdiscardRange);
+		DrawTexture(shader, mHPbarGreen, mHpbarPos, 1.0f, mHPdiscardRange);
+	}
+	else if (mHPdiscardRange >= 0.0f)
+	{
+		DrawTexture(shader, mHPbarRed, mHpbarPos, 1.0f, mHPdiscardRange);
 	}
 	// HP(number)‚Ì•`‰æ
 	offset = Vector2(mNumbers[0]->GetWidthF(), 0.0f);
