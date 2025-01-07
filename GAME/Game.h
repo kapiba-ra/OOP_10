@@ -68,8 +68,6 @@ public:
 	class Animation* GetAnimation(const std::string& fileName);
 
 	// MeinMenu‚É–ß‚é‚Æ‚«‚Ìˆ—
-	// GamePlay->Restart‚Æˆê‰ñMainMenu‚É–ß‚é->GamePlay‚Å
-	// ˆ—‚ª•Ï‚í‚é‚½‚ß—pˆÓB‚ ‚ñ‚Ü‚è‚æ‚­‚È‚³‚»‚¤
 	void OnReturnToMainMenu();
 
 private:

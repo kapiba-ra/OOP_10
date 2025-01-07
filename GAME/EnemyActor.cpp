@@ -90,7 +90,9 @@ void EnemyActor::UpdateActor(float deltaTime)
 			SetState(EDead);
 			// アイテムを落とす
 			Actor* a = new ExpActor(GetGame());
-			a->SetPosition(GetPosition());
+			// アイテムの位置は足元のちょっと上
+			Vector3 offset(0.0f, 0.0f, 50.0f);
+			a->SetPosition(GetPosition() + offset);
 		}
 	}
 	// 倒された瞬間の処理
@@ -112,7 +114,6 @@ void EnemyActor::Reset()
 
 void EnemyActor::FixCollisions()
 {
-	// 丸ごとPlayerActorにおいてもいいかも
 	ComputeWorldTransform();
 
 	const AABB& enemyBox = mBoxComp->GetWorldBox();

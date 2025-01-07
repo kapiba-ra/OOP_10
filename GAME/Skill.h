@@ -42,7 +42,7 @@
 
 /// <summary>
 /// Skillクラス
-/// WeaponとPerkの二つに派生する,LevelUp時の処理内容が結構異なるのでクラス分けした
+/// WeaponとPerkの二つに派生する,LevelUp時の処理内容に違いが出るのでクラス分けした
 /// </summary>
 class Skill
 {

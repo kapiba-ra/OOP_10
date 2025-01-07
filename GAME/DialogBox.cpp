@@ -3,7 +3,7 @@
 #include "Renderer.h"
 #include <SDL/SDL.h>
 
-DialogBox::DialogBox(Game* game, const std::string& text, std::function<void()> onOK)
+DialogBox::DialogBox(Game* game, const std::string& text, std::function<void()> onOK, bool cancelButton)
 	: UIScreen(game)
 {
 	// ダイアログボックス用に位置を調節する
@@ -17,9 +17,12 @@ DialogBox::DialogBox(Game* game, const std::string& text, std::function<void()> 
 	AddButton("OKButton", [onOK]() {
 		onOK();
 	});
-	AddButton("CancelButton", [this]() {
-		Close();
-	});
+	if (cancelButton)
+	{
+		AddButton("CancelButton", [this]() {
+			Close();
+		});
+	}
 }
 
 DialogBox::~DialogBox()

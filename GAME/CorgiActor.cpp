@@ -11,6 +11,7 @@
 #include "ChaseMove.h"
 #include "DamageComponent.h"
 #include "BoxComponent.h"
+#include "JumpComponent.h"
 
 #include "EnemyActor.h"
 
@@ -28,6 +29,10 @@ CorgiActor::CorgiActor(Game* game, EnemyActor* target)
 
 	// move
 	mMyMove = new ChaseMove(this, mTarget);
+
+	// jump
+	mJumpComp = new JumpComponent(this);
+
 	// collision
 	mBoxComp = new BoxComponent(this);
 	mBoxComp->SetObjectBox(mesh->GetBox());
@@ -70,6 +75,7 @@ void CorgiActor::FixCollision()
 
 	const AABB& corgiBox = mBoxComp->GetWorldBox();
 
+	// “G‚Æ‚ÌÕ“Ë
 	GetGame()->GetPhysWorld()->TestSweepAndPrune([this, corgiBox](Actor* corgi, Actor* enemy)
 	{
 		if (corgi == this) // CorgiActor ‚ªŒğ·‚µ‚Ä‚¢‚éê‡

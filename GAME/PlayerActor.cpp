@@ -296,9 +296,9 @@ void PlayerActor::AddWeapon(std::string name, WeaponComponent* weapon)
 	mWeapons[name] = weapon;
 }
 
-void PlayerActor::LevelUpWeapon(std::string name, int lv)
+void PlayerActor::LevelUpWeapon(std::string name, int preLv)
 {
-	mWeapons[name]->LevelUp(lv);
+	mWeapons[name]->LevelUp(preLv);
 }
 
 float PlayerActor::GetForwardSpeed()

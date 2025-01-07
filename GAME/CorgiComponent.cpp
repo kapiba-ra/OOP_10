@@ -29,8 +29,32 @@ CorgiComponent::CorgiComponent(Actor* owner)
 
 }
 
-void CorgiComponent::LevelUp(int curLv)
+void CorgiComponent::LevelUp(int preLv)
 {
+	switch (preLv)
+	{
+	case 1:
+	{
+		break;
+	}
+	case 2:
+	{
+		mScale *= 1.2f;
+		break;
+	}
+	case 3:
+	{
+		mSpeed *= 1.2f;
+		break;
+	}
+	case 4:
+	{
+		mScale *= 1.2f;
+		mSpeed *= 1.2f;
+		break;
+	}
+	// MaxLv5Ç»ÇÃÇ≈èIóπ
+	}
 }
 
 void CorgiComponent::Reset()

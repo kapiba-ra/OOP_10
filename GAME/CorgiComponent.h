@@ -7,7 +7,7 @@ class CorgiComponent :
 public:
     CorgiComponent(class Actor* owner);
 
-    void LevelUp(int curLv) override;
+    void LevelUp(int preLv) override;
     void Reset() override;
 
 private:

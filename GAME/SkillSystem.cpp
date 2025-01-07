@@ -131,9 +131,9 @@ SkillSystem::~SkillSystem()
 
 void SkillSystem::Initialize()
 {
-	// 新たなるAddSkill関連
-	// AddWeaponSkillで設定する関数はスキル獲得時の処理
-	// AddPerkSkillで設定する関数はレベルアップ時の処理
+	// 関数は二つ,AddWeaponSkill()とAddPerkSkill()
+	// AddWeaponSkill()で設定するのはスキル獲得時の処理
+	// AddPerkSkill()で設定するのはレベルアップ時の処理
 	
 	// WeaponはPlayerの方に一旦おいてみる
 	// Weapon

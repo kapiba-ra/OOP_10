@@ -13,7 +13,8 @@ public:
     ~WeaponComponent();
 
     // 強化内容を派生クラスで設定する,Lv1以降の強化内容を設定する
-    // preLvは,Lv1->Lv2なら,1の方,つまりレベルアップ前のレベル
+    // preLvはレベルアップ前のレベル,Lv1->Lv2なら,1の方
+    // 最大レベルが5なら,1-4までのcaseを作る
     virtual void LevelUp(int preLv);
     virtual void Reset();
 

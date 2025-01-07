@@ -258,6 +258,7 @@ void Game::OnEnter(GameState state)
 		new GameClearMenu(this);
 		break;
 	case EGameover:
+		mMusicEvent.SetPaused(true);
 		new GameOverMenu(this);
 		break;
 	case EGameplay:
@@ -329,6 +330,7 @@ void Game::Reset()
 	//}
 	mHUD->Reset();
 	mPhaseSystem->Reset();
+	mMusicEvent.Restart();
 
 	// 初期配置
 	Actor* actor;
@@ -450,6 +452,7 @@ void Game::OnReturnToMainMenu()
 	// 多分必要
 	mSkillSystem->Reset();
 	mPhaseSystem->Reset();
+	mMusicEvent.SetPaused(true);
 
 	while (!mActors.empty())
 	{

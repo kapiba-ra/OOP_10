@@ -34,7 +34,7 @@ MainMenu::MainMenu(Game* game)
 		new DialogBox(mGame, "ControlsText",
 			[this]() {
 				mGame->ChangeState(Game::EMainMenu);
-		});
+		}, false);
 	});
 }
 

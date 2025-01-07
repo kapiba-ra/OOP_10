@@ -24,7 +24,8 @@ public:
 	// 後で消す
 	void AddWeapon(std::string name, class WeaponComponent* weapon);
 	// nameはいずれ参照になる(enumでskillのタイプを分ける)
-	void LevelUpWeapon(std::string name, int lv);
+	// レベルアップ前のレベルが渡されることに注意
+	void LevelUpWeapon(std::string name, int preLv);
 	// 基底クラスがメモリは解放してくれるのでとりあえず要らない
 	//void RemoveWeapon(WeaponComponent* weapon);
 	float GetForwardSpeed();

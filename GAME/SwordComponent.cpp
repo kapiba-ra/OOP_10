@@ -54,10 +54,10 @@ void SwordComponent::Update(float deltaTime)
 	}
 }
 
-void SwordComponent::LevelUp(int curLv)
+void SwordComponent::LevelUp(int preLv)
 {
 	// LevelUp‚Ì“à—e
-	switch (curLv)
+	switch (preLv)
 	{
 	case 2:
 	{

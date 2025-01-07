@@ -22,4 +22,5 @@ private:
     class ChaseMove* mMyMove;       // “G‚ªŽg‚Á‚Ä‚éChaseMove‚ð—¬—p‚·‚é
     class BoxComponent* mBoxComp;
     class EnemyActor* mTarget;
+    class JumpComponent* mJumpComp;
 };

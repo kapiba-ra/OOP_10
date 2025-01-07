@@ -126,7 +126,7 @@ void LevelUpMenu::AddButtonRandom()
 			Close();
 		}, buttonOffset);
 	}
-	// ここ出来てないっぽい
+	// 全部の武器とパークのレベルがmaxになったら,回復だけできるようになる
 	if (skills.size() == 0)
 	{
 		mButtonBGs.emplace_back(mGame->GetRenderer()->GetTexture("Assets/RecoverBG.png"));
