@@ -115,9 +115,16 @@ void ChaseMove::SetTarget(Actor* target)
 
 void ChaseMove::CheckObstacle(float deltaTime)
 {
+	/* 問題：PlaneActorが線分の間にあるかの判定の際に,床のPlaneActorを判定
+	* することがある。解決策は2つ,一つは線分の始点を床よりちょっと上にすること,
+	* もう一つは,PlaneActorが床Actorなら..という条件分岐をすること
+	* 前者の方がわだかまりが少なそうなので,前者を採用している
+	*/
+
 	ChaseState stateBeforeCheck = mChaseState;
 	// playerまでの間の線分を作る
-	Vector3 pos = mOwner->GetPosition();
+	// posが足元だと床と接触してる判定になることがあり厄介なので,z方向に0.1プラスしている
+	Vector3 pos = mOwner->GetPosition() + Vector3(0.0f, 0.0f, 0.1f);
 	Vector3 targetPos(Vector3::Zero);
 	if(mTarget) targetPos = mTarget->GetPosition();
 	// targetPosは大体足元で、胴体付近の方が都合がいいのでz方向に+100.0fしている
@@ -132,9 +139,9 @@ void ChaseMove::CheckObstacle(float deltaTime)
 		const AABB& planeBox = pa->GetBox()->GetWorldBox();
 
 		// もしもplayerとの間に壁か足場があったら,Searching状態へ
-		if ((Intersect(line, planeBox, t, norm)) &&
-			(pa->GetCategory() != (PlaneActor::Category::EFloor)))
-		//if(phys->SegmentCast(line, info) && (info.mActor->GetType() == Actor::Eplane))
+		// Floorかどうかの判定は行っていない。
+		if ((Intersect(line, planeBox, t, norm))) //&&
+			//(pa->GetCategory() != (PlaneActor::Category::EFloor)))
 		{
 			mChaseState = ESearching;
 			if(stateBeforeCheck == ETargeting)

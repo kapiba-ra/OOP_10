@@ -114,7 +114,7 @@ void EnemyActor::UpdateActor(float deltaTime)
 	{
 		mUniState = UniState::EDying;
 		mMyMove->SetForwardSpeed(0.0f);
-		//mMeshComp->PlayAnimation(GetGame()->GetAnimation("Assets/GP_HumanDying.gpanim"));
+		mMeshComp->PlayAnimation(GetGame()->GetAnimation("Assets/GP_HumanDying.gpanim"));
 	}
 
 	FixCollisions();
