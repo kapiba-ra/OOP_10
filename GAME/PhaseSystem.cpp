@@ -28,7 +28,7 @@ void PhaseSystem::Update(float deltaTime)
 		{
 			mTimer -= mEnemyGenInterval;
 
-			new EnemyActor(mGame);
+			//new EnemyActor(mGame);
 		}
 	}
 	else
@@ -59,14 +59,15 @@ void PhaseSystem::StartPhase()
 	{
 		hud->ResetTimer();
 		
+		//actor = new EnemyActor(mGame);
 		actor = new EnemyActor(mGame);
-		actor = new EnemyActor(mGame);
-		actor->SetPosition(Vector3(-400.0f, 400.0f, 0.0f));
-		actor = new EnemyActor(mGame);
-		actor->SetPosition(Vector3(-300.0f, -300.0f, 0.0f));
-		actor = new EnemyActor(mGame);
-		actor->SetPosition(Vector3(300.0f, -300.0f, 0.0f));
-		actor = new HeartActor(mGame);
+		actor->SetPosition(Vector3(-400.0f, 400.0f, -100.0f));
+		//actor = new EnemyActor(mGame);
+		//actor->SetPosition(Vector3(-300.0f, -300.0f, 0.0f));
+		//actor = new EnemyActor(mGame);
+		//actor->SetPosition(Vector3(300.0f, -300.0f, 0.0f));
+		//actor->SetScale(200.0f);
+		//actor = new HeartActor(mGame);
 		break;
 	}
 	case Phases::EPhase_2:
@@ -84,7 +85,7 @@ void PhaseSystem::StartPhase()
 		hud->ResetTimer();
 		EnemyActor* eActor;
 		eActor = new EnemyActor(mGame);
-		eActor->SetScale(80.0f);
+		eActor->SetScale(200.0f);
 		eActor->SetSpeed(200.0f);
 		break;
 	}

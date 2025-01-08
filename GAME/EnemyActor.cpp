@@ -33,6 +33,11 @@ EnemyActor::EnemyActor(Game* game)
 	mMeshComp->SetMesh(mesh);
 	mMeshComp->SetSkeleton(game->GetSkeleton("Assets/GP_Human.gpskel"));
 	mMeshComp->PlayAnimation(game->GetAnimation("Assets/GP_HumanWalk.gpanim"));
+	// スライム
+	//Mesh* mesh = game->GetRenderer()->GetMesh("Assets/Slime.gpmesh");
+	//mMeshComp->SetMesh(mesh);
+	//mMeshComp->SetSkeleton(game->GetSkeleton("Assets/Slime.gpskel"));
+	//mMeshComp->PlayAnimation(game->GetAnimation("Assets/SlimeIdle.gpanim"));
 
 	// 出現位置はランダムなノードから
 	WeightedGraph* g = game->GetGraph();
@@ -40,15 +45,24 @@ EnemyActor::EnemyActor(Game* game)
 	std::random_device rd;    // シードを生成
 	std::mt19937 gen(rd());   // メルセンヌ・ツイスタ乱数生成器
 	std::uniform_int_distribution<> dist(0, size - 1);  // グラフノード数の範囲で乱数を生成
+
 	int randomIndex = dist(gen);
 	WeightedGraphNode* node = g->mNodes[randomIndex];
-	if (node->type != NodeType::ENoAccess)
+	// NoAccess以外が見つかるまでループ
+	while (node->type == NodeType::ENoAccess)
 	{
-		SetPosition(node->NodePos);
+		randomIndex = dist(gen);
+		node = g->mNodes[randomIndex];
 	}
+	SetScale(100.0f);
+	SetPosition(node->NodePos);
+
+	//if (node->type != NodeType::ENoAccess)
+	//{
+	//	SetPosition(node->NodePos);
+	//}
 	
 	// メッシュによる
-	SetScale(100.0f);
 
 	mMyMove = new ChaseMove(this, game->GetPlayer());
 	// 常に進み続ける
@@ -100,7 +114,7 @@ void EnemyActor::UpdateActor(float deltaTime)
 	{
 		mUniState = UniState::EDying;
 		mMyMove->SetForwardSpeed(0.0f);
-		mMeshComp->PlayAnimation(GetGame()->GetAnimation("Assets/GP_HumanDying.gpanim"));
+		//mMeshComp->PlayAnimation(GetGame()->GetAnimation("Assets/GP_HumanDying.gpanim"));
 	}
 
 	FixCollisions();
@@ -195,8 +209,9 @@ void EnemyActor::FixCollisions()
 			}
 		}
 	}
-
-	if (inAir && !mJumpComp->IsJumping())
+	// デバッグしやすいように
+	bool isJumping = mJumpComp->IsJumping();
+	if (inAir && !isJumping)
 	{
 		// 踏切速度0でジャンプさせる(自由落下)
 		mJumpComp->Liftoff(0.0f);

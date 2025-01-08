@@ -14,6 +14,7 @@
 #include "JumpComponent.h"
 
 #include "EnemyActor.h"
+#include "PlaneActor.h"
 
 
 CorgiActor::CorgiActor(Game* game, EnemyActor* target)
@@ -74,6 +75,13 @@ void CorgiActor::FixCollision()
 	ComputeWorldTransform();
 
 	const AABB& corgiBox = mBoxComp->GetWorldBox();
+	Vector3 pos = GetPosition();
+	Vector3 offset(0, 0, 50.0f);
+	LineSegment line((pos + offset), pos + Vector3::UnitZ * -100.0f);
+	bool inAir(true); // 空中にいるか
+	float t = 0.0f;				 // 引数設定用に便宜上必要,使わない
+	Vector3 norm(Vector3::Zero); // 同上
+
 
 	// 敵との衝突
 	GetGame()->GetPhysWorld()->TestSweepAndPrune([this, corgiBox](Actor* corgi, Actor* enemy)
@@ -88,6 +96,71 @@ void CorgiActor::FixCollision()
 			}
 		}
 	});
+
+	// 壁・床との衝突
+	auto& planes = GetGame()->GetPlanes();
+	for (auto pa : planes)
+	{
+		const AABB& planeBox = pa->GetBox()->GetWorldBox();
+		if (Intersect(corgiBox, planeBox))
+		{
+			float dx1 = planeBox.mMax.x - corgiBox.mMin.x;
+			float dx2 = planeBox.mMin.x - corgiBox.mMax.x;
+			float dy1 = planeBox.mMax.y - corgiBox.mMin.y;
+			float dy2 = planeBox.mMin.y - corgiBox.mMax.y;
+			float dz1 = planeBox.mMax.z - corgiBox.mMin.z;
+			float dz2 = planeBox.mMin.z - corgiBox.mMax.z;
+
+			float dx = Math::Abs(dx1) < Math::Abs(dx2) ? dx1 : dx2;
+			float dy = Math::Abs(dy1) < Math::Abs(dy2) ? dy1 : dy2;
+			float dz = Math::Abs(dz1) < Math::Abs(dz2) ? dz1 : dz2;
+
+			if (Math::Abs(dx) <= Math::Abs(dy) && Math::Abs(dx) <= Math::Abs(dz))
+			{
+				pos.x += dx;
+			}
+			else if (Math::Abs(dy) <= Math::Abs(dx) && Math::Abs(dy) <= Math::Abs(dz))
+			{
+				pos.y += dy;
+			}
+			else
+			{
+				pos.z += dz;
+				if (dz == dz1)
+				{
+					if (mJumpComp->IsJumping())
+					{
+						mJumpComp->Land();
+					}
+				}
+			}
+			SetPosition(pos);
+			// わずかに位置をずらすので一応変えておく
+			mBoxComp->OnUpdateWorldTransform();
+			// もし足場との衝突で,自分の足元が足場よりも少し下にある場合にジャンプ
+			if ((pa->GetCategory() == PlaneActor::Category::EScaffold) &&
+				(dz1 > 5.0f))
+			{
+				if (!mJumpComp->IsJumping())
+				{
+					mJumpComp->Liftoff(500.0f);
+				}
+			}
+			if (!mJumpComp->IsJumping())
+			{
+				if (Intersect(line, planeBox, t, norm))
+				{
+					inAir = false;
+				}
+			}
+		}
+	}
+
+	if (inAir && !mJumpComp->IsJumping())
+	{
+		// 踏切速度0でジャンプさせる(自由落下)
+		mJumpComp->Liftoff(0.0f);
+	}
 }
 
 void CorgiActor::SetTarget(EnemyActor* target)

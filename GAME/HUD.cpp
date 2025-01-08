@@ -16,12 +16,12 @@
 
 HUD::HUD(Game* game)
 	: UIScreen(game)
-	, mRaderRange(2000.0f)
-	, mRaderRadius(92.0f)
+	, mRadarRange(2000.0f)
+	, mRadarRadius(92.0f)
 	, mHPdiscardRange(1.0f)
 	, mTimeFloat(0.0f)
 	, mCurPhaseNum(1)
-	, mRaderPos(-390.0f, 275.0f)
+	, mRadarPos(-390.0f, 275.0f)
 	, mHpbarPos(-350.0f, -350.0f)
 	, mHpNumPos(-460.0f, -315.0f)
 	, mTimePos(-20.0f, 340.0f)
@@ -30,7 +30,8 @@ HUD::HUD(Game* game)
 	, mSkillPos(-480.0f, 0.0f)
 {
 	Renderer* r = mGame->GetRenderer();
-	mRader = r->GetTexture("Assets/Radar.png");
+	mRadar = r->GetTexture("Assets/Radar.png");
+	mPlayerInRadar = r->GetTexture("Assets/RadarArrow.png");
 	mBlipTex = r->GetTexture("Assets/Blip.png");
 	mHPbarBG = r->GetTexture("Assets/HPBarBG.png");
 	mHPbarGreen = r->GetTexture("Assets/HPBarGreen.png");
@@ -53,18 +54,19 @@ void HUD::Update(float deltaTime)
 
 void HUD::Draw(Shader* shader)
 {
-	// prepare! キャッシュしておく,と表現する
+	// 準備。キャッシュしておくと表現する
 	PlayerActor* player = mGame->GetPlayer();
 	PlayerActor::Parameters pParams = player->GetParams();
 	Vector2 offset(Vector2::Zero);	// 使いまわす
 
 	// レーダーの描画
-	DrawTexture(shader, mRader, mRaderPos);
+	DrawTexture(shader, mRadar, mRadarPos);
 	// レーダー上の輝点の描画
 	for (const Vector2& blip : mBlips)
 	{
-		DrawTexture(shader, mBlipTex, mRaderPos + blip);
+		DrawTexture(shader, mBlipTex, mRadarPos + blip);
 	}
+	DrawTexture(shader, mPlayerInRadar, mRadarPos);
 
 	// HPバーの描画
 	DrawTexture(shader, mHPbarBG, mHpbarPos);
@@ -182,11 +184,11 @@ void HUD::UpdateRadar(float deltaTime)
 		Vector2 playerToTarget = actorPos2D - playerPos2D;
 
 		// 範囲内にあるか
-		if (playerToTarget.LengthSq() <= (mRaderRange * mRaderRange))
+		if (playerToTarget.LengthSq() <= (mRadarRange * mRadarRange))
 		{
 			// playerToTargetを画面上のレーダーの中心からのオフセットへ変換
 			Vector2 blipPos = playerToTarget;
-			blipPos *= mRaderRadius / mRaderRange;
+			blipPos *= mRadarRadius / mRadarRange;
 
 			// blipPosを回転する
 			blipPos = Vector2::Transform(blipPos, rotMat);

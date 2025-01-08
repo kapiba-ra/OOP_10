@@ -132,8 +132,8 @@ void ChaseMove::CheckObstacle(float deltaTime)
 		const AABB& planeBox = pa->GetBox()->GetWorldBox();
 
 		// ‚à‚µ‚àplayer‚Æ‚ÌŠÔ‚É•Ç‚©‘«ê‚ª‚ ‚Á‚½‚ç,Searchingó‘Ô‚Ö
-		if ((Intersect(line, planeBox, t, norm))) //&&
-		//	(pa->GetCategory() != (PlaneActor::Category::EFloor)))
+		if ((Intersect(line, planeBox, t, norm)) &&
+			(pa->GetCategory() != (PlaneActor::Category::EFloor)))
 		//if(phys->SegmentCast(line, info) && (info.mActor->GetType() == Actor::Eplane))
 		{
 			mChaseState = ESearching;

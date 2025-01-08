@@ -150,7 +150,6 @@ void SkillSystem::Initialize()
 		player->AddWeapon("Corgi", sc);
 	});
 
-
 	// ˆÈ‰ºPerk
 	AddPerkSkill("MaxHp", [](PlayerActor* player) {
 		float add = 20.0f;

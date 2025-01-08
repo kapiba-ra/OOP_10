@@ -116,11 +116,11 @@ void Game::LoadData()
 	CreateStage();
 
 	// Setup lights
-	mRenderer->SetAmbientLight(Vector3(0.7f, 0.7f, 0.7f));
+	mRenderer->SetAmbientLight(Vector3(0.4f, 0.4f, 0.4f));
 	DirectionalLight& dir = mRenderer->GetDirectionalLight();
 	dir.mDirection = Vector3(0.0f, -0.7f, -0.7f);
 	dir.mDiffuseColor = Vector3(0.8f, 1.0f, 1.0f);
-	dir.mSpecColor = Vector3(0.8f, 0.8f, 0.8f);
+	dir.mSpecColor = Vector3(0.2f, 0.2f, 0.2f);
 
 	// UI elements
 	mHUD = new HUD(this);
