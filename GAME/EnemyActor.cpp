@@ -29,15 +29,15 @@ EnemyActor::EnemyActor(Game* game)
 {
 	mMeshComp = new SkeletalMeshComponent(this);
 	// 人型
-	Mesh* mesh = game->GetRenderer()->GetMesh("Assets/GP_Human.gpmesh");
-	mMeshComp->SetMesh(mesh);
-	mMeshComp->SetSkeleton(game->GetSkeleton("Assets/GP_Human.gpskel"));
-	mMeshComp->PlayAnimation(game->GetAnimation("Assets/GP_HumanWalk.gpanim"));
-	// スライム
-	//Mesh* mesh = game->GetRenderer()->GetMesh("Assets/Slime.gpmesh");
+	//Mesh* mesh = game->GetRenderer()->GetMesh("Assets/GP_Human.gpmesh");
 	//mMeshComp->SetMesh(mesh);
-	//mMeshComp->SetSkeleton(game->GetSkeleton("Assets/Slime.gpskel"));
-	//mMeshComp->PlayAnimation(game->GetAnimation("Assets/SlimeIdle.gpanim"));
+	//mMeshComp->SetSkeleton(game->GetSkeleton("Assets/GP_Human.gpskel"));
+	//mMeshComp->PlayAnimation(game->GetAnimation("Assets/GP_HumanWalk.gpanim"));
+	// スライム
+	Mesh* mesh = game->GetRenderer()->GetMesh("Assets/Slime.gpmesh");
+	mMeshComp->SetMesh(mesh);
+	mMeshComp->SetSkeleton(game->GetSkeleton("Assets/Slime.gpskel"));
+	mMeshComp->PlayAnimation(game->GetAnimation("Assets/SlimeIdle.gpanim"));
 
 	// 出現位置はランダムなノードから
 	WeightedGraph* g = game->GetGraph();

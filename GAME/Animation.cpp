@@ -102,6 +102,20 @@ bool Animation::Load(const std::string& fileName)
 
 		for (rapidjson::SizeType j = 0; j < transforms.Size(); j++)
 		{
+			// スケーリング(scaleがないフォーマットにも対応)
+			if (transforms[j].HasMember("scale") && transforms[j]["scale"].IsArray())
+			{
+				const rapidjson::Value& scale = transforms[j]["scale"];
+				temp.mScale.x = scale[0].GetFloat();
+				temp.mScale.y = scale[1].GetFloat();
+				temp.mScale.z = scale[2].GetFloat();
+			}
+			else
+			{
+				temp.mScale.x = 1.0f;
+				temp.mScale.y = 1.0f;
+				temp.mScale.z = 1.0f;
+			}
 			const rapidjson::Value& rot = transforms[j]["rot"];
 			const rapidjson::Value& trans = transforms[j]["trans"];
 
@@ -110,6 +124,7 @@ bool Animation::Load(const std::string& fileName)
 				SDL_Log("Skeleton %s: Bone %d is invalid.", fileName.c_str(), i);
 				return false;
 			}
+
 			// 回転
 			temp.mRotation.x = rot[0].GetFloat();
 			temp.mRotation.y = rot[1].GetFloat();

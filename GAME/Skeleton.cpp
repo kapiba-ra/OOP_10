@@ -91,6 +91,20 @@ bool Skeleton::Load(const std::string& fileName)
 			return false;
 		}
 		// これらの情報はローカル座標系(親ボーンからの相対)
+					// スケーリング(scaleがないフォーマットにも対応)
+		if (bindpose.HasMember("scale") && bindpose["scale"].IsArray())
+		{
+			const rapidjson::Value& scale = bindpose["scale"];
+			temp.mLocalBindPose.mScale.x = scale[0].GetFloat();
+			temp.mLocalBindPose.mScale.y = scale[1].GetFloat();
+			temp.mLocalBindPose.mScale.z = scale[2].GetFloat();
+		}
+		else
+		{
+			temp.mLocalBindPose.mScale.x = 1.0f;
+			temp.mLocalBindPose.mScale.y = 1.0f;
+			temp.mLocalBindPose.mScale.z = 1.0f;
+		}
 		const rapidjson::Value& rot = bindpose["rot"];
 		const rapidjson::Value& trans = bindpose["trans"];
 

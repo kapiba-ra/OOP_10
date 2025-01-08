@@ -2,16 +2,19 @@
 
 Matrix4 BoneTransform::ToMatrix() const
 {
+	Matrix4 scale = Matrix4::CreateScale(mScale);
 	Matrix4 rot = Matrix4::CreateFromQuaternion(mRotation);
 	Matrix4 trans = Matrix4::CreateTranslation(mTranslation);
-	// 回転->オブジェクト座標
-	return rot * trans;
+	// スケール->回転->オブジェクト座標
+	return scale * rot * trans;
 }
 
 BoneTransform BoneTransform::Interpolate(const BoneTransform& a, const BoneTransform& b, float f)
 {
 	// aは前のフレームのボーン変換,bは次のフレームのボーン変換,fは補完係数(0-1が期待される)
 	BoneTransform retVal;
+	// 線形補完を行う
+	retVal.mScale = Vector3::Lerp(a.mScale, b.mScale, f);
 	// 「球面線形補完」なるものを行う
 	retVal.mRotation = Quaternion::Slerp(a.mRotation, b.mRotation, f);
 	// 線形補完を行う
