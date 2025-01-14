@@ -1,7 +1,7 @@
 #pragma once
 
 // タワーディフェンスのフェーズのイメージ
-// 大仰な名前だが、６０秒経過毎にPhase何とか…って表示させたり、時間戻したりするだけ
+// ６０秒経過毎にPhase何とか…って表示させたり、時間戻したりするだけ
 // 将来的に複数ステージ作るならそれに統合してもいいかも
 
 class PhaseSystem
@@ -25,14 +25,21 @@ public:
 	void ToNextPhase();
 	void StartPhase();
 
+	float GetMaxPhaseTime() const { return mMaxPhaseTime; }
+	float GetPhaseTimer() const { return mPhaseTimer; }
+	int GetPhaseNum() const { return mPhaseNum; }
+	bool OnTransition() const { return mOnTransition; }
+
 private:
 
 	class Game* mGame;
 	Phases mCurPhase;
 
-	bool mOnTransition;
-	float mTransTime;
-	float mTimer;
-	float mEnemyGenInterval;
+	bool mOnTransition;		// Phase移行中
+	float mTransTime;		// Phase移行時間
+	float mEnemyGenTimer;	// 敵出現用のタイマー
+	float mEnemyGenInterval;// 敵の出現間隔
+	float mPhaseTimer;		// Phase用のタイマー
+	float mMaxPhaseTime;	// 1Phaseの時間
+	int mPhaseNum;			// 何フェーズ目かをintで
 };
-

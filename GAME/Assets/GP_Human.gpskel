@@ -3,7 +3,7 @@
   "bonecount": 11,
   "bones": [
     {
-      "name": "\u30dc\u30fc\u30f3",
+      "name": "root",
       "index": 0,
       "parent": -1,
       "bindpose": {
@@ -21,7 +21,7 @@
       }
     },
     {
-      "name": "\u30dc\u30fc\u30f3.001",
+      "name": "pelvis",
       "index": 1,
       "parent": 0,
       "bindpose": {
@@ -39,7 +39,7 @@
       }
     },
     {
-      "name": "\u30dc\u30fc\u30f3.002",
+      "name": "head",
       "index": 2,
       "parent": 1,
       "bindpose": {
@@ -57,7 +57,7 @@
       }
     },
     {
-      "name": "\u30dc\u30fc\u30f3.003",
+      "name": "neckR",
       "index": 3,
       "parent": 1,
       "bindpose": {
@@ -75,7 +75,7 @@
       }
     },
     {
-      "name": "\u30dc\u30fc\u30f3.005",
+      "name": "shoulderR",
       "index": 4,
       "parent": 3,
       "bindpose": {
@@ -93,7 +93,7 @@
       }
     },
     {
-      "name": "\u30dc\u30fc\u30f3.004",
+      "name": "neckL",
       "index": 5,
       "parent": 1,
       "bindpose": {
@@ -111,7 +111,7 @@
       }
     },
     {
-      "name": "\u30dc\u30fc\u30f3.006",
+      "name": "shoulderL",
       "index": 6,
       "parent": 5,
       "bindpose": {
@@ -129,7 +129,7 @@
       }
     },
     {
-      "name": "\u30dc\u30fc\u30f3.007",
+      "name": "pelvisL",
       "index": 7,
       "parent": 0,
       "bindpose": {
@@ -147,7 +147,7 @@
       }
     },
     {
-      "name": "\u30dc\u30fc\u30f3.009",
+      "name": "thighL",
       "index": 8,
       "parent": 7,
       "bindpose": {
@@ -165,7 +165,7 @@
       }
     },
     {
-      "name": "\u30dc\u30fc\u30f3.008",
+      "name": "pelvisR",
       "index": 9,
       "parent": 0,
       "bindpose": {
@@ -183,7 +183,7 @@
       }
     },
     {
-      "name": "\u30dc\u30fc\u30f3.010",
+      "name": "thighR",
       "index": 10,
       "parent": 9,
       "bindpose": {

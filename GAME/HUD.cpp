@@ -6,6 +6,7 @@
 #include "Font.h"
 #include "PhaseSystem.h"
 #include "SkillSystem.h"
+#include "UIAnimation.h"
 
 #include "Actor.h"
 #include "PlayerActor.h"
@@ -19,8 +20,6 @@ HUD::HUD(Game* game)
 	, mRadarRange(2000.0f)
 	, mRadarRadius(92.0f)
 	, mHPdiscardRange(1.0f)
-	, mTimeFloat(0.0f)
-	, mCurPhaseNum(1)
 	, mRadarPos(-390.0f, 275.0f)
 	, mHpbarPos(-350.0f, -350.0f)
 	, mHpNumPos(-460.0f, -315.0f)
@@ -39,10 +38,17 @@ HUD::HUD(Game* game)
 	mIconFrame = r->GetTexture("Assets/Icon/Frame.png");
 	mLevel = mFont->RenderText("LevelText");
 	mPhase = mFont->RenderText("PhaseText");
+	mExcellent = mFont->RenderText("ExcellentText", Color::Red, FontSize::font_60);
+	mNextPhase = mFont->RenderText("NextPhaseText", Color::LightPink, FontSize::font_60);
 }
 
 HUD::~HUD()
 {
+	if (mSlider)
+	{
+		delete mSlider;
+		mSlider = nullptr;
+	}
 }
 
 void HUD::Update(float deltaTime)
@@ -50,6 +56,10 @@ void HUD::Update(float deltaTime)
 	UIScreen::Update(deltaTime);
 	UpdateRadar(deltaTime);
 	UpdateTimer(deltaTime);
+	if (mSlider && mGame->GetState() == Game::EGameplay)
+	{
+		mSlider->Update(deltaTime);
+	}
 }
 
 void HUD::Draw(Shader* shader)
@@ -58,6 +68,7 @@ void HUD::Draw(Shader* shader)
 	PlayerActor* player = mGame->GetPlayer();
 	PlayerActor::Parameters pParams = player->GetParams();
 	Vector2 offset(Vector2::Zero);	// 使いまわす
+	PhaseSystem* phaseSystem = mGame->GetPhaseSystem();
 
 	// レーダーの描画
 	DrawTexture(shader, mRadar, mRadarPos);
@@ -113,13 +124,16 @@ void HUD::Draw(Shader* shader)
 	}
 
 	// タイマーの描画(2桁)
+	float timer = phaseSystem->GetPhaseTimer();
 	scale = 2.0f;		// タイマーの数字のスケール
 	offset = Vector2(mNumbers[0]->GetWidthF() * scale, 0.0f);
-	int tens = static_cast<int>(mTimeFloat / 10);
-	int ones = static_cast<int>(mTimeFloat - tens * 10) % 10;
-	DrawTexture(shader, mNumbers[tens], mTimePos, scale);
-	DrawTexture(shader, mNumbers[ones], mTimePos + offset, scale);
-
+	int tens = static_cast<int>(timer / 10);
+	int ones = static_cast<int>(timer - tens * 10) % 10;
+	if (!phaseSystem->OnTransition())
+	{
+		DrawTexture(shader, mNumbers[tens], mTimePos, scale);
+		DrawTexture(shader, mNumbers[ones], mTimePos + offset, scale);
+	}
 	// Levelの描画
 	DrawTexture(shader, mLevel, mLevelPos);
 	int level = pParams.level;
@@ -130,21 +144,97 @@ void HUD::Draw(Shader* shader)
 	DrawTexture(shader, mNumbers[ones], mLevelPos + offset + Vector2(static_cast<float>(mNumbers[0]->GetWidth()), 0.0f));
 
 	// Phaseの描画
-	DrawTexture(shader, mPhase, mPhasePos);
+	DrawTexture(shader, mPhase, mPhasePos);	// "Phase"
 	offset = Vector2((mPhase->GetWidthF() + mNumbers[0]->GetWidthF()) / 2.0f, 3.0f);
-	DrawTexture(shader, mNumbers[mCurPhaseNum], mPhasePos + offset);
+	int phaseNum = phaseSystem->GetPhaseNum();
+	DrawTexture(shader, mNumbers[phaseNum], mPhasePos + offset); // "1"とか"2"とか
+
+	// 敵のHPbarの描画(HUDではないかもしれない)
+	std::vector<EnemyActor*> enemies = mGame->GetEnemies();
+	Renderer* renderer = mGame->GetRenderer();
+
+	for (auto enemy : enemies)
+	{
+		// ワールド空間での位置を取得
+		Vector3 enemyPos = enemy->GetHeadPosition();
+		Vector3 offset(0.0f, 0.0f, 0.0f); // 敵の頭らへんにhpを表示したい
+		Vector3 hpPosInWorld = enemyPos + offset;
+
+		// カメラの背後にいる場合は描画しない
+		if (!renderer->IsInFrontOfCamera(hpPosInWorld))
+		{
+			continue; // 次の敵へ
+		}
+
+		Vector2 screenPos = renderer->WorldToScreen(hpPosInWorld);
+
+		// hpバーの背景を描画
+		Vector2 hpPosInScreen(screenPos.x, screenPos.y);
+		DrawTexture(shader, mHPbarBG, hpPosInScreen, 0.2f);
+
+		// HPバーの色を判定して描画
+		float hpDiscardRange = enemy->GetHpComp()->GetHpPercentage();
+		if (hpDiscardRange >= 0.2f)
+		{
+			DrawTexture(shader, mHPbarGreen, hpPosInScreen, 0.2f, hpDiscardRange);
+		}
+		else if (hpDiscardRange >= 0.0f)
+		{
+			DrawTexture(shader, mHPbarRed, hpPosInScreen, 0.2f, hpDiscardRange);
+		}
+	}
+
+	// Phase移行時「Excellent!!」の描画
+	if (phaseSystem->OnTransition())
+	{
+		DrawTexture(shader, mExcellent, mSlider->GetPosition(), 1.0f);
+		// Sliderが止まったら次のPhaseを始める
+		if (mSlider->GetState() == UIAnimation::AnimState::EEnded)
+		{
+			delete mSlider;
+			mSlider = nullptr;
+			phaseSystem->StartPhase();
+		}
+	}
+	// Phase移行時でない,且つ最初のPhaseでない時「NextPhase...を表示する」
+	else if (phaseNum != 1)
+	{
+		if (timer <= 1.0f)
+		{
+			DrawTexture(shader, mNextPhase, Vector2(0.0f, 200.0f), 1.0f);
+		}
+		// テクスチャが右から徐々に消えていくように見える
+		else if (timer <= 2.0f)
+		{
+			switch (phaseNum)
+			{
+			case 2:
+				DrawTexture(shader, mNextPhase, Vector2(0.0f, 200.0f), 
+				2.0f - timer);
+				break;
+			case 3:
+				DrawTexture(shader, mNextPhase, Vector2(0.0f, 200.0f), 
+				1.0f, 2.0f - timer);
+				break;
+			case 4:
+				DrawTexture(shader, mNextPhase, Vector2(0.0f, 200.0f), 
+				1.0f, 1.0f, 2.0f - timer);
+				break;
+			}
+		}
+	}
 }
 
 void HUD::Reset()
 {
 	mHPdiscardRange = 1.0f;
-	mTimeFloat = 0.0f;
+	//mTimeFloat = 0.0f;
 }
 
-void HUD::ResetTimer()
-{
-	mTimeFloat = 0.0f;
-}
+//void HUD::ResetTimer()
+//{
+//	mTimeFloat = 0.0f;
+//}
 
 void HUD::AddTargetComponent(TargetComponent* tc)
 {
@@ -155,6 +245,14 @@ void HUD::RemoveTargetComponent(TargetComponent* tc)
 {
 	auto iter = std::find(mTargetComps.begin(), mTargetComps.end(), tc);
 	mTargetComps.erase(iter);
+}
+
+void HUD::ToNextPhase()
+{
+	float screenWidth = mGame->GetRenderer()->GetScreenWidth();
+	float end = (screenWidth + mExcellent->GetWidthF()) * 1.0f / 2.0f;
+	// 左から右へ流す
+	mSlider = new Slider(end, 500.0f, Vector2(-end, 200.0f));
 }
 
 void HUD::UpdateRadar(float deltaTime)
@@ -199,16 +297,18 @@ void HUD::UpdateRadar(float deltaTime)
 
 void HUD::UpdateTimer(float deltaTime)
 {
-	if (mGame->GetState() == Game::EGameplay)
-	{
-		mTimeFloat += deltaTime;
-		if (mTimeFloat >= 60.0f + deltaTime) // 60で表示されるように
-		{
-			mGame->GetPhaseSystem()->ToNextPhase();
-			if (mCurPhaseNum <= 4)
-			{
-				mCurPhaseNum++;
-			}
-		}
-	}
+	//if (mGame->GetState() == Game::EGameplay)
+	//{
+	//	mTimeFloat += deltaTime;
+	//	PhaseSystem* phaseSys = mGame->GetPhaseSystem();
+	//	// Phaseを終えたら
+	//	if (mTimeFloat >= phaseSys->GetMaxPhaseTime() + deltaTime)
+	//	{
+	//		phaseSys->ToNextPhase();
+	//		if (mCurPhaseNum <= 4)
+	//		{
+	//			mCurPhaseNum++;
+	//		}
+	//	}
+	//}
 }

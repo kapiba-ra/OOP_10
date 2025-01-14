@@ -219,6 +219,7 @@ xcopy "C:\Program Files (x86)\FMOD SoundSystem\FMOD Studio API Windows\api\studi
     <ClCompile Include="SwordActor.cpp" />
     <ClCompile Include="SwordComponent.cpp" />
     <ClCompile Include="SwordMove.cpp" />
+    <ClCompile Include="UIAnimation.cpp" />
     <ClCompile Include="WeaponActor.cpp" />
     <ClCompile Include="WeaponComponent.cpp" />
     <ClInclude Include="Animation.h" />
@@ -244,6 +245,7 @@ xcopy "C:\Program Files (x86)\FMOD SoundSystem\FMOD Studio API Windows\api\studi
     <ClInclude Include="SwordActor.h" />
     <ClInclude Include="SwordComponent.h" />
     <ClInclude Include="SwordMove.h" />
+    <ClInclude Include="UIAnimation.h" />
     <ClInclude Include="WeaponActor.h" />
     <ClInclude Include="WeaponComponent.h" />
   </ItemGroup>

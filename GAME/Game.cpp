@@ -426,6 +426,7 @@ void Game::UnloadData()
 	while (!mActors.empty())
 	{
 		delete mActors.back();
+		mActors.pop_back();
 	}
 	while (!mUIStack.empty())
 	{

@@ -4,14 +4,18 @@
 
 #include "EnemyActor.h"
 #include "HeartActor.h"
+#include "HpComponent.h"
 
 PhaseSystem::PhaseSystem(Game* game)
 	: mGame(game)
 	, mCurPhase(Phases::EPhase_1)
 	, mOnTransition(false)
 	, mTransTime(2.0f)
-	, mTimer(0.0f)
-	, mEnemyGenInterval(1.0f)
+	, mEnemyGenTimer(0.0f)
+	, mEnemyGenInterval(2.0f)
+	, mPhaseTimer(0.0f)
+	, mMaxPhaseTime(60.0f)
+	, mPhaseNum(1)
 {
 }
 
@@ -21,72 +25,83 @@ PhaseSystem::~PhaseSystem()
 
 void PhaseSystem::Update(float deltaTime)
 {
+	// 通常時
 	if (!mOnTransition)
 	{
-		mTimer += deltaTime;
-		if (mTimer >= mEnemyGenInterval)
+		mEnemyGenTimer += deltaTime;
+		mPhaseTimer += deltaTime;
+		if (mEnemyGenTimer >= mEnemyGenInterval)
 		{
-			mTimer -= mEnemyGenInterval;
+			mEnemyGenTimer -= mEnemyGenInterval;
 
-			//new EnemyActor(mGame);
+			new Slime(mGame);
+			new Zombie(mGame);
 		}
-	}
-	else
-	{
-		mTimer += deltaTime;
-		if (mTimer > mTransTime)
+		if (mPhaseTimer >= mMaxPhaseTime + deltaTime) // 60と表示したいのでdeltaTimeを+している
 		{
-			mTimer = 0.0f;
-			mOnTransition = false;
-			StartPhase();
+			ToNextPhase();
 		}
 	}
+	// Phase切り替え中
+	//else
+	//{
+	//	mPhaseTimer += deltaTime;
+	//	if (mPhaseTimer > mTransTime)
+	//	{
+	//		mPhaseTimer = 0.0f;
+	//		mOnTransition = false;
+	//		StartPhase();
+	//	}
+	//}
 }
 
 void PhaseSystem::Reset()
 {
 	mCurPhase = Phases::EPhase_1;
 	mOnTransition = false;
+	mEnemyGenTimer = 0.0f;
+	mPhaseTimer = 0.0f;
+	mPhaseNum = 1;
 }
 
 void PhaseSystem::StartPhase()
 {
-	class HUD* hud = mGame->GetHUD();
-	Actor* actor;
+	mOnTransition = false;
+	EnemyActor* eActor;
+
 	switch (mCurPhase)
 	{
 	case Phases::EPhase_1:
 	{
-		hud->ResetTimer();
 		
-		//actor = new EnemyActor(mGame);
-		actor = new EnemyActor(mGame);
-		actor->SetPosition(Vector3(-400.0f, 400.0f, -100.0f));
-		//actor = new EnemyActor(mGame);
-		//actor->SetPosition(Vector3(-300.0f, -300.0f, 0.0f));
-		//actor = new EnemyActor(mGame);
-		//actor->SetPosition(Vector3(300.0f, -300.0f, 0.0f));
-		//actor->SetScale(200.0f);
-		//actor = new HeartActor(mGame);
+		eActor = new Slime(mGame);
+		eActor->GetHpComp()->SetMaxHp(2.0f);
+		eActor = new Slime(mGame);
+		eActor->SetPosition(Vector3(-400.0f, 400.0f, -100.0f));
+		eActor = new Slime(mGame);
+		eActor->SetPosition(Vector3(-300.0f, -300.0f, 0.0f));
+		eActor = new Slime(mGame);
+		eActor->SetPosition(Vector3(300.0f, -300.0f, 0.0f));
+		eActor->SetScale(200.0f);
+		new HeartActor(mGame);
 		break;
 	}
 	case Phases::EPhase_2:
 	{
-		hud->ResetTimer();
+		new HeartActor(mGame);
 		break;
 	}
 	case Phases::EPhase_3:
 	{
-		hud->ResetTimer();
+		new HeartActor(mGame);
 		break;
 	}
 	case Phases::EPhase_Boss:
 	{
-		hud->ResetTimer();
-		EnemyActor* eActor;
-		eActor = new EnemyActor(mGame);
+		eActor = new Zombie(mGame);
 		eActor->SetScale(200.0f);
 		eActor->SetSpeed(200.0f);
+		eActor->GetHpComp()->SetMaxHp(50.0f);
 		break;
 	}
 	}
@@ -94,37 +109,34 @@ void PhaseSystem::StartPhase()
 
 void PhaseSystem::ToNextPhase()
 {
-	class HUD* hud = mGame->GetHUD();
+	mOnTransition = true;
+	mPhaseTimer = 0.0f;
+	mEnemyGenTimer = 0.0f;
+	mPhaseNum += 1;
+	
+	HUD* hud = mGame->GetHUD();
+	hud->ToNextPhase();
+
 	// 次のフェーズへ移行させる
 	switch (mCurPhase)
 	{
 	case Phases::EPhase_1:
 	{
-		hud->ResetTimer();
-		mOnTransition = true;
-		mTimer = 0.0f;
 		mCurPhase = Phases::EPhase_2;
 		break;
 	}
 	case Phases::EPhase_2:
 	{
-		hud->ResetTimer();
-		mOnTransition = true;
-		mTimer = 0.0f;
 		mCurPhase = Phases::EPhase_3;
 		break;
 	}
 	case Phases::EPhase_3:
 	{
-		hud->ResetTimer();
-		mOnTransition = true;
-		mTimer = 0.0f;
 		mCurPhase = Phases::EPhase_Boss;
 		break;
 	}
 	case Phases::EPhase_Boss:
 	{
-		hud->ResetTimer();
 		mGame->ChangeState(Game::GameState::EGameclear);
 		break;
 	}

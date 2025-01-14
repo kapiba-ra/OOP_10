@@ -264,6 +264,9 @@
     <ClCompile Include="CorgiComponent.cpp">
       <Filter>component\weapon</Filter>
     </ClCompile>
+    <ClCompile Include="UIAnimation.cpp">
+      <Filter>ui</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Math.h">
@@ -448,6 +451,9 @@
     </ClInclude>
     <ClInclude Include="CorgiComponent.h">
       <Filter>component\weapon</Filter>
+    </ClInclude>
+    <ClInclude Include="UIAnimation.h">
+      <Filter>ui</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

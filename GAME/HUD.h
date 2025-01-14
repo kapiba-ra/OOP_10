@@ -16,10 +16,11 @@ public:
     void Update(float deltaTime) override;
     void Draw(class Shader* shader) override;
     void Reset() override;
-    void ResetTimer();
 
     void AddTargetComponent(class TargetComponent* tc);
     void RemoveTargetComponent(class TargetComponent* tc);
+
+    void ToNextPhase();
 
 protected:
     // Update内で呼び出すヘルパー関数
@@ -45,8 +46,9 @@ protected:
 
     class Texture* mLevel;  // 「Lv.」 のテキストテクスチャ
     class Texture* mPhase;  // 「Phase」のテキストテクスチャ
-    int mCurPhaseNum;       // 現在のフェーズ
-    float mTimeFloat;       // Phase開始からの時間を記録する
+    class Texture* mExcellent; // Phase移行時「Excellent」のテクスチャ
+    class Texture* mNextPhase; // Phase移行時「NextPhase」のテクスチャ
+    class Slider* mSlider;     // 左から右へのSlider
 
     /* 表示位置系,Updateで使う日に備えてメンバにしておいた(基本はDrawで使用) */
     class Vector2 mHpbarPos;    // Hpbarの表示位置

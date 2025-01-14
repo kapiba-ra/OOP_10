@@ -33,15 +33,12 @@ PlayerActor::PlayerActor(Game* game)
 {	
 	mHUD = GetGame()->GetHUD();
 
-	//mMeshComp = new MeshComponent(this);
-	//mMeshComp->SetMesh(game->GetRenderer()->GetMesh("Assets/Cube.gpmesh"));
 	mMeshComp = new SkeletalMeshComponent(this);
 	Mesh* mesh = game->GetRenderer()->GetMesh("Assets/CatWarrior.gpmesh");
 	mMeshComp->SetMesh(mesh);
 	mMeshComp->SetSkeleton(game->GetSkeleton("Assets/CatWarrior.gpskel"));
 	mMeshComp->PlayAnimation(game->GetAnimation("Assets/CatActionIdle.gpanim"));
 	SetPosition(Vector3(0.0f, 0.0f, -50.0f));
-	//SetScale(100.0f);
 
 	mBoxComp = new BoxComponent(this);
 	mBoxComp->SetObjectBox(mesh->GetBox());
@@ -139,9 +136,9 @@ void PlayerActor::UpdateActor(float deltaTime)
 
 	FixCollisions();
 
-	Vector3 bonePosition = mMeshComp->GetBonePosition("pelvis");
+/*	Vector3 bonePosition = mMeshComp->GetBonePosition("pelvis");
 	Matrix4 worldTransform = GetWorldTransform();
-	Vector3::Transform(bonePosition, worldTransform);
+	Vector3::Transform(bonePosition, worldTransform)*/;
 
 	if (mHpComp->IsKilled())
 	{

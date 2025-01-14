@@ -16,6 +16,9 @@ struct DirectionalLight
 	Vector3 mSpecColor;
 };
 
+/// <summary>
+/// 描画周りを担当するクラス
+/// </summary>
 class Renderer
 {
 public:
@@ -47,6 +50,11 @@ public:
 
 	Vector3 Unproject(const Vector3& screenPoint) const;
 	void GetScreenDirection(Vector3& outStart, Vector3& outDir) const;
+	// 以下2つ追加
+	// ワールド座標->スクリーン座標(-1から1に正規化してない座標系)
+	Vector2 WorldToScreen(const Vector3& worldPos);
+	// 与えられた座標がカメラの前側にあるかの判定
+	bool IsInFrontOfCamera(const Vector3& worldPos);
 
 private:
 	bool LoadShaders();

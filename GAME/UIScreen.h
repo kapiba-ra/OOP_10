@@ -71,9 +71,12 @@ public:
 		Vector2 offset = Vector2(0.0f, 20.0f));
 
 protected:
-	// テクスチャを描画するヘルパー関数
+	// テクスチャを描画するヘルパー関数,rangeとalphaを追加した
+	// rangeはx軸方向であることに,alphaはテクスチャそのもののalpha値とは異なるもの
+	// であり,texture.a * alpha のようにscalerとして使う。
 	void DrawTexture(class Shader* shader, class Texture* texture,
-		const Vector2& offset = Vector2::Zero, float scale = 1.0f, float range = 1.0f);
+		const Vector2& offset = Vector2::Zero, float scale = 1.0f,
+		float range = 1.0f, float alpha = 1.0f);
 	void SetRelativeMouseMode(bool relative);
 	class Game* mGame;
 

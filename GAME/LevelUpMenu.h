@@ -24,6 +24,9 @@ private:
     float mSlideStartPosX;
     float mSlideEndPosX;
     float mSlideSpeed;
+    class Slider* mTitleSlider;
+    class Slider* mBGSlider;
+    std::vector<class Slider*> mButtonSliders;
 
     // スキルアイコンと説明文の背景
     std::vector<class Texture*> mButtonBGs;

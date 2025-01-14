@@ -34,10 +34,10 @@ EnemyActor::EnemyActor(Game* game)
 	//mMeshComp->SetSkeleton(game->GetSkeleton("Assets/GP_Human.gpskel"));
 	//mMeshComp->PlayAnimation(game->GetAnimation("Assets/GP_HumanWalk.gpanim"));
 	// スライム
-	Mesh* mesh = game->GetRenderer()->GetMesh("Assets/Slime.gpmesh");
-	mMeshComp->SetMesh(mesh);
-	mMeshComp->SetSkeleton(game->GetSkeleton("Assets/Slime.gpskel"));
-	mMeshComp->PlayAnimation(game->GetAnimation("Assets/SlimeIdle.gpanim"));
+	//Mesh* mesh = game->GetRenderer()->GetMesh("Assets/Slime.gpmesh");
+	//mMeshComp->SetMesh(mesh);
+	//mMeshComp->SetSkeleton(game->GetSkeleton("Assets/Slime.gpskel"));
+	//mMeshComp->PlayAnimation(game->GetAnimation("Assets/SlimeIdle.gpanim"));
 
 	// 出現位置はランダムなノードから
 	WeightedGraph* g = game->GetGraph();
@@ -62,17 +62,12 @@ EnemyActor::EnemyActor(Game* game)
 	//	SetPosition(node->NodePos);
 	//}
 	
-	// メッシュによる
-
+	
 	mMyMove = new ChaseMove(this, game->GetPlayer());
 	// 常に進み続ける
 	mMyMove->SetForwardSpeed(150.0f);
 
 	mJumpComp = new JumpComponent(this);
-
-	mBoxComp = new BoxComponent(this);
-	mBoxComp->SetObjectBox(mesh->GetBox());
-	mBoxComp->SetShouldRotate(false);
 
 	// Damage(攻撃力),Hp共にデフォルトの,1
 	mDamageComp = new DamageComponent(this);
@@ -114,7 +109,7 @@ void EnemyActor::UpdateActor(float deltaTime)
 	{
 		mUniState = UniState::EDying;
 		mMyMove->SetForwardSpeed(0.0f);
-		mMeshComp->PlayAnimation(GetGame()->GetAnimation("Assets/GP_HumanDying.gpanim"));
+		PlayDyingAnimation();
 	}
 
 	FixCollisions();
@@ -230,4 +225,47 @@ void EnemyActor::TakeDamage(float amount)
 void EnemyActor::SetSpeed(float speed)
 {
 	mMyMove->SetForwardSpeed(speed);
+}
+
+Vector3 EnemyActor::GetHeadPosition()
+{
+	Vector3 headPos = mMeshComp->GetBonePosition("head") + Vector3(0.0f, 0.0f, 1.0f);
+	Matrix4 worldTransform = GetWorldTransform();
+	return Vector3::Transform(headPos, worldTransform);
+}
+
+Slime::Slime(Game* game)
+	: EnemyActor(game)
+{
+	Mesh* mesh = game->GetRenderer()->GetMesh("Assets/Slime.gpmesh");
+	mMeshComp->SetMesh(mesh);
+	mMeshComp->SetSkeleton(game->GetSkeleton("Assets/Slime.gpskel"));
+	mMeshComp->PlayAnimation(game->GetAnimation("Assets/SlimeIdle.gpanim"));
+
+	mBoxComp = new BoxComponent(this);
+	mBoxComp->SetObjectBox(mesh->GetBox());
+	mBoxComp->SetShouldRotate(false);
+}
+
+void Slime::PlayDyingAnimation()
+{
+	mMeshComp->PlayAnimation(GetGame()->GetAnimation("Assets/SlimeDying.gpanim"));
+}
+
+Zombie::Zombie(Game* game)
+	: EnemyActor(game)
+{
+	Mesh* mesh = game->GetRenderer()->GetMesh("Assets/GP_Human.gpmesh");
+	mMeshComp->SetMesh(mesh);
+	mMeshComp->SetSkeleton(game->GetSkeleton("Assets/GP_Human.gpskel"));
+	mMeshComp->PlayAnimation(game->GetAnimation("Assets/GP_HumanWalk.gpanim"));
+
+	mBoxComp = new BoxComponent(this);
+	mBoxComp->SetObjectBox(mesh->GetBox());
+	mBoxComp->SetShouldRotate(false);
+}
+
+void Zombie::PlayDyingAnimation()
+{
+	mMeshComp->PlayAnimation(GetGame()->GetAnimation("Assets/GP_HumanDying.gpanim"));
 }

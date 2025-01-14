@@ -280,7 +280,7 @@ Mesh* Renderer::GetMesh(const std::string& fileName)
 
 Vector3 Renderer::Unproject(const Vector3& screenPoint) const
 {
-	// screenPointを-1から+1までのデバイス座標(screenCoord)に変換する
+	// screenPointを-1から+1までのデバイス座標(deviceCoord)に変換する
 	Vector3 deviceCoord = screenPoint;
 	deviceCoord.x /= (mScreenWidth) * 0.5f;
 	deviceCoord.y /= (mScreenHeight) * 0.5f;
@@ -304,6 +304,22 @@ void Renderer::GetScreenDirection(Vector3& outStart, Vector3& outDir) const
 	// 方向ベクトルを求める
 	outDir = end - outStart;
 	outDir.Normalize();
+}
+
+Vector2 Renderer::WorldToScreen(const Vector3& worldPos)
+{
+	Vector3 screenPos = Vector3::TransformWithPerspDiv(worldPos, mView * mProjection);
+	screenPos.x *= 0.5f * mScreenWidth;
+	screenPos.y *= 0.5f * mScreenHeight;
+	return Vector2(screenPos.x, screenPos.y);
+}
+
+bool Renderer::IsInFrontOfCamera(const Vector3& worldPos)
+{
+	// ビュー空間での位置を得る
+	Vector3 viewSpacePos = Vector3::Transform(worldPos, mView);
+	// ビュー空間でのz座標はカメラからの奥行きになる
+	return viewSpacePos.z > 0.0f;  // カメラの前にいるならtrueを返す
 }
 
 bool Renderer::LoadShaders()

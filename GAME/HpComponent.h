@@ -22,7 +22,7 @@ public:
 
     // Getter,Setter
     float GetCurHp() const { return mCurHp; }
-    void SetMaxHp(float maxHp) { mMaxHp = maxHp; }
+    void SetMaxHp(float maxHp) { mMaxHp = maxHp, mCurHp = maxHp; }
     // •Ö—˜Œn(SetterGetter‚Å‚à‚Å‚«‚é‚¯‚Ç...‚Æ‚¢‚¤“z)
     float GetHpPercentage() const { return mCurHp / mMaxHp; }
     void AddMaxHp(float add);

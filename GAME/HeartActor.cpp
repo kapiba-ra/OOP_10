@@ -1,5 +1,6 @@
 #include "HeartActor.h"
 #include "Game.h"
+#include <random>
 #include "Renderer.h"
 #include "Mesh.h"
 
@@ -18,7 +19,12 @@ HeartActor::HeartActor(Game* game)
 
 	Mesh* mesh = game->GetRenderer()->GetMesh("Assets/Heart.gpmesh");
 	mc->SetMesh(mesh);
-	SetPosition(Vector3(-2000.0f, 2000.0f, 0.0f));
+	std::random_device rd;
+	std::mt19937 gen(rd());
+	std::uniform_real_distribution<float> dist(-2000.0f, 2000.0f); 
+	float randomX = dist(gen);
+	float randomY = dist(gen);
+	SetPosition(Vector3(randomX, randomY, -50.0f));
 	SetScale(15.0f);
 
 	mMoveComp = new MoveComponent(this);
