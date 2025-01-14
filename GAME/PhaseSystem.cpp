@@ -1,5 +1,6 @@
 #include "PhaseSystem.h"
 #include "Game.h"
+#include "AudioSystem.h"
 #include "HUD.h"
 
 #include "EnemyActor.h"
@@ -37,7 +38,7 @@ void PhaseSystem::Update(float deltaTime)
 			new Slime(mGame);
 			new Zombie(mGame);
 		}
-		if (mPhaseTimer >= mMaxPhaseTime + deltaTime) // 60と表示したいのでdeltaTimeを+している
+		if (mPhaseTimer >= mMaxPhaseTime + deltaTime) // 60を超えさせたいので(UIの都合),deltaTimeを+している
 		{
 			ToNextPhase();
 		}
@@ -109,11 +110,14 @@ void PhaseSystem::StartPhase()
 
 void PhaseSystem::ToNextPhase()
 {
-	mOnTransition = true;
-	mPhaseTimer = 0.0f;
-	mEnemyGenTimer = 0.0f;
-	mPhaseNum += 1;
+	mOnTransition = true;	// Phase移行中,の状態へ
+	mPhaseTimer = 0.0f;		// タイマーリセット
+	mEnemyGenTimer = 0.0f;	// タイマーリセット
+	mPhaseNum += 1;		// 現在のPhase数をプラス
 	
+	// 音を鳴らす
+	mGame->GetAudioSystem()->PlayEvent("event:/Explosion2D");
+
 	HUD* hud = mGame->GetHUD();
 	hud->ToNextPhase();
 

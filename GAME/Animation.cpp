@@ -7,7 +7,7 @@
 
 bool Animation::Load(const std::string& fileName)
 {
-	// ここはコピペ
+	// ここはコピペ(コメント,スケーリング関連以外)
 
 	std::ifstream file(fileName);
 	// ステップ1 : 指定された名前のファイルを読み込む

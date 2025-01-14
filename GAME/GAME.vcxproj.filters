@@ -58,9 +58,6 @@
     <Filter Include="actor\enemy">
       <UniqueIdentifier>{1c76ce14-e7bc-4b81-8746-4ca00f76c04b}</UniqueIdentifier>
     </Filter>
-    <Filter Include="actor\enemy\base">
-      <UniqueIdentifier>{b500f376-95af-45b9-9bab-18b5e6c9875e}</UniqueIdentifier>
-    </Filter>
     <Filter Include="actor\weapon">
       <UniqueIdentifier>{0fd99000-78ca-40d6-8725-86b7e650f3aa}</UniqueIdentifier>
     </Filter>
@@ -207,9 +204,6 @@
     <ClCompile Include="Actor.cpp">
       <Filter>actor\base</Filter>
     </ClCompile>
-    <ClCompile Include="EnemyActor.cpp">
-      <Filter>actor\enemy\base</Filter>
-    </ClCompile>
     <ClCompile Include="JumpComponent.cpp">
       <Filter>component\move</Filter>
     </ClCompile>
@@ -252,9 +246,6 @@
     <ClCompile Include="Skeleton.cpp">
       <Filter>manager\animation</Filter>
     </ClCompile>
-    <ClCompile Include="SkeletalMeshComponent.cpp">
-      <Filter>manager\animation</Filter>
-    </ClCompile>
     <ClCompile Include="Animation.cpp">
       <Filter>manager\animation</Filter>
     </ClCompile>
@@ -266,6 +257,12 @@
     </ClCompile>
     <ClCompile Include="UIAnimation.cpp">
       <Filter>ui</Filter>
+    </ClCompile>
+    <ClCompile Include="EnemyActor.cpp">
+      <Filter>actor\enemy</Filter>
+    </ClCompile>
+    <ClCompile Include="SkeletalMeshComponent.cpp">
+      <Filter>component\essential</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -392,9 +389,6 @@
     <ClInclude Include="Actor.h">
       <Filter>actor\base</Filter>
     </ClInclude>
-    <ClInclude Include="EnemyActor.h">
-      <Filter>actor\enemy\base</Filter>
-    </ClInclude>
     <ClInclude Include="JumpComponent.h">
       <Filter>component\move</Filter>
     </ClInclude>
@@ -437,9 +431,6 @@
     <ClInclude Include="Skeleton.h">
       <Filter>manager\animation</Filter>
     </ClInclude>
-    <ClInclude Include="SkeletalMeshComponent.h">
-      <Filter>manager\animation</Filter>
-    </ClInclude>
     <ClInclude Include="MatrixPalette.h">
       <Filter>manager\animation</Filter>
     </ClInclude>
@@ -454,6 +445,12 @@
     </ClInclude>
     <ClInclude Include="UIAnimation.h">
       <Filter>ui</Filter>
+    </ClInclude>
+    <ClInclude Include="EnemyActor.h">
+      <Filter>actor\enemy</Filter>
+    </ClInclude>
+    <ClInclude Include="SkeletalMeshComponent.h">
+      <Filter>component\essential</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

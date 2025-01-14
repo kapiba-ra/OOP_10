@@ -37,7 +37,7 @@ PlayerActor::PlayerActor(Game* game)
 	Mesh* mesh = game->GetRenderer()->GetMesh("Assets/CatWarrior.gpmesh");
 	mMeshComp->SetMesh(mesh);
 	mMeshComp->SetSkeleton(game->GetSkeleton("Assets/CatWarrior.gpskel"));
-	mMeshComp->PlayAnimation(game->GetAnimation("Assets/CatActionIdle.gpanim"));
+	mMeshComp->PlayAnimation(game->GetAnimation("Assets/CatActionIdle.gpanim"), 1.0f, 0.5f);
 	SetPosition(Vector3(0.0f, 0.0f, -50.0f));
 
 	mBoxComp = new BoxComponent(this);
@@ -103,12 +103,12 @@ void PlayerActor::ActorInput(const InputState& state)
 	if (!mMoving && !Math::NearZero(forwardSpeed))
 	{
 		mMoving = true;
-		mMeshComp->PlayAnimation(GetGame()->GetAnimation("Assets/CatRunSprint.gpanim"), 1.25f);
+		mMeshComp->PlayAnimation(GetGame()->GetAnimation("Assets/CatRunSprint.gpanim"), 1.25f, 0.5f);
 	}
 	else if (mMoving && Math::NearZero(forwardSpeed))
 	{
 		mMoving = false;
-		mMeshComp->PlayAnimation(GetGame()->GetAnimation("Assets/CatActionIdle.gpanim"));
+		mMeshComp->PlayAnimation(GetGame()->GetAnimation("Assets/CatActionIdle.gpanim"), 1.0f, 0.5f);
 	}
 
 	mMoveComp->SetForwardSpeed(forwardSpeed);

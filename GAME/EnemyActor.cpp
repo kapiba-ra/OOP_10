@@ -240,7 +240,7 @@ Slime::Slime(Game* game)
 	Mesh* mesh = game->GetRenderer()->GetMesh("Assets/Slime.gpmesh");
 	mMeshComp->SetMesh(mesh);
 	mMeshComp->SetSkeleton(game->GetSkeleton("Assets/Slime.gpskel"));
-	mMeshComp->PlayAnimation(game->GetAnimation("Assets/SlimeIdle.gpanim"));
+	mMeshComp->PlayAnimation(game->GetAnimation("Assets/SlimeIdle.gpanim"), 1.0f, 0.2f);
 
 	mBoxComp = new BoxComponent(this);
 	mBoxComp->SetObjectBox(mesh->GetBox());
@@ -249,7 +249,7 @@ Slime::Slime(Game* game)
 
 void Slime::PlayDyingAnimation()
 {
-	mMeshComp->PlayAnimation(GetGame()->GetAnimation("Assets/SlimeDying.gpanim"));
+	mMeshComp->PlayAnimation(GetGame()->GetAnimation("Assets/SlimeDying.gpanim"), 1.0f, 0.2f);
 }
 
 Zombie::Zombie(Game* game)
@@ -258,7 +258,7 @@ Zombie::Zombie(Game* game)
 	Mesh* mesh = game->GetRenderer()->GetMesh("Assets/GP_Human.gpmesh");
 	mMeshComp->SetMesh(mesh);
 	mMeshComp->SetSkeleton(game->GetSkeleton("Assets/GP_Human.gpskel"));
-	mMeshComp->PlayAnimation(game->GetAnimation("Assets/GP_HumanWalk.gpanim"));
+	mMeshComp->PlayAnimation(game->GetAnimation("Assets/GP_HumanWalk.gpanim"), 1.0f, 0.2f);
 
 	mBoxComp = new BoxComponent(this);
 	mBoxComp->SetObjectBox(mesh->GetBox());
@@ -267,5 +267,5 @@ Zombie::Zombie(Game* game)
 
 void Zombie::PlayDyingAnimation()
 {
-	mMeshComp->PlayAnimation(GetGame()->GetAnimation("Assets/GP_HumanDying.gpanim"));
+	mMeshComp->PlayAnimation(GetGame()->GetAnimation("Assets/GP_HumanDying.gpanim"), 1.0f, 0.2f);
 }

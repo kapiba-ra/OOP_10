@@ -6,6 +6,8 @@
 // See LICENSE in root directory for full details.
 // ----------------------------------------------------------------
 
+// ‚±‚ÌƒNƒ‰ƒX‚Í‚Ù‚Æ‚ñ‚Ç‚¢‚¶‚Á‚Ä‚¢‚Ü‚¹‚ñB
+
 #pragma once
 
 #include <cmath>
