@@ -5,7 +5,6 @@
 
 #include "EnemyActor.h"
 #include "HeartActor.h"
-#include "HpComponent.h"
 
 PhaseSystem::PhaseSystem(Game* game)
 	: mGame(game)
@@ -59,6 +58,7 @@ void PhaseSystem::Update(float deltaTime)
 void PhaseSystem::Reset()
 {
 	mCurPhase = Phases::EPhase_1;
+	StartPhase();
 	mOnTransition = false;
 	mEnemyGenTimer = 0.0f;
 	mPhaseTimer = 0.0f;
@@ -76,7 +76,7 @@ void PhaseSystem::StartPhase()
 	{
 		
 		eActor = new Slime(mGame);
-		eActor->GetHpComp()->SetMaxHp(2.0f);
+		eActor->SetMaxHp(2.0f);
 		eActor = new Slime(mGame);
 		eActor->SetPosition(Vector3(-400.0f, 400.0f, -100.0f));
 		eActor = new Slime(mGame);
@@ -102,7 +102,7 @@ void PhaseSystem::StartPhase()
 		eActor = new Zombie(mGame);
 		eActor->SetScale(200.0f);
 		eActor->SetSpeed(200.0f);
-		eActor->GetHpComp()->SetMaxHp(50.0f);
+		eActor->SetMaxHp(50.0f);
 		break;
 	}
 	}

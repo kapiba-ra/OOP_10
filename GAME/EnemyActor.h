@@ -22,12 +22,12 @@ public:
 
     void TakeDamage(float amount);
     void SetSpeed(float speed);
-    class HpComponent* GetHpComp() { return mHpComp; }
+    void SetMaxHp(float hp);
+    float GetHpPercentage();
     Vector3 GetHeadPosition();
 
 private:
     // 倒された時のアニメーションを再生する。
-    // アニメーションの名前のフォーマットがバラバラなら,この関数があった方が良さそう
     virtual void PlayDyingAnimation() {};
 
 protected:

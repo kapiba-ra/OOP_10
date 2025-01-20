@@ -21,8 +21,7 @@ public:
 	void Update(float deltaTime);
 
 	void Reset();
-
-	void ToNextPhase();
+	// ŠO•”‚©‚çŒÄ‚Ño‚·
 	void StartPhase();
 
 	float GetMaxPhaseTime() const { return mMaxPhaseTime; }
@@ -31,6 +30,7 @@ public:
 	bool OnTransition() const { return mOnTransition; }
 
 private:
+	void ToNextPhase();
 
 	class Game* mGame;
 	Phases mCurPhase;

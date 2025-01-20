@@ -26,13 +26,14 @@ EnemyActor::EnemyActor(Game* game)
 	, mInvincibleDuration(0.5f)	// 無敵時間,初期設定は0.5秒
 	, mInvincibilityTimer(0.0f)
 	, mMaxJumpSpeed(500.0f)
+	, mBoxComp(nullptr)
 {
 	mMeshComp = new SkeletalMeshComponent(this);
 	// 人型
-	//Mesh* mesh = game->GetRenderer()->GetMesh("Assets/GP_Human.gpmesh");
+	//Mesh* mesh = game->GetRenderer()->GetMesh("Assets/Zombie.gpmesh");
 	//mMeshComp->SetMesh(mesh);
-	//mMeshComp->SetSkeleton(game->GetSkeleton("Assets/GP_Human.gpskel"));
-	//mMeshComp->PlayAnimation(game->GetAnimation("Assets/GP_HumanWalk.gpanim"));
+	//mMeshComp->SetSkeleton(game->GetSkeleton("Assets/Zombie.gpskel"));
+	//mMeshComp->PlayAnimation(game->GetAnimation("Assets/ZombieWalk.gpanim"));
 	// スライム
 	//Mesh* mesh = game->GetRenderer()->GetMesh("Assets/Slime.gpmesh");
 	//mMeshComp->SetMesh(mesh);
@@ -125,6 +126,7 @@ void EnemyActor::FixCollisions()
 {
 	ComputeWorldTransform();
 
+	if (!mBoxComp) return;
 	const AABB& enemyBox = mBoxComp->GetWorldBox();
 	Vector3 pos = GetPosition();
 	Vector3 offset(0, 0, 50.0f);
@@ -140,8 +142,6 @@ void EnemyActor::FixCollisions()
 		//player->GetState() == EActive &&
 		mUniState != UniState::EDying)
 	{
-		// 敵の位置をプレイヤーから少し離す
-		
 		// プレイヤーのHPをへらす
 		player->GetHpComp()->TakeDamage(1.0f);
 	}
@@ -227,9 +227,22 @@ void EnemyActor::SetSpeed(float speed)
 	mMyMove->SetForwardSpeed(speed);
 }
 
+void EnemyActor::SetMaxHp(float hp)
+{
+	if (mHpComp) mHpComp->SetMaxHp(hp);
+}
+
+float EnemyActor::GetHpPercentage()
+{
+	if (mHpComp) return mHpComp->GetHpPercentage();
+	else return 0.0f;
+}
+
 Vector3 EnemyActor::GetHeadPosition()
 {
-	Vector3 headPos = mMeshComp->GetBonePosition("head") + Vector3(0.0f, 0.0f, 1.0f);
+	Vector3 headPos;
+	if (mMeshComp)  headPos = mMeshComp->GetBonePosition("head");
+	else headPos = Vector3::Zero;
 	Matrix4 worldTransform = GetWorldTransform();
 	return Vector3::Transform(headPos, worldTransform);
 }
@@ -255,10 +268,10 @@ void Slime::PlayDyingAnimation()
 Zombie::Zombie(Game* game)
 	: EnemyActor(game)
 {
-	Mesh* mesh = game->GetRenderer()->GetMesh("Assets/GP_Human.gpmesh");
+	Mesh* mesh = game->GetRenderer()->GetMesh("Assets/Zombie.gpmesh");
 	mMeshComp->SetMesh(mesh);
-	mMeshComp->SetSkeleton(game->GetSkeleton("Assets/GP_Human.gpskel"));
-	mMeshComp->PlayAnimation(game->GetAnimation("Assets/GP_HumanWalk.gpanim"), 1.0f, 0.2f);
+	mMeshComp->SetSkeleton(game->GetSkeleton("Assets/Zombie.gpskel"));
+	mMeshComp->PlayAnimation(game->GetAnimation("Assets/ZombieWalk.gpanim"), 1.0f, 0.2f);
 
 	mBoxComp = new BoxComponent(this);
 	mBoxComp->SetObjectBox(mesh->GetBox());
@@ -267,5 +280,5 @@ Zombie::Zombie(Game* game)
 
 void Zombie::PlayDyingAnimation()
 {
-	mMeshComp->PlayAnimation(GetGame()->GetAnimation("Assets/GP_HumanDying.gpanim"), 1.0f, 0.2f);
+	mMeshComp->PlayAnimation(GetGame()->GetAnimation("Assets/ZombieDying.gpanim"), 1.0f, 0.2f);
 }

@@ -47,7 +47,7 @@ void ShotComponent::LevelUp(int preLv)
 	}
 	case 2:
 	{
-		mBallScale += 2.0f;
+		mBallScale += 1.0f;
 		break;
 	}
 	case 3:
@@ -59,7 +59,7 @@ void ShotComponent::LevelUp(int preLv)
 	case 4:
 	{
 		mShotInterval *= 0.9f;
-		mBallScale += 2.0f;
+		mBallScale += 1.0f;
 		break;
 	}
 	// MaxLv5Ç»ÇÃÇ≈èIóπ

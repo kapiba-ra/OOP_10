@@ -3,7 +3,7 @@
   "vertexformat": "PosNormSkinTex",
   "shader": "Skinned",
   "textures": [
-    "Assets/color.png"
+    "Assets/ZombieColor.png"
   ],
   "specularPower": 100.0,
   "vertices": [

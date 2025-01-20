@@ -173,7 +173,7 @@ void HUD::Draw(Shader* shader)
 		DrawTexture(shader, mHPbarBG, hpPosInScreen, 0.2f);
 
 		// HPƒo[‚ÌF‚ð”»’è‚µ‚Ä•`‰æ
-		float hpDiscardRange = enemy->GetHpComp()->GetHpPercentage();
+		float hpDiscardRange = enemy->GetHpPercentage();
 		if (hpDiscardRange >= 0.2f)
 		{
 			DrawTexture(shader, mHPbarGreen, hpPosInScreen, 0.2f, hpDiscardRange);

@@ -5,6 +5,8 @@
 #include <fstream>
 #include <sstream>
 #include <utility> // for 'pair'
+#include <random>
+#include <unordered_set>
 #include <rapidjson/document.h>
 #include "Renderer.h"
 #include "AudioSystem.h"
@@ -331,17 +333,6 @@ void Game::Reset()
 	mHUD->Reset();
 	mPhaseSystem->Reset();
 	mMusicEvent.Restart();
-
-	// 初期配置
-	Actor* actor;
-	actor = new EnemyActor(this);
-	actor = new EnemyActor(this);
-	actor->SetPosition(Vector3(-400.0f, 400.0f, 0.0f));
-	actor = new EnemyActor(this);
-	actor->SetPosition(Vector3(-300.0f, -300.0f, 0.0f));
-	actor = new EnemyActor(this);
-	actor->SetPosition(Vector3(300.0f, -300.0f, 0.0f));
-	actor = new HeartActor(this);
 }
 
 void Game::UpdateGame()
@@ -418,11 +409,7 @@ void Game::GenerateOutput()
 }
 
 void Game::UnloadData()
-{
-	// 多分必要
-	mSkillSystem->Reset();
-	mPhaseSystem->Reset();
-	
+{	
 	while (!mActors.empty())
 	{
 		delete mActors.back();
@@ -777,11 +764,13 @@ void Game::CreateNodes2()
 	mGraph = new WeightedGraph;
 
 	/* 10×10×3グリッドのノードをゲームワールドに作る。 */ 
+	// 10*10のグリッドが3つあり、floor1,floor2,floor3と呼ぶことにする
 	const int gridZ = 3;
 	const int gridX = 10;
 	const int gridY = 10;
+	const int gridXY = gridX * gridY;
 	const float gridSpacingXY = 500.0f;	// gridの間隔。床アクターのサイズでもある
-	const float gridSpacingZ = 100.0f;	// gridのz軸方向の高さ,要調節
+	const float gridSpacingZ = 120.0f;	// gridのz軸方向の高さ,要調節
 	const int gridNum = gridX * gridY * gridZ;
 
 	/* まずはグリッド上にノードを作る。*/
@@ -807,7 +796,7 @@ void Game::CreateNodes2()
 		}
 	}
 
-	/* 床アクターの作成(敷き詰める) */
+	/* 床アクターの作成(floor1に敷き詰める) */
 	for (int i = 0; i < gridX; ++i)
 	{
 		for (int j = 0; j < gridY; ++j)
@@ -825,12 +814,71 @@ void Game::CreateNodes2()
 		}
 	}
 	
-	/* 空中に足場Actorを設置してみる */
-	CreateScaffold(111);
-	CreateScaffold(112);
-	CreateScaffold(213);
-	CreateScaffold(118);
-	CreateScaffold(134);
+	/* 空中に足場Actorを設置する仕組み */
+	/* 2階と3階を作るが、2階がない場所付近に3階を作らないように注意する */
+	std::random_device rd;
+	std::mt19937 gen(rd());
+	std::vector<int> floor2Indices; // 2階部分に作る足場の位置を示すindex(確定)
+	std::unordered_set<int> floor3Indices; // 3階部分に作る足場の位置を示すindex(候補地)
+	for (int i = 0; i < 5; ++i)
+	{
+		// gridNumが十分に大きい必要がある
+		// 1階部分のみのインデックスに絞る
+		std::uniform_int_distribution<> dist(gridXY, gridXY * 2 - 1);
+		int index;
+		// インデックスが重複しないようにする。
+		do
+		{
+			index = dist(gen);
+		}
+		while (std::find(floor2Indices.begin(), floor2Indices.end(), index) != floor2Indices.end());
+		// 足場を作る(2階部分)。
+		CreateScaffold(index);
+
+		floor2Indices.push_back(index);
+	}
+	// 以降3階部分用の足場の為のループ
+	// このループは、足場候補地探し
+	for (int i = 0; i < floor2Indices.size(); i++)
+	{
+		int floor2Index = floor2Indices[i];
+		// gridで管理しやすいように
+		int hundreds = floor2Index / 100;
+		int tens = (floor2Index - hundreds * 100) / 10;
+		int ones = floor2Index % 10;
+		std::vector<std::tuple<int, int, int>> directions = {
+			{-1, 0, 1},		// 左上
+			{1, 0, 1},		// 右上
+			{0, -1, 1},		// 後方上
+			{0, 1, 1},		// 前方上
+		};
+		// 2階部分の足場から上記の4つの方向にある場所のインデックスをfloor3Indicesに格納する
+		// ただし、重複がないようにする。また、4つの方向が有効である事をチェックする
+		for (const auto& dir : directions)
+		{
+			int idxX = ones + std::get<0>(dir);
+			int idxY = tens + std::get<1>(dir);
+			int idxZ = hundreds + std::get<2>(dir);
+
+			// 隣接ノードがグリッド内に収まるか確認
+			if (0 <= idxX && idxX < 10 &&
+				0 <= idxY && idxY < 10 &&
+				0 <= idxZ && idxZ < 10)
+			{
+
+				int index = idxZ * 100 + idxY * 10 + idxX;
+				floor3Indices.insert(index);
+			}
+		}
+	}
+	// 足場を実際に作る
+	int count = 0;
+	for (int index : floor3Indices)
+	{
+		// 足場を作成
+		CreateScaffold(index);
+		if (++count >= 5) break; // 5つ作成で終了
+	}
 
 	/* エッジを繋ぐ */
 	// 準備として、ノードをつなぐのに便利なtupleを用意する
