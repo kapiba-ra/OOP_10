@@ -61,7 +61,10 @@ LevelUpMenu::~LevelUpMenu()
 		mButtonSliders.pop_back();
 	}
 
-	SetRelativeMouseMode(true);
+	if (mGame->GetState() != Game::ELevelUp)
+	{
+		SetRelativeMouseMode(true);
+	}
 }
 
 void LevelUpMenu::Update(float deltaTime)
@@ -153,9 +156,8 @@ void LevelUpMenu::AddButtonRandom()
 		// BGの部分は変わるかも
 		mButtonBGs.emplace_back(mGame->GetRenderer()->GetTexture("Assets/SkillBG.png"));
 		mIcons.emplace_back(skill->GetIconTex());
-		AddButton(skill->GetName(), [this, skill, skillSystem]() {
+		AddButton(skill->GetName() + std::to_string(skill->GetCurLv()), [this, skill, skillSystem]() {
 			mGame->ChangeState(Game::EGameplay);
-			//skill->LevelUp(player);
 			skillSystem->OnLevelUp(skill);
 			Close();
 		}, buttonOffset);
@@ -163,7 +165,8 @@ void LevelUpMenu::AddButtonRandom()
 	// 全部の武器とパークのレベルがmaxになったら,回復だけできるようになる
 	if (skills.size() == 0)
 	{
-		mButtonBGs.emplace_back(mGame->GetRenderer()->GetTexture("Assets/RecoverBG.png"));
+		mButtonBGs.emplace_back(mGame->GetRenderer()->GetTexture("Assets/SkillBG.png"));
+		mIcons.emplace_back(skillSystem->GetRecoverIcon());
 		AddButton("Recover", [this, player]() {
 			mGame->ChangeState(Game::EGameplay);
 			player->GetHpComp()->Recover(20.0f);

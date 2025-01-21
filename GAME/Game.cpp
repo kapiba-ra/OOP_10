@@ -252,9 +252,17 @@ void Game::HandleKeyPress(int key)
 	}
 }
 
-void Game::OnEnter(GameState state)
+void Game::ChangeState(GameState nextState)
 {
-	switch (state)
+	OnExit(nextState);
+	GameState preState = mGameState;
+	mGameState = nextState;
+	OnEnter(preState);
+}
+
+void Game::OnEnter(GameState preState)
+{
+	switch (mGameState)
 	{
 	case EGameclear:
 		new GameClearMenu(this);
@@ -264,7 +272,6 @@ void Game::OnEnter(GameState state)
 		new GameOverMenu(this);
 		break;
 	case EGameplay:
-		// LoadData();
 		break;
 	case EMainMenu:
 		//UnloadData();
@@ -549,13 +556,6 @@ void Game::RemoveEnemy(EnemyActor* enemy)
 	mEnemies.erase(iter);
 }
 
-void Game::ChangeState(GameState nextState)
-{
-	OnExit(nextState);
-	mGameState = nextState;
-	OnEnter(mGameState);
-}
-
 Font* Game::GetFont(const std::string& fileName)
 {
 	auto iter = mFonts.find(fileName);
@@ -770,7 +770,7 @@ void Game::CreateNodes2()
 	const int gridY = 10;
 	const int gridXY = gridX * gridY;
 	const float gridSpacingXY = 500.0f;	// gridの間隔。床アクターのサイズでもある
-	const float gridSpacingZ = 120.0f;	// gridのz軸方向の高さ,要調節
+	const float gridSpacingZ = 110.0f;	// gridのz軸方向の高さ,要調節
 	const int gridNum = gridX * gridY * gridZ;
 
 	/* まずはグリッド上にノードを作る。*/
@@ -820,7 +820,8 @@ void Game::CreateNodes2()
 	std::mt19937 gen(rd());
 	std::vector<int> floor2Indices; // 2階部分に作る足場の位置を示すindex(確定)
 	std::unordered_set<int> floor3Indices; // 3階部分に作る足場の位置を示すindex(候補地)
-	for (int i = 0; i < 5; ++i)
+	std::unordered_set<int> excludedIndices = { 144, 145, 154, 155 };	// 真ん中には2階を作らない
+	for (int i = 0; i < 10; ++i)
 	{
 		// gridNumが十分に大きい必要がある
 		// 1階部分のみのインデックスに絞る
@@ -831,7 +832,9 @@ void Game::CreateNodes2()
 		{
 			index = dist(gen);
 		}
-		while (std::find(floor2Indices.begin(), floor2Indices.end(), index) != floor2Indices.end());
+		//while (std::find(floor2Indices.begin(), floor2Indices.end(), index) != floor2Indices.end());
+		while (std::find(floor2Indices.begin(), floor2Indices.end(), index) != floor2Indices.end() ||
+			excludedIndices.find(index) != excludedIndices.end());
 		// 足場を作る(2階部分)。
 		CreateScaffold(index);
 
@@ -839,7 +842,7 @@ void Game::CreateNodes2()
 	}
 	// 以降3階部分用の足場の為のループ
 	// このループは、足場候補地探し
-	for (int i = 0; i < floor2Indices.size(); i++)
+	for (size_t i = 0; i < floor2Indices.size(); i++)
 	{
 		int floor2Index = floor2Indices[i];
 		// gridで管理しやすいように
@@ -871,13 +874,30 @@ void Game::CreateNodes2()
 			}
 		}
 	}
+	/* このままのfloor3Indicesから選択すると色々問題がある */
+	// まず201の上である301に足場ができてしまうようなケース
+	// (200,201に足場が作られる場合など)があるので修正する
+	for (size_t i  = 0; i < floor2Indices.size(); i++)
+	{
+		int floor2Index = floor2Indices[i];
+		for (auto index : floor3Indices)
+		{
+			// gridXY(100)を足して、上下にあるかどうか判定
+			if (index == floor2Index + gridXY)
+			{
+				floor3Indices.erase(index);
+				break;
+			}
+		}
+	}
 	// 足場を実際に作る
+	// unorderd_setなので普通に取り出すだけで疑似的にランダムのはず
 	int count = 0;
 	for (int index : floor3Indices)
 	{
 		// 足場を作成
 		CreateScaffold(index);
-		if (++count >= 5) break; // 5つ作成で終了
+		if (++count >= 3) break; // 3つ作成で終了
 	}
 
 	/* エッジを繋ぐ */
@@ -969,8 +989,8 @@ void Game::CreateNodes2()
 
 void Game::CreateScaffold(size_t index)
 {
-	/* 空中に足場Actorを設置してみる */
-	// ここはインデックスを指定するだけみたいな状態にしたいかも
+	/* 空中に足場Actorを設置する */
+	// 引数で受け取るのは、グリッド状になっているステージの位置を指すindex
 
 	if (index < mGraph->mNodes.size())
 	{
@@ -1011,10 +1031,11 @@ void Game::CreateScaffold(size_t index)
 		//}
 		
 		// 1.いかなる場合でも,足場の真下を非アクティブなノードにする
-		int nodeU1idx = index - 100;	// 1つ下のノード
-		if (nodeU1idx > 0)
+		int nodeUnder = index - 100;	// 1つ下のノード
+		if (nodeUnder > 0)
 		{
-			mGraph->mNodes[nodeU1idx]->Active = false;
+			mGraph->mNodes[nodeUnder]->Active = false;
+			mGraph->mNodes[nodeUnder]->type = NodeType::ENoAccess;
 		}
 
 		// Actor作成

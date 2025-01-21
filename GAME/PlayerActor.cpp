@@ -140,6 +140,8 @@ void PlayerActor::UpdateActor(float deltaTime)
 	Matrix4 worldTransform = GetWorldTransform();
 	Vector3::Transform(bonePosition, worldTransform)*/;
 
+	CheckLevelUp();
+
 	if (mHpComp->IsKilled())
 	{
 		Actor::SetState(EPaused);
@@ -273,7 +275,6 @@ void PlayerActor::FixCollisions()
 void PlayerActor::GainExp(float exp)
 {
 	mParams.exp += exp;
-	CheckLevelUp();
 }
 
 //void PlayerActor::GainHeart(float recover)
@@ -323,6 +324,22 @@ Vector3 PlayerActor::GetBoneWorldPosition(std::string boneName)
 	return retVec;
 }
 
+float PlayerActor::GetWeaponIntervalRate(std::string weaponName)
+{
+	// mWeaponsは武器名とWeaponComponent*のマップ
+	auto it = mWeapons.find(weaponName);
+	// 武器が見つかった場合
+	if (it != mWeapons.end())
+	{
+		return it->second->GetIntervalRate();
+	}
+	else
+	{
+		// 見つからなかった場合
+		return 1.0f;
+	}
+}
+
 //void PlayerActor::RemoveWeapon(WeaponComponent* weapon)
 //{
 //	// バグのこってるよ
@@ -362,7 +379,7 @@ void PlayerActor::CheckLevelUp()
 void PlayerActor::Parameters::Reset()
 {
 	maxForwardSpeed = 400.0f;
-	maxJumpSpeed = 500.0f;
+	maxJumpSpeed = 700.0f;
 	//hp = 100.0f;
 	exp = 0.0f;
 	expToLevelUp = 1.0f;

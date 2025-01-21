@@ -36,6 +36,7 @@ HUD::HUD(Game* game)
 	mHPbarGreen = r->GetTexture("Assets/HPBarGreen.png");
 	mHPbarRed = r->GetTexture("Assets/HPBarRed.png");
 	mIconFrame = r->GetTexture("Assets/Icon/Frame.png");
+	mIconMask = r->GetTexture("Assets/Icon/Mask.png");
 	mLevel = mFont->RenderText("LevelText");
 	mPhase = mFont->RenderText("PhaseText");
 	mExcellent = mFont->RenderText("ExcellentText", Color::Red, FontSize::font_60);
@@ -106,11 +107,17 @@ void HUD::Draw(Shader* shader)
 	Vector2 nextSkillPos(mSkillPos);
 	std::vector<Skill*> skills = mGame->GetSkillSystem()->GetAcquiredSkills();
 	float scale = 0.4f;
+
 	for (auto skill : skills)
 	{
+		int i = 0;
+		// 武器の発射までのクールダウンを割合で取得(マスクの描画に使う)
+		float range = 1.0f -  player->GetWeaponIntervalRate(skill->GetName());
 		if (skill->GetType() == Skill::Type::EWeapon)
 		{
+			++i;
 			DrawTexture(shader, skill->GetIconTex(), nextSkillPos, scale);
+			DrawTexture(shader, mIconMask, nextSkillPos, scale, range);
 			Vector2 offset(Vector2(0.0f, skill->GetIconTex()->GetmHeightF() * scale));
 			Vector2 space(0.0f, 6.0f);
 			nextSkillPos -= (offset + space);
@@ -157,7 +164,7 @@ void HUD::Draw(Shader* shader)
 	{
 		// ワールド空間での位置を取得
 		Vector3 enemyPos = enemy->GetHeadPosition();
-		Vector3 offset(0.0f, 0.0f, 0.0f); // 敵の頭らへんにhpを表示したい
+		Vector3 offset(0.0f, 0.0f, 60.0f); // 敵の頭らへんにhpを表示したい
 		Vector3 hpPosInWorld = enemyPos + offset;
 
 		// カメラの背後にいる場合は描画しない

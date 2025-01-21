@@ -47,7 +47,7 @@ void ShotComponent::LevelUp(int preLv)
 	}
 	case 2:
 	{
-		mBallScale += 1.0f;
+		mShotInterval *= 0.9f;
 		break;
 	}
 	case 3:
@@ -58,8 +58,7 @@ void ShotComponent::LevelUp(int preLv)
 	}
 	case 4:
 	{
-		mShotInterval *= 0.9f;
-		mBallScale += 1.0f;
+		mShotInterval *= 0.8f;
 		break;
 	}
 	// MaxLv5Ç»ÇÃÇ≈èIóπ
@@ -69,6 +68,11 @@ void ShotComponent::LevelUp(int preLv)
 void ShotComponent::IncShotSpeed(float add)
 {
 	mShotSpeed += add;
+}
+
+float ShotComponent::GetIntervalRate()
+{
+	return mLastShot / (mIntervalFactor * mShotInterval);
 }
 
 void ShotComponent::Reset()

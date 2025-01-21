@@ -1,9 +1,9 @@
 #pragma once
 
 // タワーディフェンスのフェーズのイメージ
-// ６０秒経過毎にPhase何とか…って表示させたり、時間戻したりするだけ
-// 将来的に複数ステージ作るならそれに統合してもいいかも
-
+// ６０秒経過毎にPhase何とか…って表示させたり、時間を戻したりする
+// 将来的に複数ステージ作るならそっちに統合してもいいかも
+// 難易度調節を行うのもこのクラス
 class PhaseSystem
 {
 public:
@@ -21,7 +21,7 @@ public:
 	void Update(float deltaTime);
 
 	void Reset();
-	// 外部から呼び出す
+	// 外部から呼び出す(今はHUDクラスから)
 	void StartPhase();
 
 	float GetMaxPhaseTime() const { return mMaxPhaseTime; }

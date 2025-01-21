@@ -25,7 +25,8 @@ EnemyActor::EnemyActor(Game* game)
 	, mUniState(UniState::EAlive)
 	, mInvincibleDuration(0.5f)	// 無敵時間,初期設定は0.5秒
 	, mInvincibilityTimer(0.0f)
-	, mMaxJumpSpeed(500.0f)
+	, mMaxJumpSpeed(700.0f)
+	, mExpAmount(1.0f)
 	, mBoxComp(nullptr)
 {
 	mMeshComp = new SkeletalMeshComponent(this);
@@ -99,7 +100,8 @@ void EnemyActor::UpdateActor(float deltaTime)
 		{
 			SetState(EDead);
 			// アイテムを落とす
-			Actor* a = new ExpActor(GetGame());
+			ExpActor* a = new ExpActor(GetGame());
+			a->SetExpAmount(mExpAmount);
 			// アイテムの位置は足元のちょっと上
 			Vector3 offset(0.0f, 0.0f, 50.0f);
 			a->SetPosition(GetPosition() + offset);
@@ -245,6 +247,12 @@ Vector3 EnemyActor::GetHeadPosition()
 	else headPos = Vector3::Zero;
 	Matrix4 worldTransform = GetWorldTransform();
 	return Vector3::Transform(headPos, worldTransform);
+}
+
+float EnemyActor::GetForwardSpeed()
+{
+	if (mMyMove) return mMyMove->GetForwardSpeed();
+	else return 0.0f;
 }
 
 Slime::Slime(Game* game)

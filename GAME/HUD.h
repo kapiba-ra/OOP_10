@@ -43,6 +43,7 @@ protected:
     /* スキルのレベル */
     std::vector<class Texture*> mIcons; // 獲得したスキルのアイコン
     class Texture* mIconFrame;       // アイコンのフレーム
+    class Texture* mIconMask;        // 武器のintervalを示すためのマスク的なもの
 
     class Texture* mLevel;  // 「Lv.」 のテキストテクスチャ
     class Texture* mPhase;  // 「Phase」のテキストテクスチャ

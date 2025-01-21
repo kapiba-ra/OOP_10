@@ -12,7 +12,7 @@ PhaseSystem::PhaseSystem(Game* game)
 	, mOnTransition(false)
 	, mTransTime(2.0f)
 	, mEnemyGenTimer(0.0f)
-	, mEnemyGenInterval(2.0f)
+	, mEnemyGenInterval(1.0f)
 	, mPhaseTimer(0.0f)
 	, mMaxPhaseTime(60.0f)
 	, mPhaseNum(1)
@@ -25,34 +25,53 @@ PhaseSystem::~PhaseSystem()
 
 void PhaseSystem::Update(float deltaTime)
 {
-	// ’ÊíŽž
+	// Phaseis’†‚Ìˆ—,“G‚ð¶‚Ýo‚·
+	// “ïˆÕ“x’²ß‚ðs‚¤‚Ì‚Í‚±‚±
 	if (!mOnTransition)
 	{
 		mEnemyGenTimer += deltaTime;
 		mPhaseTimer += deltaTime;
 		if (mEnemyGenTimer >= mEnemyGenInterval)
 		{
-			mEnemyGenTimer -= mEnemyGenInterval;
-
-			new Slime(mGame);
-			new Zombie(mGame);
+			mEnemyGenTimer -= mEnemyGenInterval; // ƒ^ƒCƒ}[ƒŠƒZƒbƒg
+			EnemyActor* eActor = nullptr;
+			switch (mCurPhase)
+			{
+			case Phases::EPhase_1:
+			{
+				eActor = new Slime(mGame);
+				break;
+			}
+			case Phases::EPhase_2:
+			{
+				eActor = new Zombie(mGame);
+				eActor->SetMaxHp(2.0f);
+				break;
+			}
+			case Phases::EPhase_3:
+			{
+				eActor = new Slime(mGame);
+				eActor->SetSpeed(eActor->GetForwardSpeed() * 1.2f);
+				eActor = new Zombie(mGame);
+				eActor->SetMaxHp(2.0f);
+				break;
+			}
+			case Phases::EPhase_Boss:
+			{
+				eActor = new Slime(mGame);
+				eActor->SetSpeed(eActor->GetForwardSpeed() * 1.3f);
+				eActor = new Zombie(mGame);
+				eActor->SetMaxHp(2.0f);
+				eActor->SetSpeed(eActor->GetForwardSpeed() * 1.2f);
+				break;
+			}
+			}
 		}
 		if (mPhaseTimer >= mMaxPhaseTime + deltaTime) // 60‚ð’´‚¦‚³‚¹‚½‚¢‚Ì‚Å(UI‚Ì“s‡),deltaTime‚ð+‚µ‚Ä‚¢‚é
 		{
 			ToNextPhase();
 		}
 	}
-	// PhaseØ‚è‘Ö‚¦’†
-	//else
-	//{
-	//	mPhaseTimer += deltaTime;
-	//	if (mPhaseTimer > mTransTime)
-	//	{
-	//		mPhaseTimer = 0.0f;
-	//		mOnTransition = false;
-	//		StartPhase();
-	//	}
-	//}
 }
 
 void PhaseSystem::Reset()
@@ -74,16 +93,6 @@ void PhaseSystem::StartPhase()
 	{
 	case Phases::EPhase_1:
 	{
-		
-		eActor = new Slime(mGame);
-		eActor->SetMaxHp(2.0f);
-		eActor = new Slime(mGame);
-		eActor->SetPosition(Vector3(-400.0f, 400.0f, -100.0f));
-		eActor = new Slime(mGame);
-		eActor->SetPosition(Vector3(-300.0f, -300.0f, 0.0f));
-		eActor = new Slime(mGame);
-		eActor->SetPosition(Vector3(300.0f, -300.0f, 0.0f));
-		eActor->SetScale(200.0f);
 		new HeartActor(mGame);
 		break;
 	}
@@ -94,15 +103,21 @@ void PhaseSystem::StartPhase()
 	}
 	case Phases::EPhase_3:
 	{
+		// Phase3‚Í“G”­¶ŠÔŠu‚ð2•b‚É‚·‚é
+		mEnemyGenInterval = 2.0f;
 		new HeartActor(mGame);
 		break;
 	}
 	case Phases::EPhase_Boss:
 	{
+		// Phase3‚Í“G”­¶ŠÔŠu‚ð2•b‚É‚·‚é
+		mEnemyGenInterval = 2.0f;
+		// Boss
 		eActor = new Zombie(mGame);
 		eActor->SetScale(200.0f);
 		eActor->SetSpeed(200.0f);
 		eActor->SetMaxHp(50.0f);
+		eActor->SetExp(20.0f);
 		break;
 	}
 	}

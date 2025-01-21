@@ -23,12 +23,15 @@ public:
     void TakeDamage(float amount);
     void SetSpeed(float speed);
     void SetMaxHp(float hp);
+    void SetExp(float exp) { mExpAmount = exp; }
     float GetHpPercentage();
     Vector3 GetHeadPosition();
+    float GetForwardSpeed();
 
 private:
     // 倒された時のアニメーションを再生する。
     virtual void PlayDyingAnimation() {};
+    float mExpAmount;
 
 protected:
     UniState mUniState;

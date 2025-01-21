@@ -65,7 +65,7 @@ Skill::Skill(const std::string& name, Type type)
 	, mMaxLv(5)
 {
 	// ‚±‚Á‚¿‚©‚çŒ©‚¦‚È‚¢‚Ì‚ª­X•ª‚©‚è‚Ã‚ç‚¢‚ªAmIcon‚Í
-	// SkillSystem‚ÌAddWeapon()“à‚Å‚µ‚Á‚©‚èÝ’è‚³‚ê‚Ä‚¢‚é
+	// SkillSystem‚ÌAddWeapon()“à‚ÅÝ’è‚³‚ê‚Ä‚¢‚é
 }
 
 Skill::~Skill()
@@ -92,7 +92,6 @@ void WeaponSkill::LevelUp(PlayerActor* player)
 	{
 		player->LevelUpWeapon(mName, mCurLv);
 	}
-
 	// ‚±‚±‚ÅŽŸ‚ÌƒŒƒxƒ‹‚É‚È‚é
 	mCurLv += 1;
 }

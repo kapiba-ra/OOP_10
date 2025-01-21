@@ -21,6 +21,7 @@ public:
     void SetNum(int i) { mNum = i; }
     void SetInterval(float f) { mInterval = f; }
     void SetScale(float f) { mScale = f; }
+    float GetIntervalRate() override;
 
 
 private:

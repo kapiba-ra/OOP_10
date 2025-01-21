@@ -23,7 +23,7 @@ public:
     void SetBallScale(float f) { mBallScale = f; }
 
     void IncShotSpeed(float add);
-
+    float GetIntervalRate() override;
 
 private:
     int mShotNum;

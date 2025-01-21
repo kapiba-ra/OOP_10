@@ -21,6 +21,7 @@ public:
     void SetSizeFactor(float factor) { mSizeFactor = factor; }
     void SetIntervalFactor(float factor) { mIntervalFactor = factor; }
     void SetSpeedFactor(float factor) { mSpeedFactor = factor; }
+    virtual float GetIntervalRate() = 0;
 
 protected:
     float mSizeFactor;

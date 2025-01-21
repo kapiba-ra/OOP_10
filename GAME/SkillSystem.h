@@ -19,9 +19,9 @@ public:
 	void Initialize();
 	void Reset();	// 真っ先にResetされることを期待する
 
-	// 武器スキルの設定,functionに注意,初期武器にする場合は第三引数をtrueにする
+	// 武器スキルの設定,functionはスキル獲得時の処理を記述,初期武器にする場合は第三引数をtrueにする
 	void AddWeaponSkill(const std::string& name, std::function<void(class PlayerActor*)> onAcquireSkill);
-	// Perkスキルの設定,functionに注意
+	// Perkスキルの設定,functionはレベルアップ時の効果を設定
 	void AddPerkSkill(const std::string& name, std::function<void(class PlayerActor*)> levelUpEffect);
 	// 初期武器設定用,Playerクラスが呼び出すことを期待
 	void SetInitialWeapon(const std::string& name, class PlayerActor* player);
@@ -32,11 +32,12 @@ public:
 
 	std::vector<Skill*> GetRandomSkills();
 	const std::vector<Skill*>& GetAcquiredSkills() const { return mAcquiredSkills; }
-	
+	class Texture* GetRecoverIcon() { return mRecoverIcon; }
 	//Skill* GetSkill(std::string name) const;
 
 private:
 	class Game* mGame;
 	std::vector<Skill*> mSkills;
 	std::vector<Skill*> mAcquiredSkills;
+	class Texture* mRecoverIcon; // 全てのスキルが最大レベルになったときに使うアイコン
 };

@@ -8,7 +8,6 @@
 SwordComponent::SwordComponent(Actor* owner)
 	: WeaponComponent(owner)
 	, mLastShot(0.0f)
-	, mNum(2)
 {
 	Reset();
 }
@@ -38,7 +37,7 @@ void SwordComponent::Update(float deltaTime)
 			Vector3 SwordOffset = dir * 100.0f;
 			sword->SetPosition(start + SwordOffset);
 			sword->SetPivotAndRadius(mOwner, SwordOffset);
-			sword->SetRotationSpeed(Math::PiOver2 / 6 * mSpeedFactor);
+			sword->SetRotationSpeed(mSpeed * mSpeedFactor);
 
 			/* Œ•‚ÌŒü‚«‚ğŒˆ’è‚µ‚Ä‚¢‚é...Œ•‚Ìƒ‚ƒfƒ‹‚ÍZ²+‚ªŒ•æ‚ÅX²+‚Én‚ªŒü‚¢‚Ä‚éó‘Ô */ 
 			// 1:Œ•‚ğQ‚©‚·‰ñ“]
@@ -61,12 +60,13 @@ void SwordComponent::LevelUp(int preLv)
 	{
 	case 2:
 	{
+		mSpeed *= 1.1f;
 		mInterval *= 0.9f;
 		break;
 	}
 	case 3:
 	{
-		mScale += 2.0f;
+		mScale *= 1.1f;
 		break;
 	}
 	case 4:
@@ -76,8 +76,8 @@ void SwordComponent::LevelUp(int preLv)
 	}
 	case 5:
 	{
-		mScale += 2.0f;
-		mInterval *= 0.9f;
+		mScale *= 0.9f;
+		mInterval *= 0.8f;
 		break;
 	}
 	}
@@ -87,6 +87,11 @@ void SwordComponent::Reset()
 {
 	mNum = 1;
 	mScale = 10.0f;
-	mInterval = 2.0f;
-	mSpeed = Math::Pi;
+	mInterval = 4.0f;
+	mSpeed = Math::PiOver2;
+}
+
+float SwordComponent::GetIntervalRate()
+{
+	return mLastShot / (mIntervalFactor * mInterval);
 }

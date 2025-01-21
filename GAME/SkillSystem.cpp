@@ -174,6 +174,8 @@ void SkillSystem::Initialize()
 		player->GetParams().WeaponSpeedFactor *= multiplier;
 		player->ApplyWeaponFactors();
 	});
+
+	mRecoverIcon = mGame->GetRenderer()->GetTexture("Assets/Icon/Recover.png");
 }
 
 void SkillSystem::Reset()

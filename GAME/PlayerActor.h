@@ -34,9 +34,11 @@ public:
 	void ApplyWeaponFactors();
 	// 指定の名前のボーンのワールド空間位置を計算する
 	class Vector3 GetBoneWorldPosition(std::string boneName);
+	// (武器の発射間隔経過時間/武器の最大発射間隔)を取得
+	float GetWeaponIntervalRate(std::string weaponName);
 
-private:
 	void CheckLevelUp();
+private:
 
 	class HUD* mHUD;
 	// ステータス,パラメータに関連するもの

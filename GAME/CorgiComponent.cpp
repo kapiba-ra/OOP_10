@@ -22,8 +22,10 @@ CorgiComponent::CorgiComponent(Actor* owner)
 		mTargetActive = true;
 		target = enemies[0];
 	}
+	// 以降はCorgiActor側でターゲットの設定をしてもらう
 	mCorgi = new CorgiActor(mOwner->GetGame(), target);
-	mCorgi->SetScale(mScale * mSizeFactor);
+	// 大きくなるのは変&&床の下で大きくなると挟まっちゃうのでScaleFactorは考慮しない。
+	mCorgi->SetScale(mScale);
 	mCorgi->SetPosition(spawnPos);
 	mCorgi->SetSpeed(mSpeed);
 
@@ -35,22 +37,26 @@ void CorgiComponent::LevelUp(int preLv)
 	{
 	case 1:
 	{
+		mSpeed *= 1.1f;
+		mCorgi->SetSpeed(mSpeed * mSpeedFactor);
 		break;
 	}
 	case 2:
 	{
-		mScale *= 1.2f;
+		mSpeed *= 1.1f;
+		mCorgi->SetSpeed(mSpeed * mSpeedFactor);
 		break;
 	}
 	case 3:
 	{
-		mSpeed *= 1.2f;
+		mSpeed *= 1.1f;
+		mCorgi->SetSpeed(mSpeed * mSpeedFactor);
 		break;
 	}
 	case 4:
 	{
-		mScale *= 1.2f;
 		mSpeed *= 1.2f;
+		mCorgi->SetSpeed(mSpeed * mSpeedFactor);
 		break;
 	}
 	// MaxLv5なので終了
