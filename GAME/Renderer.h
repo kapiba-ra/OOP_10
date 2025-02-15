@@ -41,6 +41,7 @@ public:
 	class Mesh* GetMesh(const std::string& fileName);
 
 	void SetViewMatrix(const Matrix4& view) { mView = view; }
+	void SetMirrorView(const Matrix4& view) { mMirrorView = view; }
 
 	float GetScreenWidth() const { return mScreenWidth; }
 	float GetScreenHeight() const { return mScreenHeight; }
@@ -60,6 +61,11 @@ private:
 	bool LoadShaders();
 	void CreateSpriteVerts();
 	void SetLightUniforms(class Shader* shader);
+	// バックミラーのフレームバッファ作成
+	bool CreateMirrorTarget();
+
+	void Draw3DScene(unsigned int framebuffer, const Matrix4& view,
+		const Matrix4& proj, float viewPortScale = 1.0f);
 
 	/*
 	* mTextures      : mapで管理する
@@ -81,6 +87,7 @@ private:
 	class Shader* mSkinnedShader;	// スケルタルメッシュ用シェーダー
 
 	Matrix4 mView;			// ビュー行列
+	Matrix4 mMirrorView;	// ミラー用ビュー行列
 	Matrix4 mProjection;	// 射影行列
 	float mScreenWidth;
 	float mScreenHeight;
@@ -88,6 +95,11 @@ private:
 	// ライティング用のデータ
 	Vector3 mAmbientLight;		// 環境光
 	DirectionalLight mDirLight; // 平行光源
+
+	// バックミラー用のフレームバッファオブジェクト(FBO)のid
+	unsigned int mMirrorBuffer;
+	//バックミラーのテクスチャ
+	class Texture* mMirrorTexture;
 
 	SDL_Window* mWindow;
 	SDL_GLContext mContext;

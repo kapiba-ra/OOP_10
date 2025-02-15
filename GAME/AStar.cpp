@@ -27,7 +27,7 @@ bool AStarSearch(const WeightedGraph& g, const WeightedGraphNode* start,
 		// currentノードの全てのエッジについて調べる
 		for (const WeightedEdge* edge : current->mEdges)
 		{
-			// edge->mToで。エッジの繋がり先のノードを示すポインタを得る
+			// edge->mToで、エッジの繋がり先のノードを示すポインタを得る
 			const WeightedGraphNode* neighbor = edge->mTo;
 			// Get scratch data for this (neighborのこと) node
 			// 新しいキーにアクセスした場合はそのキーと値(ScratchData)が追加される
@@ -90,7 +90,6 @@ WeightedGraphNode* FindClosestNode(const WeightedGraph& graph, const Vector3& po
 	WeightedGraphNode* closestNode = nullptr; // graph.mNodes[0]とかの方が安全かも
 	float closestDist = std::numeric_limits<float>::max(); // floatの最大値
 
-
 	for (WeightedGraphNode* node : graph.mNodes)
 	{
 		// Active なノードのみを対象にする
@@ -99,8 +98,7 @@ WeightedGraphNode* FindClosestNode(const WeightedGraph& graph, const Vector3& po
 		Vector3 diff = node->NodePos - pos;
 
 		// Playerの位置との距離を計算
-		// TODO: Vector2で扱えるようにしたい。NodeにもVector2でx,y座標を持たせたい
-		float dist =
+ 		float dist =
 			//std::sqrt((nodeX - playerX) * (nodeX - playerX) + (nodeY - playerY) * (nodeY - playerY));
 			diff.Length();
 

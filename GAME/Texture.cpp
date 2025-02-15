@@ -55,9 +55,24 @@ bool Texture::Load(const std::string& fileName)
 
 	SOIL_free_image_data(image);	// unload
 
+	// MipMap生成
+	glGenerateMipmap(GL_TEXTURE_2D);
+
 	// Enable 'bilinear filtering' (Not 'nearest-neighbor filtering')
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+	// 縮小フィルターでトライリニアフィルタリングを使う
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_LINEAR);
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+
+	// 異方性フィルタリングを有効にする
+	// ここがないままだと、テクスチャを斜めに見た時にぼやけが発生する
+	if (GLEW_EXT_texture_filter_anisotropic)
+	{
+		GLfloat largest;
+		glGetFloatv(GL_MAX_TEXTURE_MAX_ANISOTROPY_EXT, &largest);
+		// 有効にする
+		glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_MAX_ANISOTROPY_EXT, largest);
+	}
+
 
 	return true;
 }
@@ -78,6 +93,32 @@ void Texture::CreateFromSurface(SDL_Surface* surface)
 		GL_UNSIGNED_BYTE, surface->pixels);
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+}
+
+void Texture::CreateForRendering(int width, int height, unsigned int format)
+{
+	mWidth = width;
+	mHeight = height;
+
+	// textureID の作成
+	glGenTextures(1, &mTextureID);
+	glBindTexture(GL_TEXTURE_2D, mTextureID);
+	// 画像の幅と高さを設定
+	glTexImage2D(
+		GL_TEXTURE_2D,
+		0,
+		format,
+		mWidth,
+		mHeight,
+		0,
+		GL_RGB,
+		GL_FLOAT,
+		nullptr		// 初期データはない(直前の引数と第2引数は無視される)
+	);
+
+	// レンダリング先のテクスチャには最近傍フィルタリングを使用
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
 }
 
 void Texture::SetActive()

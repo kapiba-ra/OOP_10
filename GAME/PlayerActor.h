@@ -47,6 +47,7 @@ private:
 	class HpComponent* mHpComp;
 	// essential
 	class FollowCamera* mCameraComp;
+	class MirrorCamera* mMirrorCameraComp;
 	class SkeletalMeshComponent* mMeshComp;
 	class BoxComponent* mBoxComp;
 	class AudioComponent* mAudioComp;

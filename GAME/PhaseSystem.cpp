@@ -14,7 +14,7 @@ PhaseSystem::PhaseSystem(Game* game)
 	, mEnemyGenTimer(0.0f)
 	, mEnemyGenInterval(1.0f)
 	, mPhaseTimer(0.0f)
-	, mMaxPhaseTime(10.0f)
+	, mMaxPhaseTime(45.0f)
 	, mPhaseNum(1)
 {
 }

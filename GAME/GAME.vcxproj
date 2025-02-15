@@ -194,6 +194,7 @@ xcopy "C:\Program Files (x86)\FMOD SoundSystem\FMOD Studio API Windows\api\studi
     <ClCompile Include="ItemActor.cpp" />
     <ClCompile Include="JumpComponent.cpp" />
     <ClCompile Include="LevelUpMenu.cpp" />
+    <ClCompile Include="MirrorCamera.cpp" />
     <ClCompile Include="PhaseSystem.cpp" />
     <ClCompile Include="PlayerActor.cpp" />
     <ClCompile Include="FollowCamera.cpp" />
@@ -239,6 +240,7 @@ xcopy "C:\Program Files (x86)\FMOD SoundSystem\FMOD Studio API Windows\api\studi
     <ClInclude Include="HpComponent.h" />
     <ClInclude Include="JumpComponent.h" />
     <ClInclude Include="MatrixPalette.h" />
+    <ClInclude Include="MirrorCamera.h" />
     <ClInclude Include="SkeletalMeshComponent.h" />
     <ClInclude Include="Skeleton.h" />
     <ClInclude Include="Skill.h" />

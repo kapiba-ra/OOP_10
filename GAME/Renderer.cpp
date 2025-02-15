@@ -84,11 +84,25 @@ bool Renderer::Initialize(float screenWidth, float screenHeight)
 	// Spriteの描画先の四辺形(quadrilateral)の作成
 	CreateSpriteVerts();
 
+	// バックミラー作成
+	if (!CreateMirrorTarget())
+	{
+		SDL_Log("failed to create mirror target");
+		return false;
+	}
+	
+
 	return true;
 }
 
 void Renderer::Shutdown()
 {
+	if (!mMirrorTexture)
+	{
+		glDeleteFramebuffers(1, &mMirrorBuffer);
+		mMirrorTexture->Unload();
+		delete mMirrorTexture;
+	}
 	delete mSpriteVerts;
 	mSpriteShader->Unload();
 	delete mSpriteShader;
@@ -121,35 +135,10 @@ void Renderer::UnloadData()
 
 void Renderer::Draw()
 {
-	// Sky color
-	glClearColor(0.8f, 0.9f, 0.9f, 1.0f);
-	// Color buffer, Depth buffer をそれぞれクリア
-	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-
-	// 3D 描画
-	glEnable(GL_DEPTH_TEST);	// Depth Buffer を有効に
-	glDisable(GL_BLEND);		// Alpha blending を無効に
-	// Meshシェーダーをアクティブにしてビュー射影行列を更新
-	mMeshShader->SetActive();
-	mMeshShader->SetMatrixUniform("uViewProj", mView * mProjection);
-	SetLightUniforms(mMeshShader);
-	for (auto mc : mMeshComps)
-	{
-		if (mc->GetVisible())
-		{
-			mc->Draw(mMeshShader);
-		}
-	}
-	mSkinnedShader->SetActive();
-	mSkinnedShader->SetMatrixUniform("uViewProj", mView * mProjection);
-	SetLightUniforms(mSkinnedShader);
-	for (auto sm : mSkeletalMeshes)
-	{
-		if (sm->GetVisible())
-		{
-			sm->Draw(mSkinnedShader);
-		}
-	}
+	// 先にバックミラーテクスチャへ描画
+	Draw3DScene(mMirrorBuffer, mMirrorView, mProjection, 0.25f);
+	// 次に通常の3Dシーンをデフォルトのフレームバッファに描画する
+	Draw3DScene(0, mView, mProjection);
 
 	// 2D 描画
 	glDisable(GL_DEPTH_TEST);	// Depth Buffer を無効に
@@ -405,4 +394,88 @@ void Renderer::SetLightUniforms(Shader* shader)
 	shader->SetVectorUniform("uDirLight.mDirection", mDirLight.mDirection);
 	shader->SetVectorUniform("uDirLight.mDiffuseColor", mDirLight.mDiffuseColor);
 	shader->SetVectorUniform("uDirLight.mSpecColor", mDirLight.mSpecColor);
+}
+
+bool Renderer::CreateMirrorTarget()
+{
+	int width = static_cast<int>(mScreenWidth) / 4;
+	int height = static_cast<int>(mScreenHeight) / 4;
+
+	// バックミラーテクスチャ用のフレームバッファを作成する
+	glGenFramebuffers(1, &mMirrorBuffer);
+	glBindFramebuffer(GL_FRAMEBUFFER, mMirrorBuffer);
+
+	// レンダリングに使うテクスチャを作成
+	mMirrorTexture = new Texture();
+	mMirrorTexture->CreateForRendering(width, height, GL_RGB);
+
+	// このターゲットに深度バッファを追加する
+	GLuint depthBuffer;
+	glGenRenderbuffers(1, &depthBuffer);
+	glBindRenderbuffer(GL_RENDERBUFFER, depthBuffer);
+	glRenderbufferStorage(GL_RENDERBUFFER, GL_DEPTH_COMPONENT, width, height);
+	glFramebufferRenderbuffer(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, GL_RENDERBUFFER, depthBuffer);
+
+	// バックミラーテクスチャを出力先としてフレームバッファにアタッチする
+	glFramebufferTexture(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, mMirrorTexture->GetTextureID(), 0);
+
+	// フレームバッファの描画先のリストを設定
+	GLenum drawBuffers[] = { GL_COLOR_ATTACHMENT0 };
+	glDrawBuffers(1, drawBuffers);
+
+	// 全て上手くいってるか確認
+	if (glCheckFramebufferStatus(GL_FRAMEBUFFER) != GL_FRAMEBUFFER_COMPLETE)
+	{
+		// もし問題があればフレームバッファを削除して,
+		// テクスチャを解放,削除してfalseを返す
+		glDeleteFramebuffers(1, &mMirrorBuffer);
+		mMirrorTexture->Unload();
+		delete mMirrorTexture;
+		mMirrorTexture = nullptr;
+		return false;
+	}
+	return true;
+}
+
+void Renderer::Draw3DScene(unsigned int framebuffer, const Matrix4& view,
+	const Matrix4& proj, float viewPortScale)
+{
+	// これから書き込むフレームバッファに設定
+	glBindFramebuffer(GL_FRAMEBUFFER, framebuffer);
+
+	// スケールに基づいてビューポートサイズを設定
+	glViewport(0,0,
+		static_cast<int>(mScreenWidth)*viewPortScale,
+		static_cast<int>(mScreenHeight) * viewPortScale
+	);
+
+	// カラーバッファと深度バッファをクリア
+	glClearColor(0.0f, 0.0f, 0.0f, 0.0f);
+	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+
+	// 3D 描画
+	glEnable(GL_DEPTH_TEST);	// Depth Buffer を有効に
+	glDisable(GL_BLEND);		// Alpha blending を無効に
+	// Meshシェーダーをアクティブにしてビュー射影行列を更新
+	mMeshShader->SetActive();
+	mMeshShader->SetMatrixUniform("uViewProj", mView * mProjection);
+	SetLightUniforms(mMeshShader);
+	for (auto mc : mMeshComps)
+	{
+		if (mc->GetVisible())
+		{
+			mc->Draw(mMeshShader);
+		}
+	}
+	mSkinnedShader->SetActive();
+	mSkinnedShader->SetMatrixUniform("uViewProj", mView * mProjection);
+	SetLightUniforms(mSkinnedShader);
+	for (auto sm : mSkeletalMeshes)
+	{
+		if (sm->GetVisible())
+		{
+			sm->Draw(mSkinnedShader);
+		}
+	}
+
 }

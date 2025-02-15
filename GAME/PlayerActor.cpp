@@ -16,6 +16,7 @@
 #include "HpComponent.h"
 #include "BoxComponent.h"
 #include "FollowCamera.h"
+#include "MirrorCamera.h"
 #include "ShotComponent.h"
 #include "SwordComponent.h"
 #include "AudioComponent.h"
@@ -53,6 +54,8 @@ PlayerActor::PlayerActor(Game* game)
 
 	mCameraComp = new FollowCamera(this);
 	mCameraComp->SnapToIdeal();
+	mMirrorCameraComp = new MirrorCamera(this);
+	mMirrorCameraComp->SnapToIdeal();
 	
 	//mBoxComp = new BoxComponent(this);
 	//AABB myBox(Vector3(-0.5f, -0.5f, -0.5f), Vector3(0.5f, 0.5f, 0.5f));

@@ -264,6 +264,9 @@
     <ClCompile Include="SkeletalMeshComponent.cpp">
       <Filter>component\essential</Filter>
     </ClCompile>
+    <ClCompile Include="MirrorCamera.cpp">
+      <Filter>component\camera</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Math.h">
@@ -451,6 +454,9 @@
     </ClInclude>
     <ClInclude Include="SkeletalMeshComponent.h">
       <Filter>component\essential</Filter>
+    </ClInclude>
+    <ClInclude Include="MirrorCamera.h">
+      <Filter>component\camera</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
