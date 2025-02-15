@@ -97,6 +97,8 @@ void FollowCamera::CheckObstacles()
 	{
 		start = mOwner->GetPosition();
 	}
+
+	// ˆÈ‰ºƒJƒƒ‰•ÇŠÑ’Ê–hŽ~‘[’u
 	LineSegment line(mActualPos, mOwner->GetPosition() + Vector3(0.0f, 0.0f, 50.0f));
 	auto& planes = mOwner->GetGame()->GetPlanes();
 	for (auto pa : planes)

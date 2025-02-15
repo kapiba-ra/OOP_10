@@ -14,7 +14,7 @@ PhaseSystem::PhaseSystem(Game* game)
 	, mEnemyGenTimer(0.0f)
 	, mEnemyGenInterval(1.0f)
 	, mPhaseTimer(0.0f)
-	, mMaxPhaseTime(60.0f)
+	, mMaxPhaseTime(10.0f)
 	, mPhaseNum(1)
 {
 }
@@ -40,6 +40,7 @@ void PhaseSystem::Update(float deltaTime)
 			case Phases::EPhase_1:
 			{
 				eActor = new Slime(mGame);
+				eActor = new Zombie(mGame);
 				break;
 			}
 			case Phases::EPhase_2:
@@ -54,6 +55,7 @@ void PhaseSystem::Update(float deltaTime)
 				eActor->SetSpeed(eActor->GetForwardSpeed() * 1.2f);
 				eActor = new Zombie(mGame);
 				eActor->SetMaxHp(2.0f);
+				eActor->SetExp(2.0f);
 				break;
 			}
 			case Phases::EPhase_Boss:

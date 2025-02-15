@@ -308,6 +308,7 @@ void Renderer::GetScreenDirection(Vector3& outStart, Vector3& outDir) const
 
 Vector2 Renderer::WorldToScreen(const Vector3& worldPos)
 {
+	// ƒrƒ…[Ë‰es—ñ‚ğ“n‚·
 	Vector3 screenPos = Vector3::TransformWithPerspDiv(worldPos, mView * mProjection);
 	screenPos.x *= 0.5f * mScreenWidth;
 	screenPos.y *= 0.5f * mScreenHeight;

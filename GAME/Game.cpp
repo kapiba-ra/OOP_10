@@ -808,7 +808,7 @@ void Game::CreateNodes2()
 				node->Active = true;
 
 				Actor* floor = new FloorActor(this);
-				// ノードの情報->Actorの床,床の位置がノードの場所に依存する
+				// ノードの情報からActorの床を設定する,つまり床の位置はノードの持つ情報に依存する
 				floor->SetPosition(node->NodePos);
 			}
 		}
@@ -818,28 +818,34 @@ void Game::CreateNodes2()
 	/* 2階と3階を作るが、2階がない場所付近に3階を作らないように注意する */
 	std::random_device rd;
 	std::mt19937 gen(rd());
-	std::vector<int> floor2Indices; // 2階部分に作る足場の位置を示すindex(確定)
-	std::unordered_set<int> floor3Indices; // 3階部分に作る足場の位置を示すindex(候補地)
-	std::unordered_set<int> excludedIndices = { 144, 145, 154, 155 };	// 真ん中には2階を作らない
+	std::vector<int> floor2Indices;		   // 2階部分に作る足場の位置を示すindex(確定)
+	// 2階部分の足場に対応する,4方向以下の3階部分のインデックスを格納する2次元配列
+	// なんのため...後々、2階部分の足場が持つ3階部分全てに足場ができないようにする為
+	// 2階に連続して足場が出来た場合にも対応している
+	std::vector<std::vector<int>> floor3Candidate;
+	// ステージ真ん中には2階を作らない(Playerの発生位置は固定とするため)
+	std::vector<int> deadIndices = { 144, 145, 154, 155 };
 	for (int i = 0; i < 10; ++i)
 	{
 		// gridNumが十分に大きい必要がある
-		// 1階部分のみのインデックスに絞る
+		// 2階部分のみのインデックスに絞る
 		std::uniform_int_distribution<> dist(gridXY, gridXY * 2 - 1);
 		int index;
-		// インデックスが重複しないようにする。
+		// インデックスが重複しないようにする。また、ステージ中央には作成しない。
 		do
 		{
 			index = dist(gen);
 		}
-		//while (std::find(floor2Indices.begin(), floor2Indices.end(), index) != floor2Indices.end());
 		while (std::find(floor2Indices.begin(), floor2Indices.end(), index) != floor2Indices.end() ||
-			excludedIndices.find(index) != excludedIndices.end());
-		// 足場を作る(2階部分)。
+			std::find(deadIndices.begin(), deadIndices.end(), index) != deadIndices.end());
+		//index = i + 120;	// テスト用
+		// 足場を作る(2階部分)
 		CreateScaffold(index);
-
+		// 足場作成の位置を格納
 		floor2Indices.push_back(index);
 	}
+
+	
 	// 以降3階部分用の足場の為のループ
 	// このループは、足場候補地探し
 	for (size_t i = 0; i < floor2Indices.size(); i++)
@@ -855,14 +861,16 @@ void Game::CreateNodes2()
 			{0, -1, 1},		// 後方上
 			{0, 1, 1},		// 前方上
 		};
-		// 2階部分の足場から上記の4つの方向にある場所のインデックスをfloor3Indicesに格納する
-		// ただし、重複がないようにする。また、4つの方向が有効である事をチェックする
+		// やりたいことは、3階部分の足場を作る候補地を絞ること
+		// 2階部分の足場から上記の4つの方向にある場所をfloor3Indicesに格納する
+		// ただし、重複がないようにする。また、4つの方向が有効である事をチェックする(例えば角っこは2方向のみ)
+		std::vector<int> indices;
 		for (const auto& dir : directions)
 		{
 			int idxX = ones + std::get<0>(dir);
 			int idxY = tens + std::get<1>(dir);
 			int idxZ = hundreds + std::get<2>(dir);
-
+			
 			// 隣接ノードがグリッド内に収まるか確認
 			if (0 <= idxX && idxX < 10 &&
 				0 <= idxY && idxY < 10 &&
@@ -870,9 +878,11 @@ void Game::CreateNodes2()
 			{
 
 				int index = idxZ * 100 + idxY * 10 + idxX;
-				floor3Indices.insert(index);
+				indices.push_back(index);
 			}
 		}
+		// まとまりを入れる
+		floor3Candidate.push_back(indices);
 	}
 	/* このままのfloor3Indicesから選択すると色々問題がある */
 	// まず201の上である301に足場ができてしまうようなケース
@@ -880,24 +890,76 @@ void Game::CreateNodes2()
 	for (size_t i  = 0; i < floor2Indices.size(); i++)
 	{
 		int floor2Index = floor2Indices[i];
-		for (auto index : floor3Indices)
+		// 全てのindexSetについて(2階の足場の場所に対応する最大4つの3階部分のindex)
+		for (auto& indexSet : floor3Candidate)
 		{
 			// gridXY(100)を足して、上下にあるかどうか判定
-			if (index == floor2Index + gridXY)
+			int floor3Index = floor2Index + gridXY;
+			// 全てのindexについてループする
+			for (auto it = indexSet.begin(); it != indexSet.end();)
 			{
-				floor3Indices.erase(index);
-				break;
+				if (*it == floor3Index)
+				{
+					it = indexSet.erase(it);
+				}
+				else
+				{
+					++it;
+				}
 			}
 		}
 	}
 	// 足場を実際に作る
-	// unorderd_setなので普通に取り出すだけで疑似的にランダムのはず
 	int count = 0;
-	for (int index : floor3Indices)
+	std::vector<int> randomIndices;
+	// floor3Candidateから全ての要素をrandomIndicesに移してシャッフル
+	for (const auto& indexSet : floor3Candidate)
 	{
-		// 足場を作成
-		CreateScaffold(index);
-		if (++count >= 3) break; // 3つ作成で終了
+		randomIndices.insert(randomIndices.end(), indexSet.begin(), indexSet.end());
+	}
+	// シャッフルする
+	std::shuffle(randomIndices.begin(), randomIndices.end(), gen);
+	// 順番バラバラにしたので、ランダムに3階の足場候補地を選べている
+	for (int index : randomIndices)
+	{
+		// 足場を作成するか否か
+		bool shouldCreateScaffold = true;
+
+		// 全てのindexSetについてチェック
+		for (auto& indexSet : floor3Candidate)
+		{
+			// indexが含まれているかチェック
+			for (auto it = indexSet.begin(); it != indexSet.end();)
+			{
+				if (*it == index)
+				{
+					// candidatesの要素数が2以上なら
+					// 個々のチェックが重要。sizeが1の時に足場を作成すると、
+					// 侵入不可能な領域ができてしまう
+					if (indexSet.size() >= 2)
+					{
+						// indexを削除
+						it = indexSet.erase(it);
+					}
+					else if (indexSet.size() == 1)
+					{
+						shouldCreateScaffold = false;
+						++it; // これを忘れて無限ループしてた(教訓)
+					}
+				}
+				else
+				{
+					++it;
+				}
+			}
+		}
+		// 足場を作成するかを判定
+		if (shouldCreateScaffold)
+		{
+			CreateScaffold(index);
+			// 5つ作成できた時点で終了する
+			if (++count >= 5) break;
+		}
 	}
 
 	/* エッジを繋ぐ */
