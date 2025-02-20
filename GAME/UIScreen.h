@@ -76,7 +76,7 @@ protected:
 	// Ç≈Ç†ÇË,texture.a * alpha ÇÃÇÊÇ§Ç…scalerÇ∆ÇµÇƒégÇ§ÅB
 	void DrawTexture(class Shader* shader, class Texture* texture,
 		const Vector2& offset = Vector2::Zero, float scale = 1.0f,
-		float range = 1.0f, float alpha = 1.0f);
+		float range = 1.0f, float alpha = 1.0f, bool flipY = false);
 	void SetRelativeMouseMode(bool relative);
 	class Game* mGame;
 

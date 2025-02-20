@@ -4,6 +4,7 @@
 class MirrorCamera :
     public CameraComponent
 {
+public:
     MirrorCamera(class Actor* owner);
 
     void Update(float deltaTime) override;

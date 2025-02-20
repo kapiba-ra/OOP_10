@@ -42,6 +42,7 @@ public:
 
 	void SetViewMatrix(const Matrix4& view) { mView = view; }
 	void SetMirrorView(const Matrix4& view) { mMirrorView = view; }
+	class Texture* GetMirrorTexture() const { return mMirrorTexture; }
 
 	float GetScreenWidth() const { return mScreenWidth; }
 	float GetScreenHeight() const { return mScreenHeight; }

@@ -39,32 +39,43 @@ void PhaseSystem::Update(float deltaTime)
 			{
 			case Phases::EPhase_1:
 			{
-				eActor = new Slime(mGame);
-				eActor = new Zombie(mGame);
+				if (mGame->GetEnemies().size() <= 50)
+				{
+					eActor = new Slime(mGame);
+				}
 				break;
 			}
 			case Phases::EPhase_2:
 			{
-				eActor = new Zombie(mGame);
-				eActor->SetMaxHp(2.0f);
+				if (mGame->GetEnemies().size() <= 50)
+				{
+					eActor = new Zombie(mGame);
+					eActor->SetMaxHp(2.0f);
+				}
 				break;
 			}
 			case Phases::EPhase_3:
 			{
-				eActor = new Slime(mGame);
-				eActor->SetSpeed(eActor->GetForwardSpeed() * 1.2f);
-				eActor = new Zombie(mGame);
-				eActor->SetMaxHp(2.0f);
-				eActor->SetExp(2.0f);
+				if (mGame->GetEnemies().size() <= 50)
+				{
+					eActor = new Slime(mGame);
+					eActor->SetSpeed(eActor->GetForwardSpeed() * 1.2f);
+					eActor = new Zombie(mGame);
+					eActor->SetMaxHp(2.0f);
+					eActor->SetExp(2.0f);
+				}
 				break;
 			}
 			case Phases::EPhase_Boss:
 			{
-				eActor = new Slime(mGame);
-				eActor->SetSpeed(eActor->GetForwardSpeed() * 1.3f);
-				eActor = new Zombie(mGame);
-				eActor->SetMaxHp(2.0f);
-				eActor->SetSpeed(eActor->GetForwardSpeed() * 1.2f);
+				if (mGame->GetEnemies().size() <= 50)
+				{
+					eActor = new Slime(mGame);
+					eActor->SetSpeed(eActor->GetForwardSpeed() * 1.3f);
+					eActor = new Zombie(mGame);
+					eActor->SetMaxHp(2.0f);
+					eActor->SetSpeed(eActor->GetForwardSpeed() * 1.2f);
+				}
 				break;
 			}
 			}

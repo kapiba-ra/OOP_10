@@ -177,19 +177,29 @@ void UIScreen::AddButton(const std::string& name, std::function<void()> onClick,
 }
 
 void UIScreen::DrawTexture(Shader* shader, Texture* texture, const Vector2& offset,
-	float scale, float range, float alpha)
+	float scale, float range, float alpha, bool flipY)
 {
+	// テクスチャの幅と高さで矩形をスケーリングする
+	// 必要ならばyを反転
+	float yScale = texture->GetHeightF() * scale;
+	if (flipY) { yScale *= -1.0f; }
+
 	Matrix4 scaleMat = Matrix4::CreateScale(
-		static_cast<float>(texture->GetWidth()) * scale,
-		static_cast<float>(texture->GetHeight()) * scale,
+		texture->GetWidthF() * scale,
+		yScale,
 		1.0f
 	);
+	// 平行移動行列
 	Matrix4 transMat = Matrix4::CreateTranslation(Vector3(offset.x, offset.y, 0.0f));
+	// ワールド変換
 	Matrix4 world = scaleMat * transMat;
+	
 	shader->SetMatrixUniform("uWorldTransform", world);
 	shader->SetFloatUniform("uDiscardRange", range); // x軸方向の描画範囲を制限できる(hpの為に用意した)
-	shader->SetFloatUniform("uAlpha", alpha);	// alpha値
+	shader->SetFloatUniform("uAlpha", alpha);		 // alpha値
+	// 使うテクスチャを設定
 	texture->SetActive();
+	// 矩形の描画
 	glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, nullptr);
 }
 

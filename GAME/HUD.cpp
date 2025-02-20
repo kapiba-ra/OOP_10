@@ -118,7 +118,7 @@ void HUD::Draw(Shader* shader)
 			++i;
 			DrawTexture(shader, skill->GetIconTex(), nextSkillPos, scale);
 			DrawTexture(shader, mIconMask, nextSkillPos, scale, range);
-			Vector2 offset(Vector2(0.0f, skill->GetIconTex()->GetmHeightF() * scale));
+			Vector2 offset(Vector2(0.0f, skill->GetIconTex()->GetHeightF() * scale));
 			Vector2 space(0.0f, 6.0f);
 			nextSkillPos -= (offset + space);
 		}
@@ -127,7 +127,7 @@ void HUD::Draw(Shader* shader)
 	for (int i = 0; i < 5; ++i)
 	{
 		DrawTexture(shader, mIconFrame, nextFramePos);
-		nextFramePos -= Vector2(0.0f, mIconFrame->GetmHeightF() + 2.0f);
+		nextFramePos -= Vector2(0.0f, mIconFrame->GetHeightF() + 2.0f);
 	}
 
 	// タイマーの描画(2桁)
@@ -230,6 +230,8 @@ void HUD::Draw(Shader* shader)
 			}
 		}
 	}
+	Texture* mirror = mGame->GetRenderer()->GetMirrorTexture();
+	DrawTexture(shader, mirror, Vector2(-350.0f, -250.0f), 1.0f, 1.0f, 1.0f, true);
 }
 
 void HUD::Reset()

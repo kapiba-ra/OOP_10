@@ -3,6 +3,7 @@
 #include "Game.h"
 #include "Renderer.h"
 
+
 MirrorCamera::MirrorCamera(Actor* owner)
 	:CameraComponent(owner)
 	, mHorzDist(150.0f)

@@ -22,7 +22,7 @@ public:
 	// Get width as float
 	float GetWidthF() const { return static_cast<float>(mWidth); }
 	// Get height as float
-	float GetmHeightF() const { return static_cast<float>(mHeight); }
+	float GetHeightF() const { return static_cast<float>(mHeight); }
 	unsigned int GetTextureID() const { return mTextureID; }
 
 private:

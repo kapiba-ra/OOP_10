@@ -458,7 +458,7 @@ void Renderer::Draw3DScene(unsigned int framebuffer, const Matrix4& view,
 	glDisable(GL_BLEND);		// Alpha blending を無効に
 	// Meshシェーダーをアクティブにしてビュー射影行列を更新
 	mMeshShader->SetActive();
-	mMeshShader->SetMatrixUniform("uViewProj", mView * mProjection);
+	mMeshShader->SetMatrixUniform("uViewProj", view * mProjection);
 	SetLightUniforms(mMeshShader);
 	for (auto mc : mMeshComps)
 	{
@@ -468,7 +468,7 @@ void Renderer::Draw3DScene(unsigned int framebuffer, const Matrix4& view,
 		}
 	}
 	mSkinnedShader->SetActive();
-	mSkinnedShader->SetMatrixUniform("uViewProj", mView * mProjection);
+	mSkinnedShader->SetMatrixUniform("uViewProj", view * mProjection);
 	SetLightUniforms(mSkinnedShader);
 	for (auto sm : mSkeletalMeshes)
 	{
